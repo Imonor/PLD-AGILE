@@ -2,11 +2,16 @@ package util;
 
 import org.w3c.dom.*;
 
+import model.Course;
 import model.Intersection;
 import model.Troncon;
+import model.Plan;
+import model.Precedence;
+import model.Tournee;
 
 import javax.xml.parsers.*;
 import java.io.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,24 +19,22 @@ import java.util.Map;
 
 public class XMLParser {
 	
-	public static List<Object> readFilePlan(String filePathPlan) {	
-
-		Map<Long, Intersection> intersections = new HashMap<>();
+	public static Plan chargerPlan(String filePathPlan) {	
+		Map<String, Intersection> intersections = new HashMap<>();
 		List<Troncon> troncons = new ArrayList<>();
-		List<Object> result = new ArrayList<>();
+		Plan plan = new Plan();
 		try {
 			File file = new File(filePathPlan);
 	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	         Document doc = dBuilder.parse(file);
 	         doc.getDocumentElement().normalize();
-	         System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 	         NodeList nInter = doc.getElementsByTagName("noeud");
 	         NodeList nTronc = doc.getElementsByTagName("troncon");
 	         
 	         for(int i = 0; i < nInter.getLength(); ++i) {
 	        	 Element elem = (Element)nInter.item(i);
-	        	 long id = Long.parseLong(elem.getAttribute("id"));
+	        	 String id = elem.getAttribute("id");
 	        	 double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 	        	 double longitude = Double.parseDouble(elem.getAttribute("longitude"));
 	        	 Intersection inter = new Intersection(id, latitude, longitude);
@@ -48,23 +51,60 @@ public class XMLParser {
 	        	 troncons.add(tronc);
 	         }
 	         
-	         result.add(intersections);
-	         result.add(troncons);
+	 		plan.setIntersections(intersections);
+	 		plan.setTroncons(troncons);
 	         
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return plan;
+	}
+	
+	public static Tournee chargerTournee(String filePathTournee, Plan plan) {
+		List<Precedence> precedences = new ArrayList<>();
+		Tournee tournee = new Tournee();
+		try {
+			File file = new File(filePathTournee);
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.parse(file);
+	         doc.getDocumentElement().normalize();
+	         Element entrepot = (Element)doc.getElementsByTagName("entrepot").item(0);
+	         String[] heureTab = entrepot.getAttribute("heureDepart").split(":");
+	         int heures = Integer.parseInt(heureTab[0]);
+	         int minutes = Integer.parseInt(heureTab[1]);
+	         int secondes = Integer.parseInt(heureTab[2]);
+	         tournee.setHeureDepart(LocalTime.of(heures, minutes, secondes));
+	         tournee.setDepart(plan.getIntersections().get(entrepot.getAttribute("adresse")));
+	         
+	         NodeList nLivraisons = doc.getElementsByTagName("livraison");
+	         
+	         for(int i = 0; i < nLivraisons.getLength(); ++i) {
+	        	 Element elem = (Element)nLivraisons.item(i);
+	        	 Intersection depart = plan.getIntersections().get(elem.getAttribute("adresseEnlevement"));
+	        	 Intersection arrivee = plan.getIntersections().get(elem.getAttribute("adresseLivraison"));
+	        	 int duree = Integer.parseInt(elem.getAttribute("dureeLivraison")) + Integer.parseInt(elem.getAttribute("dureeEnlevement"));
+	        	 
+	        	 Course course = new Course(depart, arrivee, duree);
+	        	 precedences.add(course);
+	         }
+	         
+	         tournee.setListePrecedences(precedences);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tournee;
 	}
 	
 	public static void main(String[] args) {
-		List<Object> liste = readFilePlan("fichiersXML2019/grandPlan.xml");
-		List<Troncon> troncons = (List<Troncon>)liste.get(1);
-		Map< Long, Intersection> inters = (HashMap<Long, Intersection>)liste.get(0);
-		
-		for(Troncon tronc : troncons) {
-			System.out.println(tronc.getNomRue());
+		Plan plan = chargerPlan("fichiersXML2019/grandPlan.xml");
+		Tournee tournee = chargerTournee("fichiersXML2019/demandeGrand7.xml", plan);
+		for(Precedence prec: tournee.getListePrecedences()) {
+			System.out.println(prec.getDepart().getId() + " --> " + prec.getArrivee().getId());
 		}
+		
 	}
 
 }
