@@ -7,7 +7,7 @@ import model.Intersection;
 import model.Troncon;
 import model.Plan;
 import model.Precedence;
-import model.Tournee;
+import model.ContraintesTournee;
 
 import javax.xml.parsers.*;
 import java.io.*;
@@ -21,7 +21,6 @@ public class XMLParser {
 	
 	public static Plan chargerPlan(String filePathPlan) {	
 		Map<String, Intersection> intersections = new HashMap<>();
-		List<Troncon> troncons = new ArrayList<>();
 		Plan plan = new Plan();
 		try {
 			File file = new File(filePathPlan);
@@ -43,16 +42,15 @@ public class XMLParser {
 
 	         for(int i = 0; i < nTronc.getLength(); ++i) {
 	        	 Element elem = (Element)nTronc.item(i);
-	        	 long idOrig = Long.parseLong(elem.getAttribute("origine"));
-	        	 long idDest = Long.parseLong(elem.getAttribute("destination"));
+	        	 String idOrig = elem.getAttribute("origine");
+	        	 String idDest = elem.getAttribute("destination");
 	        	 String nomRue = elem.getAttribute("nomRue");
 	        	 double longueur = Double.parseDouble(elem.getAttribute("longueur"));
-	        	 Troncon tronc = new Troncon(intersections.get(idOrig), intersections.get(idDest), nomRue, longueur);
-	        	 troncons.add(tronc);
+	        	 Troncon tronc = new Troncon(intersections.get(idDest), nomRue, longueur);
+	        	 intersections.get(idOrig).addTroncon(tronc);
 	         }
 	         
 	 		plan.setIntersections(intersections);
-	 		plan.setTroncons(troncons);
 	         
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -60,9 +58,9 @@ public class XMLParser {
 		return plan;
 	}
 	
-	public static Tournee chargerTournee(String filePathTournee, Plan plan) {
+	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) {
 		List<Precedence> precedences = new ArrayList<>();
-		Tournee tournee = new Tournee();
+		ContraintesTournee tournee = new ContraintesTournee();
 		try {
 			File file = new File(filePathTournee);
 	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -100,7 +98,7 @@ public class XMLParser {
 	
 	public static void main(String[] args) {
 		Plan plan = chargerPlan("fichiersXML2019/grandPlan.xml");
-		Tournee tournee = chargerTournee("fichiersXML2019/demandeGrand7.xml", plan);
+		ContraintesTournee tournee = chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
 		for(Precedence prec: tournee.getListePrecedences()) {
 			System.out.println(prec.getDepart().getId() + " --> " + prec.getArrivee().getId());
 		}
