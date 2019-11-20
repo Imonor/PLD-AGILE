@@ -1,7 +1,7 @@
 package model;
 
 public class Course extends Precedence {
-	
+
 	private int duree;
 
 	public Course(Intersection depart, Intersection arrivee, int duree) {
