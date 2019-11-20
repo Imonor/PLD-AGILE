@@ -2,21 +2,21 @@ package model;
 
 public class Intersection {
 
-	private long id;
+	private String id;
 	private double longitude;
 	private double latitude;
 
-	public Intersection(long id, double latitude, double longitude) {
+	public Intersection(String id, double latitude, double longitude) {
 		this.id = id;
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -2,18 +2,19 @@ package model;
 
 public class Troncon {
 
+	private Intersection origine;
+	private Intersection destination;
+	private String nomRue;
+	private double longueur;
+
 	public Troncon(Intersection origine, Intersection destination, String nomRue, double longueur) {
-		if("".equals(nomRue)) nomRue = "UNKNOWN";
+		if ("".equals(nomRue))
+			nomRue = "UNKNOWN";
 		this.origine = origine;
 		this.destination = destination;
 		this.nomRue = nomRue;
 		this.longueur = longueur;
 	}
-
-	private Intersection origine;
-	private Intersection destination;
-	private String nomRue;
-	private double longueur;
 
 	public Intersection getOrigine() {
 		return origine;
