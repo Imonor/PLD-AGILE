@@ -6,22 +6,22 @@ import java.util.LinkedList;
 public class Tournee {
 	
 	private int duree;
-	private List<Chemin> plusCourtChemin;
+	private List<Chemin> plusCourteTournee;
 	
-	public Tournee(List<Chemin> plusCourtChemin) {
-		for(Chemin currentChemin : plusCourtChemin) {
+	public Tournee(List<Chemin> plusCourteTournee) {
+		for(Chemin currentChemin : plusCourteTournee) {
 			duree+=currentChemin.getDuree();
 		}
-		this.plusCourtChemin=plusCourtChemin;
+		this.plusCourteTournee=plusCourteTournee;
 	}
 	
-	public Tournee(List<Chemin> plusCourtChemin, int duree) {
+	public Tournee(List<Chemin> plusCourteTournee, int duree) {
 		this.duree=duree;
-		this.plusCourtChemin=plusCourtChemin;
+		this.plusCourteTournee=plusCourteTournee;
 	}
 	
 	public Tournee() {
-		plusCourtChemin = new LinkedList<Chemin>();
+		plusCourteTournee = new LinkedList<Chemin>();
 		duree = 0;
 	}
 	
@@ -29,12 +29,12 @@ public class Tournee {
 		return duree;
 	}
 	
-	public List<Chemin> getPlusCourtChemin () {
-		return plusCourtChemin;
+	public List<Chemin> getPlusCourteTournee () {
+		return plusCourteTournee;
 	}
 	
-	public void addChemlin (Chemin chemin) {
-		plusCourtChemin.add(chemin);
+	public void addChemin (Chemin chemin) {
+		plusCourteTournee.add(chemin);
 		duree+=chemin.getDuree();
 	}
 }
