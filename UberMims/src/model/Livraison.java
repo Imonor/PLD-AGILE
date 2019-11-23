@@ -2,19 +2,29 @@ package model;
 
 public class Livraison extends Precedence {
 
-	private int duree;
+	private int dureeEnlevement;
+	private int dureeLivraison;
 
-	public Livraison(Intersection depart, Intersection arrivee, int duree) {
-		super(depart, arrivee);
-		this.duree = duree;
+	public Livraison(Intersection pointAvant, Intersection pointAprès, int dureeEnlevement, int dureeLivraison) {
+		super(pointAvant, pointAprès);
+		this.dureeEnlevement = dureeEnlevement;
+		this.dureeLivraison = dureeLivraison;
 	}
 
-	public int getDuree() {
-		return duree;
+	public int getDureeEnlevement() {
+		return dureeEnlevement;
+	}
+	
+	public int getDureeLivraison() {
+		return dureeLivraison;
 	}
 
-	public void setDuree(int duree) {
-		this.duree = duree;
+	public void setDureeLivraions(int dureeLivraison) {
+		this.dureeEnlevement = dureeLivraison;
 	}
 
+	public void setDureeEnlevement(int dureeEnlevement) {
+		this.dureeEnlevement = dureeEnlevement;
+	}
+	
 }

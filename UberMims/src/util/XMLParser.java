@@ -2,7 +2,7 @@ package util;
 
 import org.w3c.dom.*;
 
-import model.Course;
+import model.Livraison;
 import model.Intersection;
 import model.Troncon;
 import model.Plan;
@@ -73,7 +73,7 @@ public class XMLParser {
 	         int minutes = Integer.parseInt(heureTab[1]);
 	         int secondes = Integer.parseInt(heureTab[2]);
 	         tournee.setHeureDepart(LocalTime.of(heures, minutes, secondes));
-	         tournee.setDepart(plan.getIntersections().get(entrepot.getAttribute("adresse")));
+	         tournee.setDepot(plan.getIntersections().get(entrepot.getAttribute("adresse")));
 	         
 	         NodeList nLivraisons = doc.getElementsByTagName("livraison");
 	         
@@ -81,13 +81,14 @@ public class XMLParser {
 	        	 Element elem = (Element)nLivraisons.item(i);
 	        	 Intersection depart = plan.getIntersections().get(elem.getAttribute("adresseEnlevement"));
 	        	 Intersection arrivee = plan.getIntersections().get(elem.getAttribute("adresseLivraison"));
-	        	 int duree = Integer.parseInt(elem.getAttribute("dureeLivraison")) + Integer.parseInt(elem.getAttribute("dureeEnlevement"));
-	        	 
-	        	 Course course = new Course(depart, arrivee, duree);
-	        	 precedences.add(course);
+	        	 int dureeLivraison = Integer.parseInt(elem.getAttribute("dureeLivraison"));
+	        	 int dureeEnlevement = Integer.parseInt(elem.getAttribute("dureeEnlevement"));
+	        			 
+	        	 Livraison livraison = new Livraison(depart, arrivee, dureeLivraison, dureeEnlevement);
+	        	 precedences.add(livraison);
 	         }
 	         
-	         tournee.setListePrecedences(precedences);
+	         tournee.setContraintes(precedences);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -99,8 +100,8 @@ public class XMLParser {
 	public static void main(String[] args) {
 		Plan plan = chargerPlan("fichiersXML2019/grandPlan.xml");
 		ContraintesTournee tournee = chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
-		for(Precedence prec: tournee.getListePrecedences()) {
-			System.out.println(prec.getDepart().getId() + " --> " + prec.getArrivee().getId());
+		for(Precedence prec: tournee.getContraintes()) {
+			System.out.println(prec.getPointAvant().getId() + " --> " + prec.getPointApres().getId());
 		}
 		
 	}

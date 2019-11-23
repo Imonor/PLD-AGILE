@@ -2,29 +2,29 @@ package model;
 
 public class Precedence {
 
-	public Precedence(Intersection depart, Intersection arrivee) {
+	public Precedence(Intersection pointAvant, Intersection pointApres) {
 		super();
-		this.depart = depart;
-		this.arrivee = arrivee;
+		this.pointAvant = pointAvant;
+		this.pointApres = pointApres;
 	}
 
-	private Intersection depart;
-	private Intersection arrivee;
+	private Intersection pointAvant;
+	private Intersection pointApres;
 
-	public Intersection getDepart() {
-		return depart;
+	public Intersection getPointAvant() {
+		return pointAvant;
 	}
 
-	public void setDepart(Intersection depart) {
-		this.depart = depart;
+	public void setPointAvant(Intersection pointAvant) {
+		this.pointAvant = pointAvant;
 	}
 
-	public Intersection getArrivee() {
-		return arrivee;
+	public Intersection getPointApres() {
+		return pointApres;
 	}
 
-	public void setArrivee(Intersection arrivee) {
-		this.arrivee = arrivee;
+	public void setpointApres(Intersection pointApres) {
+		this.pointApres = pointApres;
 	}
 
 }

@@ -6,16 +6,16 @@ import java.time.LocalTime;
 public class ContraintesTournee {
 
 	private LocalTime heureDepart;
-	private Intersection depart;
-	private List<Precedence> listePrecedences;
+	private Intersection depot;
+	private List<Precedence> contraintes;
 
 	public ContraintesTournee() {
 	}
 
-	public ContraintesTournee(LocalTime heureDepart, Intersection depart, List<Precedence> listePrecedences) {
+	public ContraintesTournee(LocalTime heureDepart, Intersection depot, List<Precedence> contraintes) {
 		this.heureDepart = heureDepart;
-		this.depart = depart;
-		this.listePrecedences = listePrecedences;
+		this.depot = depot;
+		this.contraintes = contraintes;
 	}
 
 	public LocalTime getHeureDepart() {
@@ -26,29 +26,29 @@ public class ContraintesTournee {
 		this.heureDepart = heureDepart;
 	}
 
-	public Intersection getDepart() {
-		return depart;
+	public Intersection getDepot() {
+		return depot;
 	}
 
-	public void setDepart(Intersection depart) {
-		this.depart = depart;
+	public void setDepot(Intersection depot) {
+		this.depot = depot;
 	}
 
-	public List<Precedence> getListePrecedences() {
-		return listePrecedences;
+	public List<Precedence> getContraintes() {
+		return contraintes;
 	}
 
-	public void setListePrecedences(List<Precedence> listePrecedences) {
-		this.listePrecedences = listePrecedences;
+	public void setContraintes(List<Precedence> contraintes) {
+		this.contraintes = contraintes;
 	}
 
 	public void addPrecedence(Precedence prec) {
-		this.listePrecedences.add(prec);
+		this.contraintes.add(prec);
 	}
 
 	public void removePrecedence(Precedence prec) {
-		if (this.listePrecedences.contains(prec))
-			this.listePrecedences.remove(prec);
+		if (this.contraintes.contains(prec))
+			this.contraintes.remove(prec);
 	}
 
 }
