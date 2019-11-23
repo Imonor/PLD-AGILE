@@ -1,10 +1,10 @@
 package model;
 
-public class Course extends Precedence {
+public class Livraison extends Precedence {
 
 	private int duree;
 
-	public Course(Intersection depart, Intersection arrivee, int duree) {
+	public Livraison(Intersection depart, Intersection arrivee, int duree) {
 		super(depart, arrivee);
 		this.duree = duree;
 	}
