@@ -5,11 +5,11 @@ import model.*;
 
 public class Controleur {
 	
-	private Chemin[][] plusCourtsChemins;
+	public static Chemin[][] plusCourtsChemins;
 	private XMLParser parser;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
-	private Plan plan;
+	public static Plan plan;
 	//private CmdList cmdList;
 	//private Dijkstra uniteCalculChemins
 	
