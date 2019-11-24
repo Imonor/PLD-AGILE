@@ -12,7 +12,7 @@ import model.ContraintesTournee;
 
 public abstract class TemplateTSP implements TSP{
 	
-	HashMap<Intersection, List<Intersection>> predecesseurs = new HashMap<Intersection, List<Intersection>>();
+	LinkedList<Triplet> dependences = new LinkedList<Triplet>();
 	
 	//ContraintesTournee - juste pour test
 	//Constructeur sans parametres normalement
@@ -21,11 +21,22 @@ public abstract class TemplateTSP implements TSP{
 		//A changer ici - prendre les contraintes depuis la classe singleton
 		Iterator<Precedence> it = (Iterator<Precedence>) contraintes.getContraintes().iterator();
 		while(it.hasNext()) {
-			Precedence p = it.next();
-			if (!predecesseurs.containsKey(p.getPointAvant())) {
-				predecesseurs.put(p.getPointAvant(), new ArrayList<>());
+			
+			//Initialisation liste dependences
+			Precedence p = (Precedence) it.next();
+			boolean found = false;
+			Iterator<Triplet> itDepend = (Iterator<Triplet>) dependences.iterator();
+			while(itDepend.hasNext()&&!found) {
+				if( ((Triplet) itDepend.next()).getIntersection() == p.getPointAvant()){
+					found = true;
+				}
 			}
-			predecesseurs.get(p.getPointAvant()).add(p.getPointApres());
+			if (!found) {
+				dependences.add(new Triplet(p.getPointAvant(), new ArrayList<>(), false));
+			}else {
+				((Triplet) itDepend.next()).getPredecesseurs().add(p.getPointApres());
+			}
+			
 		}
 		
 	}

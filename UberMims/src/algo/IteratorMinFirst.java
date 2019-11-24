@@ -1,8 +1,9 @@
 package algo;
 
 import model.Chemin;
+import model.Intersection;
 
-public class IteratorMinFirst implements Iterator<Chemin>{
+public class IteratorMinFirst implements Iterator<Intersection>{
 
 	@Override
 	public boolean hasNext() {
@@ -11,13 +12,13 @@ public class IteratorMinFirst implements Iterator<Chemin>{
 	}
 
 	@Override
-	public Chemin next() {
+	public Intersection next() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void remove(Chemin... args) {
+	public void remove(Intersection... args) {
 		// TODO Auto-generated method stub
 		
 	}
