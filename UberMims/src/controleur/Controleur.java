@@ -5,7 +5,7 @@ import model.*;
 
 public class Controleur {
 	
-	public static Chemin[][] plusCourtsChemins;
+	public Chemin[][] plusCourtsChemins;
 	private XMLParser parser;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
