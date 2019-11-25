@@ -3,7 +3,6 @@ package model;
 public class Precedence {
 
 	public Precedence(Intersection pointAvant, Intersection pointApres) {
-		super();
 		this.pointAvant = pointAvant;
 		this.pointApres = pointApres;
 	}
