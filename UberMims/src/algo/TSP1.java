@@ -8,23 +8,19 @@ import model.ContraintesTournee;
 
 public class TSP1 extends TemplateTSP{
 
-	//ContraintesTournee - juste pour test
-	//Constructeur sans parametres normalement
 	public TSP1(ContraintesTournee contraintes) {
 		super(contraintes);
 		// TODO Auto-generated constructor stub
 	}
-
-	//Bound - premiere approche : 0
+	
 	@Override
-	public int bound() {
-		return 0;
+	protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
+		return new IteratorSeq(nonVus, sommetCrt);
 	}
 
 	@Override
-	public Chemin iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
+		return 0;
 	}
 
 }
