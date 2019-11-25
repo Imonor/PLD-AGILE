@@ -5,8 +5,8 @@ public class Livraison extends Precedence {
 	private int dureeEnlevement;
 	private int dureeLivraison;
 
-	public Livraison(Intersection pointAvant, Intersection pointAprès, int dureeEnlevement, int dureeLivraison) {
-		super(pointAvant, pointAprès);
+	public Livraison(Intersection pointAvant, Intersection pointApres, int dureeEnlevement, int dureeLivraison) {
+		super(pointAvant, pointApres);
 		this.dureeEnlevement = dureeEnlevement;
 		this.dureeLivraison = dureeLivraison;
 	}

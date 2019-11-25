@@ -7,9 +7,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
 import controleur.Controleur;
-import modeles.DemandeLivraison;
-import modeles.Plan;
-import modeles.Tournee;
+import model.Livraison;
+import model.Plan;
+import model.Tournee;
 
 public class AffichagePlan extends JFrame{
 
@@ -18,6 +18,8 @@ public class AffichagePlan extends JFrame{
 	 */
 	
 	private Plan plan;
+	private Livraison livraison;
+	private Tournee tournee;
 	
 	
 	//Taille du plan
@@ -33,7 +35,7 @@ public class AffichagePlan extends JFrame{
 		this.tournee = tournee;
 
 
-		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	}
 
 	
