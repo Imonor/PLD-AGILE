@@ -1,41 +1,67 @@
 package algo;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import model.Chemin;
 import model.Intersection;
-import model.Precedence;
 import model.ContraintesTournee;
+import model.PointEnlevement;
+import model.PointLivraison;
+import model.Tournee;
 
 public abstract class TemplateTSP implements TSP{
 	
-	private Integer[] meilleureSolution;
+	private String[] meilleureSolution;
 	private int coutMeilleureSolution = 0;
 	private Boolean tempsLimiteAtteint;
 	
-	public TemplateTSP(ContraintesTournee contraintes) {
+	/*public TemplateTSP(ContraintesTournee contraintes) {
 		
-	}
+	}*/
 	
 	public Boolean getTempsLimiteAtteint(){
 		return tempsLimiteAtteint;
 	}
 	
-	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree){
+	public void chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins, int[] duree){
 		tempsLimiteAtteint = false;
 		coutMeilleureSolution = Integer.MAX_VALUE;
-		meilleureSolution = new Integer[nbSommets];
-		ArrayList<Integer> nonVus = new ArrayList<Integer>();
-		for (int i=1; i<nbSommets; i++) nonVus.add(i);
-		ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
-		vus.add(0); // le premier sommet visite est 0
-		branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
+		int nbSommets = contraintes.getPointsEnlevement().size()+contraintes.getPointsLivraison().size();//initialisation du nombre de sommets a visiter
+		meilleureSolution = new String[nbSommets];
+		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
+		List<String> dispos = new LinkedList<String>();
+		ArrayList<String> indispos = new ArrayList<String>(nbSommets);
+		for(PointEnlevement intersectionDispo : contraintes.getPointsEnlevement()) dispos.add(intersectionDispo.getId()); // Marquage des points d'enlevement comme potentiellement visitables
+		for(PointLivraison intersectionIndispo : contraintes.getPointsLivraison()) indispos.add(intersectionIndispo.getId()); // Marqueges des point de livraison comme non visitables
+		List<String> vus = new LinkedList<String>();
+		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
+		
+		//branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
+		
+		cheminDebile(contraintes.getDepot().getId(), indispos, dispos, vus,plusCourtsChemins);
 	}
 	
-	public Integer getMeilleureSolution(int i){
+	//Peut-etre inutile
+	private Map<String, Map<String, Integer>> extraitCouts(Map<String,Map<String, Chemin>> aTraiter, List<PointLivraison> aLivrer, List<PointEnlevement> aEnlever)	{
+		Map<String, Map<String, Integer>> couts = new HashMap();
+		for(PointEnlevement currentEnlevement : aEnlever) {
+			Map<String, Integer> coutsIntermediaraies = new HashMap();
+			for (PointLivraison currentLivraison : aLivrer) {
+				coutsIntermediaraies.put(currentLivraison.getId(),
+						aTraiter.get(currentEnlevement.getId()).get(currentLivraison.getId()).getDuree());
+			}
+			couts.put(currentEnlevement.getId(),
+					coutsIntermediaraies);
+		}
+		return couts;
+	}
+	
+	public String getMeilleureSolution(int i){
 		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
 			return null;
 		return meilleureSolution[i];
@@ -77,27 +103,36 @@ public abstract class TemplateTSP implements TSP{
 	 * @param tpsDebut : moment ou la resolution a commence
 	 * @param tpsLimite : limite de temps pour la resolution
 	 */	
-	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite){
-		 if (System.currentTimeMillis() - tpsDebut > tpsLimite){
-			 tempsLimiteAtteint = true;
-			 return;
+//	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite){
+//		 if (System.currentTimeMillis() - tpsDebut > tpsLimite){
+//			 tempsLimiteAtteint = true;
+//			 return;
+//		 }
+//	    if (nonVus.size() == 0){ // tous les sommets ont ete visites
+//	    	coutVus += cout[sommetCrt][0];
+//	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
+//	    		vus.toArray(meilleureSolution);
+//	    		coutMeilleureSolution = coutVus;
+//	    	}
+//	    } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
+//	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
+//	        while (it.hasNext()){
+//	        	Integer prochainSommet = it.next();
+//	        	vus.add(prochainSommet);
+//	        	nonVus.remove(prochainSommet);
+//	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
+//	        	vus.remove(prochainSommet);
+//	        	nonVus.add(prochainSommet);
+//	        }	    
+//	    }
+//	}
+	 
+	 Tournee cheminDebile(String sommetCrt, LinkedList<String> dispos, ArrayList<String> indispos, LinkedList<String> vus, Map<String,Map<String, Chemin>> cout){
+		 Tournee tourneeDebile = new Tournee();
+		 while(!dispos.isEmpty()) {
+			 String current = dispos.poll();
+			 
 		 }
-	    if (nonVus.size() == 0){ // tous les sommets ont ete visites
-	    	coutVus += cout[sommetCrt][0];
-	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
-	    		vus.toArray(meilleureSolution);
-	    		coutMeilleureSolution = coutVus;
-	    	}
-	    } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
-	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
-	        while (it.hasNext()){
-	        	Integer prochainSommet = it.next();
-	        	vus.add(prochainSommet);
-	        	nonVus.remove(prochainSommet);
-	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
-	        	vus.remove(prochainSommet);
-	        	nonVus.add(prochainSommet);
-	        }	    
-	    }
+		 return tourneeDebile;		 
 	}
 }

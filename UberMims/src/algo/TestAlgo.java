@@ -5,7 +5,7 @@ import java.util.List;
 
 import model.ContraintesTournee;
 import model.Intersection;
-import model.Precedence;
+//import model.Precedence;
 
 public class TestAlgo {
 	

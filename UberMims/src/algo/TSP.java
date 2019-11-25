@@ -24,7 +24,7 @@ public interface TSP {
 	 * @param i
 	 * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
 	 */
-	public Integer getMeilleureSolution(int i);
+	public String getMeilleureSolution(int i);
 	
 	/** 
 	 * @return la duree de la solution calculee par chercheSolution
