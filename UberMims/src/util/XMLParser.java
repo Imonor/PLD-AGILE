@@ -96,14 +96,5 @@ public class XMLParser {
 		
 		return tournee;
 	}
-	
-	public static void main(String[] args) {
-		Plan plan = chargerPlan("fichiersXML2019/grandPlan.xml");
-		ContraintesTournee tournee = chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
-		for(Precedence prec: tournee.getContraintes()) {
-			System.out.println(prec.getPointAvant().getId() + " --> " + prec.getPointApres().getId());
-		}
-		
-	}
 
 }

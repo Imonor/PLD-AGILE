@@ -1,17 +1,26 @@
 package controleur;
 
+import model.ContraintesTournee;
+import model.Livraison;
+
 public class CmdAjoutLivraison implements Commande {
+	
+	private ContraintesTournee tournee;
+	private Livraison livraison;
+	
+	public CmdAjoutLivraison(ContraintesTournee t, Livraison l) {
+		this.tournee = t;
+		this.livraison = l;
+	}
 
 	@Override
 	public void doCode() {
-		// TODO Auto-generated method stub
-
+		tournee.addPrecedence(livraison);
 	}
 
 	@Override
 	public void undoCode() {
-		// TODO Auto-generated method stub
-
+		tournee.removePrecedence(livraison);
 	}
 
 }
