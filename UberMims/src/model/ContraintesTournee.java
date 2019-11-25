@@ -7,15 +7,17 @@ public class ContraintesTournee {
 
 	private LocalTime heureDepart;
 	private Intersection depot;
-	private List<Precedence> contraintes;
+	private List<PointEnlevement> pointsEnlevement;
+	private List<PointLivraison> pointsLivraison;
 
 	public ContraintesTournee() {
 	}
 
-	public ContraintesTournee(LocalTime heureDepart, Intersection depot, List<Precedence> contraintes) {
+	public ContraintesTournee(LocalTime heureDepart, Intersection depot, List<PointEnlevement> enls, List<PointLivraison> livs) {
 		this.heureDepart = heureDepart;
 		this.depot = depot;
-		this.contraintes = contraintes;
+		this.pointsEnlevement = enls;
+		this.pointsLivraison = livs;
 	}
 
 	public LocalTime getHeureDepart() {
@@ -34,21 +36,20 @@ public class ContraintesTournee {
 		this.depot = depot;
 	}
 
-	public List<Precedence> getContraintes() {
-		return contraintes;
+	public List<PointEnlevement> getPointsEnlevement() {
+		return pointsEnlevement;
 	}
 
-	public void setContraintes(List<Precedence> contraintes) {
-		this.contraintes = contraintes;
+	public void setPointsEnlevement(List<PointEnlevement> pointsEnlevement) {
+		this.pointsEnlevement = pointsEnlevement;
 	}
 
-	public void addPrecedence(Precedence prec) {
-		this.contraintes.add(prec);
+	public List<PointLivraison> getPointsLivraison() {
+		return pointsLivraison;
 	}
 
-	public void removePrecedence(Precedence prec) {
-		if (this.contraintes.contains(prec))
-			this.contraintes.remove(prec);
+	public void setPointsLivraison(List<PointLivraison> pointsLivraison) {
+		this.pointsLivraison = pointsLivraison;
 	}
 
 }

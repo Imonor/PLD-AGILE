@@ -48,7 +48,7 @@ public class Fenetre extends JFrame{
 	    this.setResizable(false);
 	}
 	
-	public static void main(String[] args){       
-	    Fenetre fen = new Fenetre();
-	}       
+//	public static void main(String[] args){       
+//	    Fenetre fen = new Fenetre();
+//	}       
 }
