@@ -31,20 +31,20 @@ public class Controleur {
 		// à implémenter
 	}
 	
-	public void ajouterLivraison (Livraison livraison) {
-		CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
-		cmdListe.addCommande(cmd);
-	}
-	
-	public void supprimerLivraison (Livraison livraison) {
-		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, livraison);
-		cmdListe.addCommande(cmd);
-	}
-	
-	public void modifierOrdrePassage (Precedence precedence) {
-		CmdModifOrdre cmd = new CmdModifOrdre(contraintes, precedence);
-		cmdListe.addCommande(cmd);
-	}
+//	public void ajouterLivraison (Livraison livraison) {
+//		CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
+//		cmdListe.addCommande(cmd);
+//	}
+//	
+//	public void supprimerLivraison (Livraison livraison) {
+//		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, livraison);
+//		cmdListe.addCommande(cmd);
+//	}
+//	
+//	public void modifierOrdrePassage (Precedence precedence) {
+//		CmdModifOrdre cmd = new CmdModifOrdre(contraintes, precedence);
+//		cmdListe.addCommande(cmd);
+//	}
 	
 	public void undo() {
 		cmdListe.undo();
