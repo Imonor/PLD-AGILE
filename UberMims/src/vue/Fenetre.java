@@ -14,6 +14,9 @@ public class Fenetre extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Color backgroundColor = new Color(191,252,251);
+	
+	private final int mapHeight = 600;
+	private final int mapWidth = 1000;
 
 	
 	private JButton boutonChargement = new JButton("Charger le plan de la ville" );
@@ -30,6 +33,13 @@ public class Fenetre extends JFrame{
 	    pan.setLayout(null);
 	    pan.setBackground(backgroundColor);
 	    pan.setSize(1200, 800);
+	    boutonChargement.setBounds(400,350,400,100);
+	    
+	    JPanel planPanel = new JPanel();
+	    //Définition de sa couleur de fond
+	    planPanel.setLayout(null);
+	    planPanel.setBackground(backgroundColor);
+	    planPanel.setSize(1200, 800);
 	    boutonChargement.setBounds(400,350,400,100);
 	    
 	    pan.add(boutonChargement);
