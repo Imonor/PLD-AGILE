@@ -29,21 +29,62 @@ public abstract class TemplateTSP implements TSP{
 	}
 	
 	public void chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins, int[] duree){
+		
 		tempsLimiteAtteint = false;
 		coutMeilleureSolution = Integer.MAX_VALUE;
-		int nbSommets = contraintes.getPointsEnlevement().size()+contraintes.getPointsLivraison().size();//initialisation du nombre de sommets a visiter
-		meilleureSolution = new String[nbSommets];
+		
+//		int nbSommets = contraintes.getPointsEnlevement().size()+contraintes.getPointsLivraison().size();//initialisation du nombre de sommets a visiter
+//		meilleureSolution = new String[nbSommets];
+		
 		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
-		List<String> dispos = new LinkedList<String>();
-		ArrayList<String> indispos = new ArrayList<String>(nbSommets);
-		for(PointEnlevement intersectionDispo : contraintes.getPointsEnlevement()) dispos.add(intersectionDispo.getId()); // Marquage des points d'enlevement comme potentiellement visitables
-		for(PointLivraison intersectionIndispo : contraintes.getPointsLivraison()) indispos.add(intersectionIndispo.getId()); // Marqueges des point de livraison comme non visitables
-		List<String> vus = new LinkedList<String>();
-		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
+		
+		//HashMap avec la position dans le tableau et l'id de l'intersection correspondantes
+		HashMap<Integer, String> positions = new HashMap<Integer, String>();
+		Iterator<PointEnlevement> itEnlev = (Iterator<PointEnlevement>)contraintes.getPointsEnlevement().iterator();
+		Iterator<PointLivraison> itLiv = (Iterator<PointLivraison>)contraintes.getPointsLivraison().iterator();
+		
+		//Remplissage HashMap
+		int nbSommets = 0;
+		while(itEnlev.hasNext()) {
+			Intersection intersec = (Intersection) itEnlev.next();
+			positions.put(nbSommets, intersec.getId());
+			nbSommets++;
+		}
+		while(itLiv.hasNext()) {
+			Intersection intersec = (Intersection) itLiv.next();
+			positions.put(nbSommets, intersec.getId());
+			nbSommets++;
+		}
+		
+		meilleureSolution = new String[nbSommets];
+		
+		//Initialisation tableaux avec les elements aux positions attribuees plus haut
+		boolean[] dispos = new boolean[nbSommets];
+		boolean[] vus = new boolean[nbSommets];
+		
+		for(int i = 0; i<nbSommets; ++i) {
+			vus[i] = false;
+			
+			//Les points d'enlevement sont les premiers dans le tableau
+			if( i < (nbSommets/2) ) {
+				dispos[i] = true;
+			}else {
+				dispos[i] = false;
+			}
+		}
+		
+		
+			
+//		List<String> dispos = new LinkedList<String>();
+//		ArrayList<String> indispos = new ArrayList<String>(nbSommets);
+//		for(PointEnlevement intersectionDispo : contraintes.getPointsEnlevement()) dispos.add(intersectionDispo.getId()); // Marquage des points d'enlevement comme potentiellement visitables
+//		for(PointLivraison intersectionIndispo : contraintes.getPointsLivraison()) indispos.add(intersectionIndispo.getId()); // Marqueges des point de livraison comme non visitables
+//		List<String> vus = new LinkedList<String>();
+//		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
 		
 		//branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
 		
-		cheminDebile(contraintes.getDepot().getId(), indispos, dispos, vus,plusCourtsChemins);
+//		cheminDebile(contraintes.getDepot().getId(), indispos, dispos, vus, plusCourtsChemins);
 	}
 	
 	//Peut-etre inutile
@@ -127,12 +168,12 @@ public abstract class TemplateTSP implements TSP{
 //	    }
 //	}
 	 
-	 Tournee cheminDebile(String sommetCrt, LinkedList<String> dispos, ArrayList<String> indispos, LinkedList<String> vus, Map<String,Map<String, Chemin>> cout){
-		 Tournee tourneeDebile = new Tournee();
-		 while(!dispos.isEmpty()) {
-			 String current = dispos.poll();
-			 
-		 }
-		 return tourneeDebile;		 
-	}
+//	 Tournee cheminDebile(String sommetCrt, LinkedList<String> dispos, ArrayList<String> indispos, LinkedList<String> vus, Map<String,Map<String, Chemin>> cout){
+//		 Tournee tourneeDebile = new Tournee();
+//		 while(!dispos.isEmpty()) {
+//			 String current = dispos.poll();
+//			 
+//		 }
+//		 return tourneeDebile;		 
+//	}
 }
