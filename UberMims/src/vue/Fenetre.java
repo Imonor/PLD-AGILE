@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -37,7 +38,7 @@ public class Fenetre extends JFrame{
 	private double coefX;
 	private double coefY;
 	
-	private JButton boutonChargement = new JButton("Charger le plan de la ville" );
+	private JButton boutonChargementPlan = new JButton("Charger le plan de la ville" );
 	private Plan plan;
 
 	public Fenetre(){
@@ -45,34 +46,60 @@ public class Fenetre extends JFrame{
 	    this.setSize(1200, 800);
 	    this.setLocationRelativeTo(null);
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-	    
-//	    //Instanciation d'un objet JPanel
-//	    JPanel pan = new JPanel();
-//	    //Définition de sa couleur de fond
-//	    pan.setLayout(null);
-//	    pan.setBackground(backgroundColor);
-//	    pan.setSize(1200, 800);
-//	    boutonChargement.setBounds(400,350,400,100);
-//	    
-//	    pan.add(boutonChargement);
-//	    pan.setBackground(backgroundColor);
-//	    pan.setSize(1200, 800);
-	    
-	    creerPlan(this);
-    	      
-	    //this.setContentPane(pan);    
+
 	    this.setVisible(true);
 	    this.setResizable(false);
-	    this.setLocationRelativeTo(null);  
 	    this.setLayout(new BorderLayout());
-	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    //Instanciation d'un objet JPanel
+	    JPanel pan = new JPanel();
+	    pan.setLayout(null);
+	    pan.setBackground(backgroundColor);
+	    pan.setSize(1200, 800);
+	    boutonChargementPlan.setBounds(400,350,400,200);
+	    pan.add(boutonChargementPlan);
+		this.setContentPane(pan);    
+	    
+		boutonChargementPlan.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == boutonChargementPlan) {
+					//Affichage du navigateur de choix de fichier
+					String planFileName;
+					String planPath;
+					JFileChooser choix = new JFileChooser();
+					int boiteDialogue = choix.showOpenDialog(boutonChargementPlan);
+					
+					//Si un fichier a ete choisi (utilisateur a cliquÃ© sur OK)
+					if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
+						planFileName = choix.getSelectedFile().getName();
+						planPath = choix.getSelectedFile().getAbsolutePath();
+						
+						//Chargement du fichier
+						// A RAJOUTER A LA DEUXIEME ITERATION : VERIFICATION DU FICHIER 
+						plan = XMLParser.chargerPlan(planPath);
+						
+						boutonChargementPlan.setVisible(false);
+
+						//Affichage du plan :
+						 //creerPlan();	
+					}
+				}
+			}
+		});
+	    
 	}
+	
+	
+	
+	
+	
 	
 	public void creerPlan(JFrame frame){
 		 String path = "H:\\Mes documents\\PLDAgile\\PLD-AGILE\\UberMims\\fichiersXML2019\\moyenPlan.xml";
 		 plan = XMLParser.chargerPlan(path);
 		    
-		 //Création du panel plan
+		 //Cr?ation du panel plan
 		 JPanel panel = new JPanel();
 		 panel.setSize(500, 500);
 		 Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -99,6 +126,7 @@ public class Fenetre extends JFrame{
         //g2d.draw(new Line2D.Float(21.50f, 132.50f, 459.50f, 132.50f));
 	}
 	
+	
 	public void miseALEchelle(){
 		
 		double lol = plan.getLattitudeMax();
@@ -108,6 +136,9 @@ public class Fenetre extends JFrame{
 			coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax() - plan.getLongitudeMin());
 		}
 	}
+	
+	
+	
 	@Override
 	public void paint(Graphics g) {
         super.paint(g);
