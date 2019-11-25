@@ -15,6 +15,7 @@ public class CmdListe {
 	public void addCommande(Commande commande) {
 		liste.add(commande);
 		i = liste.size()-1;
+		commande.doCode();
 	}
 	
 	public void undo() {
