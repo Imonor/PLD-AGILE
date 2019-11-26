@@ -224,7 +224,7 @@ public class Fenetre extends JFrame {
 
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee) {
-		JLabel jlabel = new JLabel("<html> <center> Itin�raire propos� : <br><br>");
+		JLabel jlabel = new JLabel("<html> <center> Itineraire propose : <br><br>");
 		jlabel.setFont(new Font("Verdana",1,10));
 		panInformation.add(jlabel);
 		panInformation.setLayout(null);
