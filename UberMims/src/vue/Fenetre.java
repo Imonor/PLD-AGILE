@@ -57,9 +57,8 @@ public class Fenetre extends JFrame {
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
-
 	private JPanel panChargePlan = new JPanel();
-	private JPanel panChargeLivraison = new JPanel();
+	private JPanel panChargeTournee = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
 
 	private JPanel panHautGauche = new JPanel();
@@ -79,7 +78,8 @@ public class Fenetre extends JFrame {
 		// BOUTONS
 		EcouteurBoutons ecouteurBoutons = new EcouteurBoutons(controleur, this);
 		JButton boutonChargementPlan = new JButton("Charger le plan de la ville");
-		JButton boutonChargementLivraison = new JButton("Charger une livraison");	
+		JButton boutonChargementTournee = new JButton("Charger une demande de tournee");	
+		JButton boutonChargementPlan2 = new JButton("Charger un autre plan de la ville");	
 
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -119,20 +119,25 @@ public class Fenetre extends JFrame {
 		panChargePlan.setLayout(null);
 		panChargePlan.setBackground(backgroundJaune);
 		panChargePlan.setBounds(0, 0, 400, 200);
+		//bouton chargement autre plan
+		boutonChargementPlan2.setVisible(true);
+		boutonChargementPlan2.setBounds(50,75,300,75);
+		panChargePlan.add(boutonChargementPlan2);
+		boutonChargementPlan2.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargePlan);
 
-		// Panel de CHARGEMENT LIVRAISON : partie qui contiendra le bouton de chargement
+		// Panel de CHARGEMENT TOURNEE : partie qui contiendra le bouton de chargement
 		// d'une livraison
-		panChargeLivraison.setVisible(true);
-		panChargeLivraison.setLayout(null);
-		panChargeLivraison.setBounds(400, 0, 400, 200);
-		panChargeLivraison.setBackground(backgroundOrange);
-			//bouton chargement livraison
-		boutonChargementLivraison.setVisible(true);
-		boutonChargementLivraison.setBounds(40,50,200,50);
-		panChargeLivraison.add(boutonChargementLivraison);
-		boutonChargementLivraison.addActionListener(ecouteurBoutons);
-		panGauche.add(panChargeLivraison);
+		panChargeTournee.setVisible(true);
+		panChargeTournee.setLayout(null);
+		panChargeTournee.setBounds(400, 0, 400, 200);
+		panChargeTournee.setBackground(backgroundOrange);
+			//bouton chargement tournee
+		boutonChargementTournee.setVisible(true);
+		boutonChargementTournee.setBounds(50,75,300,75);
+		panChargeTournee.add(boutonChargementTournee);
+		boutonChargementTournee.addActionListener(ecouteurBoutons);
+		panGauche.add(panChargeTournee);
 
 		
 		//Panel PLAN
@@ -166,7 +171,7 @@ public class Fenetre extends JFrame {
 	}
 
 	// Passage a la page principale apres le chargement d'un plan
-	public void afficherDetailLivraison() {
+	public void afficherDetailTournee() {
 		// this.setContentPane(nouveau pan);
 		// fenetre.repaint();
 	}
