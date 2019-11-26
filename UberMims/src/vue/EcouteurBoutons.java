@@ -27,7 +27,12 @@ public class EcouteurBoutons implements ActionListener{
 	private JPanel panAccueil;
 	private JPanel panPrincipal;
 	private JPanel panPlan;
-	
+	private String cheminFichierPlan ;
+	private String nomFichierPlan;
+	private String cheminFichierPlan2 ;
+	private String nomFichierPlan2;
+	private String cheminFichierTournee ;
+	private String nomFichierTournee;
 	//Constructeur
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
@@ -41,13 +46,15 @@ public class EcouteurBoutons implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
 		panAccueil = fenetre.getPanAccueil();
+		
+
+		
 		//panPrincipal = fenetre.getPanPrincipal();
 		switch (e.getActionCommand()) {
 			case "Charger le plan de la ville":
 				System.out.println("Chargement plan de la ville");
 				
-				String cheminFichierPlan ;
-				String nomFichierPlan;
+				
 				JFileChooser choixPlan = new JFileChooser();
 				int boiteDialogue = choixPlan.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
@@ -58,40 +65,15 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
-					Plan plan = XMLParser.chargerPlan(cheminFichierPlan,600, 800);
-					fenetre.setPlan(plan);
+					controleur.chargerPlan(cheminFichierPlan,600, 800);
+					fenetre.setPlan(Controleur.plan);
 					fenetre.afficherPanPrincipal();
-				}
-			break;
-		
-			case "Charger une demande de tournee":
-				System.out.println("Chargement d'une demande de tournee");
-				String cheminFichierTournee ;
-				String nomFichierTournee;
-				JFileChooser choixTournee = new JFileChooser();
-				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
-				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
-				
-				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) {
-					nomFichierTournee = choixTournee.getSelectedFile().getName();
-					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
-					Plan plan = fenetre.getPlan();
-					ContraintesTournee contraintesTournee = XMLParser.chargerContraintesTournee(cheminFichierTournee, plan);
-					Dijkstra d = new Dijkstra();
-					Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(plan.getIntersections());
-					TSP1 tsp1 = new TSP1();
-					Tournee tournee = tsp1.chercheSolution(0, contraintesTournee, plusCourtsChemins);
-					//controleur.creerPlan(cheminFichierPlan);
-					fenetre.afficherDetailTournee(tournee);
-
 				}
 			break;
 			
 			case "Charger un autre plan de la ville":
 				System.out.println("Chargement d'un autre plan de la ville");
-				String cheminFichierPlan2 ;
-				String nomFichierPlan2;
+				
 				JFileChooser choixPlan2 = new JFileChooser();
 				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
@@ -104,9 +86,42 @@ public class EcouteurBoutons implements ActionListener{
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 					Plan plan = XMLParser.chargerPlan(cheminFichierPlan2,600, 800);
 					fenetre.setPlan(plan);
+					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
 				}
 			break;
+			
+			
+			case "Charger une demande de tournee":
+				System.out.println("Chargement d'une demande de tournee");
+				JFileChooser choixTournee = new JFileChooser();
+				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
+				// 2EME ITERATION : FILTRER LES FICHIERS XML
+				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				
+				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
+					nomFichierTournee = choixTournee.getSelectedFile().getName();
+					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
+					//controleur.creerPlan(cheminFichierPlan);
+					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.afficherBoutonCalcul();
+
+				}
+			break;
+			
+			case "Calculer une tournee":
+				System.out.println("Calculer une tournee");
+					controleur.chargerTournee(cheminFichierTournee);
+
+					controleur.calculerTournee();
+					fenetre.setTournee(controleur.getTournee());
+					
+					System.out.println("Affichage des rues d'une demande de tournee");
+					fenetre.afficherInfos();
+					fenetre.afficherDetailTournee(fenetre.getTournee());
+			break;
+			
 			}
 		}
 	}
