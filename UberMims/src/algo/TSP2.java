@@ -1,20 +1,35 @@
-//package algo;
-//
-//import model.Chemin;
-//
-//public class TSP2 extends TemplateTSP{
-//
-//	@Override
-//	public int bound() {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	@Override
-//	public Chemin iterator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//}
+package algo;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+
+import model.Chemin;
+import model.ContraintesTournee;
+import model.Intersection;
+import model.Tournee;
+
+public class TSP2 extends TemplateTSP{
+
+	public TSP2() {
+		super();
+	}
+	
+	@Override
+	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		return new IteratorMinFirst(restants, intersections, vuDispo, plusCourtsChemins);
+	}
+
+	@Override
+	protected int bound() {
+		return 0;
+	}
+
+	@Override
+	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		// TODO Auto-generated method stub
+		return super.chercheSolution(tpsLimite, contraintes, plusCourtsChemins);
+	}
+
+
+}

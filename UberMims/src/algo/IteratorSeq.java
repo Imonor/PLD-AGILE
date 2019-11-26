@@ -3,7 +3,9 @@ package algo;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Iterator;
+import java.util.Map;
 
+import model.Chemin;
 import model.Intersection;
 import model.PointEnlevement;
 
@@ -18,7 +20,7 @@ public class IteratorSeq implements Iterator<String>{
 	 * @param nonVus
 	 * @param sommetCrt
 	 */
-	public IteratorSeq(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo){
+	public IteratorSeq(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		this.intersections = intersections;
 		this.vuDispo = vuDispo;
 		this.restants = restants;
@@ -44,12 +46,6 @@ public class IteratorSeq implements Iterator<String>{
 				restants--;
 			}
 		}
-		
-//		System.out.println("---ITERATEUR---");
-//		for (HashMap.Entry<String, Paire> iterator : vuDispo.entrySet()) {
-//		    System.out.println( iterator.getKey()+" : dispo="+iterator.getValue().getDispo() + "- vu=" + iterator.getValue().getVu() );
-//		}
-//		System.out.println("---FIN ITERATEUR---");
 		
 		if(trouve) {
 			return cle;
