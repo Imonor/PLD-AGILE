@@ -1,60 +1,61 @@
 package algo;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map.Entry;
+import java.util.Iterator;
 
-import model.Chemin;
 import model.Intersection;
+import model.PointEnlevement;
 
-public class IteratorSeq implements Iterator<Triplet>{
+public class IteratorSeq implements Iterator<String>{
 	
-	private Intersection current;
+	HashMap<String, Intersection> intersections;
+	HashMap<String, Paire> vuDispo;
+	private int restants;
 	
-	private LinkedList<Triplet> dependences;
-	
-	public IteratorSeq(LinkedList<Triplet> dependeces) {
-		this.dependences = dependences;
-		current = dependeces.getFirst().getIntersection();
-		
+	/**
+	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
+	 * @param nonVus
+	 * @param sommetCrt
+	 */
+	public IteratorSeq(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo){
+		this.intersections = intersections;
+		this.vuDispo = vuDispo;
+		this.restants = restants;
 	}
-	
 	
 	@Override
 	public boolean hasNext() {
-		return current != null;
+		return restants > 0;
 	}
-
 	@Override
-	public Iterator<Triplet> next() {
+	public String next() {
 		
-		//found1 et found2 sont utilises pour avoir l'iterateur a it.next().next()
-		Iterator<Triplet> it = (Iterator<Triplet>) dependences.iterator();
-		boolean found1 = false;
-		boolean found2 = false;
-		while(!found1&&!found2) {
-			if(found1) {
-				found2 = true;
-			}
-			if( ((Triplet) it.next()).getIntersection() == current){
-				found1 = true;
-				((Triplet) it.next()).setVisite(true);
+		boolean trouve = false;
+		Iterator<Entry<String, Paire>> it = vuDispo.entrySet().iterator();
+		String cle = "";
+		
+		//Recherche du premier noeud dans la HashMap qui est disponible et non vu
+		while (it.hasNext() && !trouve) {
+			HashMap.Entry<String, Paire> entry = (HashMap.Entry<String, Paire>) it.next();
+			if( entry.getValue().getDispo() == true && entry.getValue().getVu() == false) {
+				trouve = true;
+				cle = entry.getKey();
+				restants--;
 			}
 		}
 		
-		return it.next();
+		if(trouve) {
+			return cle;
+		}else {
+			return "";
+		}
 	}
 	
-	@Override
-	public void remove(Triplet... triplet) {
-		Iterator<Triplet> it = (Iterator<Triplet>) dependences.iterator();
-		boolean found = false;
-		while(!found) {
-			if( ((Triplet) it.next()).getIntersection() == current){
-				found = true;
-				
-			}
-		}
+	
+	public void remove(String... args) {
 	}
+	
+	
 
 }

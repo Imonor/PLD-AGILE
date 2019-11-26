@@ -1,20 +1,24 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Intersection {
 
 	private String id;
 	private double longitude;
 	private double latitude;
-	private List<Troncon> tronconsSortants;
+	private Map<String, Troncon> tronconsSortants;
+	
+	public Intersection() {}
 
 	public Intersection(String id, double latitude, double longitude) {
 		this.id = id;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		tronconsSortants = new ArrayList<>();
+		tronconsSortants = new HashMap<>();
 	}
 
 	public String getId() {
@@ -41,12 +45,13 @@ public class Intersection {
 		this.latitude = latitude;
 	}
 
-	public List<Troncon> getTronconsSortants() {
+	public Map<String, Troncon> getTronconsSortants() {
 		return tronconsSortants;
 	}
 
-	public void addTroncon(Troncon tronc) {
-		this.tronconsSortants.add(tronc);
+	public void addTroncon(String idArrivee, Troncon tronc) {
+		if(!tronconsSortants.containsKey(idArrivee))
+			this.tronconsSortants.put(idArrivee, tronc);
 	}
 
 }

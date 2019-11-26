@@ -2,66 +2,206 @@ package algo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 
 import model.Chemin;
 import model.Intersection;
-import model.Precedence;
 import model.ContraintesTournee;
+import model.PointEnlevement;
+import model.PointLivraison;
+import model.Tournee;
 
 public abstract class TemplateTSP implements TSP{
 	
-	LinkedList<Triplet> dependences = new LinkedList<Triplet>();
+	private String[] meilleureSolution;
+	private int coutMeilleureSolution = 0;
+	private Boolean tempsLimiteAtteint;
 	
-	//ContraintesTournee - juste pour test
-	//Constructeur sans parametres normalement
-	public TemplateTSP(ContraintesTournee contraintes) {
+	//Constructeur par defaut
+	public TemplateTSP() {
+	}
+	
+	public Boolean getTempsLimiteAtteint(){
+		return tempsLimiteAtteint;
+	}
+	
+	public void chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins, int[] duree){
 		
-		//A changer ici - prendre les contraintes depuis la classe singleton
-		Iterator<Precedence> it = (Iterator<Precedence>) contraintes.getContraintes().iterator();
+//		tempsLimiteAtteint = false;
+//		coutMeilleureSolution = Integer.MAX_VALUE;
+//		meilleureSolution = new String[nbSommets];
+		
+//		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
+		
+		//HashMap avec l'id et le point pour pouvoir recuperer le point a partir de l'id
+		HashMap<String, Intersection> intersections = new HashMap<String, Intersection>();
+		Iterator<PointEnlevement> itEnlev = (Iterator<PointEnlevement>)contraintes.getPointsEnlevement().iterator();
+		Iterator<PointLivraison> itLiv = (Iterator<PointLivraison>)contraintes.getPointsLivraison().iterator();
+		
+		//Remplissage HashMap
+		int nbSommets = 0;
+		while(itEnlev.hasNext()) {
+			Intersection intersec = (Intersection) itEnlev.next();
+			intersections.put(intersec.getId(), intersec);
+			nbSommets++;
+		}
+		while(itLiv.hasNext()) {
+			Intersection intersec = (Intersection) itLiv.next();
+			intersections.put(intersec.getId(), intersec);
+			nbSommets++;
+		}
+		
+//		meilleureSolution = new String[nbSommets];
+		
+		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
+		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
+		
+		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
+		    if( iterator.getValue() instanceof PointEnlevement ) {
+		    	vuDispo.put( iterator.getKey(), new Paire(true, false) );
+		    }else {
+		    	vuDispo.put( iterator.getKey(), new Paire(false, false) );
+		    }
+		}
+		
+		//Mettre premier noeud comme deja visite
+		HashMap.Entry<String,Paire> first = vuDispo.entrySet().iterator().next();
+		first.getValue().setDispo(false);
+		first.getValue().setVu(true);
+		
+		Tournee tournee = new Tournee();
+		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
+		
+		//A TESTER ICI L'OBJET TOURNEE CREE
+		//
+		//
+		
+//		List<String> vus = new LinkedList<String>();
+//		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
+//		branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
+		
+	}
+	
+	
+	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		
+		Iterator<String> it = iterator(restants, intersections, vuDispo);
+		String noeudPreced = null;
+		
 		while(it.hasNext()) {
+			String noeudSuivant = it.next();
 			
-			//Initialisation liste dependences
-			Precedence p = (Precedence) it.next();
-			boolean found = false;
-			Iterator<Triplet> itDepend = (Iterator<Triplet>) dependences.iterator();
-			while(itDepend.hasNext()&&!found) {
-				if( ((Triplet) itDepend.next()).getIntersection() == p.getPointAvant()){
-					found = true;
-				}
+			vuDispo.get(noeudSuivant).setDispo(false);
+			vuDispo.get(noeudSuivant).setVu(true);
+			
+			//Mettre dispo le pt de livraison si celui actuel est un pt d'enlevement
+			if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
+				String cleTmp = intersections.get(noeudSuivant).getId();
+				vuDispo.get(cleTmp).setDispo(true);
 			}
-			if (!found) {
-				dependences.add(new Triplet(p.getPointAvant(), new ArrayList<>(), false));
+			
+			//Creation d'un chemin et l'ajout a la tournee
+			Intersection depart;
+			if(noeudPreced != null) {
+				depart = intersections.get(noeudPreced);
 			}else {
-				((Triplet) itDepend.next()).getPredecesseurs().add(p.getPointApres());
+				depart = intersections.get(first);
 			}
+			Intersection arrivee = intersections.get(noeudSuivant);
+			List<Intersection> listeInter =  plusCourtsChemins.get(depart).get(arrivee).getIntersections();
+			int duree = plusCourtsChemins.get(depart).get(arrivee).getDuree();
+			Chemin chemin = new Chemin(listeInter, duree);
+			tournee.addChemin(chemin);
 			
+			noeudPreced = noeudSuivant;
 		}
 		
 	}
 	
 	
-	@Override
-	public boolean chercherSolution() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public LinkedList<Chemin> getSolution() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getCoutSolution() {
-		// TODO Auto-generated method stub
-		return 0;
+//	//Peut-etre inutile
+//	private Map<String, Map<String, Integer>> extraitCouts(Map<String,Map<String, Chemin>> aTraiter, List<PointLivraison> aLivrer, List<PointEnlevement> aEnlever)	{
+//		Map<String, Map<String, Integer>> couts = new HashMap();
+//		for(PointEnlevement currentEnlevement : aEnlever) {
+//			Map<String, Integer> coutsIntermediaraies = new HashMap();
+//			for (PointLivraison currentLivraison : aLivrer) {
+//				coutsIntermediaraies.put(currentLivraison.getId(),
+//						aTraiter.get(currentEnlevement.getId()).get(currentLivraison.getId()).getDuree());
+//			}
+//			couts.put(currentEnlevement.getId(),
+//					coutsIntermediaraies);
+//		}
+//		return couts;
+//	}
+	
+	
+	public String getMeilleureSolution(int i){
+		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
+			return null;
+		return meilleureSolution[i];
 	}
 	
-	public abstract int bound();
+	public int getCoutMeilleureSolution(){
+		return coutMeilleureSolution;
+	}
 	
-	public abstract Chemin iterator();
+	/**
+	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
+	 * @param sommetCourant
+	 * @param nonVus : tableau des sommets restant a visiter
+	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
+	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
+	 * @return une borne inferieure du cout des permutations commencant par sommetCourant, 
+	 * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
+	 */
+	protected abstract int bound();
+	
+	/**
+	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
+	 * @param sommetCrt
+	 * @param nonVus : tableau des sommets restant a visiter
+	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
+	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
+	 * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
+	 */
+	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo);
+	
+	/**
+	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
+	 * @param sommetCrt le dernier sommet visite
+	 * @param nonVus la liste des sommets qui n'ont pas encore ete visites
+	 * @param vus la liste des sommets visites (y compris sommetCrt)
+	 * @param coutVus la somme des couts des arcs du chemin passant par tous les sommets de vus + la somme des duree des sommets de vus
+	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
+	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
+	 * @param tpsDebut : moment ou la resolution a commence
+	 * @param tpsLimite : limite de temps pour la resolution
+	 */	
+//	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite){
+//		 if (System.currentTimeMillis() - tpsDebut > tpsLimite){
+//			 tempsLimiteAtteint = true;
+//			 return;
+//		 }
+//	    if (nonVus.size() == 0){ // tous les sommets ont ete visites
+//	    	coutVus += cout[sommetCrt][0];
+//	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
+//	    		vus.toArray(meilleureSolution);
+//	    		coutMeilleureSolution = coutVus;
+//	    	}
+//	    } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
+//	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
+//	        while (it.hasNext()){
+//	        	Integer prochainSommet = it.next();
+//	        	vus.add(prochainSommet);
+//	        	nonVus.remove(prochainSommet);
+//	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
+//	        	vus.remove(prochainSommet);
+//	        	nonVus.add(prochainSommet);
+//	        }	    
+//	    }
+//	}
 
 }
