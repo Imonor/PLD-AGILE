@@ -113,7 +113,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Calculer une tournee":
 				System.out.println("Calculer une tournee");
-					controleur.chargerTournee(cheminFichierTournee);
+					//controleur.chargerTournee(cheminFichierTournee);
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
 					
