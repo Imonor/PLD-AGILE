@@ -249,6 +249,8 @@ public class Fenetre extends JFrame {
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
 	public void afficherBoutonCalcul() {
+		panInformation.setVisible(false);
+		panInformation.removeAll();
 		panDroite2.setVisible(true);
 		this.setContentPane(panPrincipal);
 		this.repaint();
