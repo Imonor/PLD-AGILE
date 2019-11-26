@@ -35,8 +35,8 @@ public class Fenetre extends JFrame{
 	private final int HAUTEUR_FENETRE = 800;
 	
 	
-	private final int LARGEUR_PLAN = 600;
-	private final int HAUTEUR_PLAN = 1000;
+	private final int LARGEUR_PLAN = 750;
+	private final int HAUTEUR_PLAN = 1100;
 
 	private JButton boutonChargementPlan = new JButton("Charger le plan de la ville" );
 	private Plan plan;

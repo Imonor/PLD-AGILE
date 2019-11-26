@@ -43,15 +43,18 @@ public class XMLParser {
 				latMin = (latitude < latMin) ? latitude : latMin;
 				longMin = (longitude < longMin) ? longitude : longMin;
 			}
+			double ratioHauteur = screenHeight / (latMax - latMin);
+			double ratioLargeur = screenWidth / (longMax - longMin);
+			double ratio = (ratioLargeur < ratioHauteur) ? ratioLargeur : ratioHauteur; 
 
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
 				String id = elem.getAttribute("id");
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
-
-				int longitudeEcran = (int) ((longitude - longMin) * (screenWidth / (longMax - longMin)));
-				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * screenHeight / (latMax - latMin));
+				
+				int longitudeEcran = (int) ((longitude - longMin) * ratio);
+				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratio);
 
 				Intersection inter = new Intersection(id, latitudeEcran, longitudeEcran);
 				intersections.put(id, inter);

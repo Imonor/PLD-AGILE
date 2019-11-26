@@ -17,6 +17,7 @@ import controleur.Controleur;
 import model.Intersection;
 import model.Plan;
 import model.Tournee;
+import model.Troncon;
 import util.XMLParser;
 
 public class AffichagePlan extends JFrame{
@@ -46,28 +47,25 @@ public class AffichagePlan extends JFrame{
 		    
 		 this.plan = plan;
 		 this.fenetre = fenetre;
-		 
-//		 Creation du panel plan
-//		 JPanel panel = new JPanel();
-//		 panel.setSize(500, 500);
-//		 Border blackline = BorderFactory.createLineBorder(Color.black);
-//		 panel.setBorder(blackline);
-//		    	      
-//		 //this.setContentPane(pan);    
-//		 fenetre.getContentPane().add(panel, BorderLayout.CENTER);
 	}
 	
 	public void dessinerPlan(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-		//miseALEchelle();
-		int i = 10;
 	    for (Intersection intersection : plan.getIntersections().values()) {
 	    	//g2d.drawLine(120+i, 50, 360, 50);
-	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLatitude(),  intersection.getLongitude(), 2, 2);
+	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(),intersection.getLatitude(),2, 2);
 	    	g2d.draw(shape);
 	    	g2d.fill(shape);
-	    	i+=10;
+	    	for (Troncon troncon : intersection.getTronconsSortants().values()) {
+	    		Intersection destination = troncon.getDestination();
+	    		//Line2D.Double ligne = new Line2D
+				g2d.drawLine((int)intersection.getLongitude(),(int)intersection.getLatitude(),
+						(int)destination.getLongitude() ,(int)destination.getLatitude() );
+			}
+	    	
 		}
+	    
+	    
 
         //g2d.draw(new Line2D.Double(59.2d, 99.8d, 419.1d, 99.8d));
         //g2d.draw(new Line2D.Float(21.50f, 132.50f, 459.50f, 132.50f));
