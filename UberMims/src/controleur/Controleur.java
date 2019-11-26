@@ -1,26 +1,34 @@
 package controleur;
 
 import util.XMLParser;
+
+import java.util.List;
+import java.util.Map;
+
+import algo.Dijkstra;
+import algo.TSP1;
 import model.*;
 
 public class Controleur {
 	
-	public Chemin[][] plusCourtsChemins;
+	public  Map<String, Map<String, Chemin>> plusCourtsChemins;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
 	public static Plan plan;
 	private CmdListe cmdListe;
-	//private Dijkstra uniteCalculChemins
+	private Dijkstra uniteCalculChemins;
 	
-	public Controleur (String filePathPlan, String filePathTournee) {
+	public Controleur (String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
 		tournee = new Tournee ();
-		plan = XMLParser.chargerPlan(filePathPlan);
+		uniteCalculChemins = new Dijkstra();
+		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		cmdListe = new CmdListe();
 	}
 	
-	public void chargerPlan(String filePathPlan) {
-		plan = XMLParser.chargerPlan(filePathPlan);
+	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
+		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 	}
 	
 	public void chargerTournee(String filePathTournee) {
@@ -28,7 +36,17 @@ public class Controleur {
 	}
 	
 	public void calculerTournee() {
-		// à implémenter
+		TSP1 tsp = new TSP1();
+		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
+		for (Chemin c : tournee.getPlusCourteTournee()) {
+			List<Intersection> inters =  c.getIntersections();
+			for(int i = 0; i< inters.size() -1; ++i) {
+				Intersection inter = inters.get(i);
+				Troncon tronc = inter.getTronconsSortants().get(inters.get(i+1).getId());
+				System.out.print(tronc.getNomRue() + ", ");
+			}
+			System.out.println();
+		}
 	}
 	
 //	public void ajouterLivraison (Livraison livraison) {
@@ -52,6 +70,11 @@ public class Controleur {
 	
 	public void redo () {
 		cmdListe.redo();
+	}
+	
+	public static void main(String[] args) {
+		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,800);
+		contr.calculerTournee();
 	}
 
 }
