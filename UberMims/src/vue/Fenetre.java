@@ -34,9 +34,10 @@ public class Fenetre extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Color backgroundColor1 = new Color(191, 252, 251);
-	private Color backgroundColor2 = new Color(254, 201, 172);
-	private Color backgroundColor3 = new Color(252, 151, 107);
+	private Color backgroundBleuCiel = new Color(191, 252, 251);
+	private Color backgroundTurquoise = new Color(25, 174, 186);
+	private Color backgroundJaune = new Color(226, 179, 72);
+	private Color backgroundOrange = new Color(229, 138, 86);
 
 	private final int LARGEUR_PLAN = 1200;
 	private final int HAUTEUR_PLAN = 800;
@@ -44,11 +45,10 @@ public class Fenetre extends JFrame {
 	private double coefX;
 	private double coefY;
 
-	private Color backgroundColor = new Color(191,252,251);
+	private Color backgroundColor = new Color(191, 252, 251);
 	private final int LARGEUR_FENETRE = 1200;
 	private final int HAUTEUR_FENETRE = 800;
-	
-	
+
 	private Plan plan;
 	private AffichagePlan affichagePlan;
 
@@ -58,8 +58,10 @@ public class Fenetre extends JFrame {
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
-	private JPanel panHautGauche = new JPanel();
+	private JPanel panChargePlan = new JPanel();
 	private JPanel panPlan = new JPanel();
+	private JPanel panChargeLivraison = new JPanel();
+	private JPanel panInfoLivraison = new JPanel();
 
 	public Fenetre() {
 
@@ -79,7 +81,7 @@ public class Fenetre extends JFrame {
 
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
-		panAccueil.setBackground(backgroundColor1);
+		panAccueil.setBackground(backgroundBleuCiel);
 		panAccueil.setSize(1200, 800);
 		panAccueil.setVisible(true);
 		boutonChargementPlan.setBounds(400, 350, 400, 200);
@@ -90,45 +92,53 @@ public class Fenetre extends JFrame {
 		// Panel Presentation : affichage de la page globale apres chargement de plan
 		panPrincipal.setVisible(false);
 		panPrincipal.setLayout(null);
-		panPrincipal.setBackground(backgroundColor2);
+		panPrincipal.setBackground(backgroundBleuCiel);
 		panPrincipal.setSize(1200, 800);
 
-		// Panel de Droite : partie qui contiendra le chargement de livraison et les
+		// Panel de DROITE : partie qui contiendra le chargement de livraison et les
 		// informations de la livraison
 		panDroite.setVisible(true);
-		panDroite.setLayout(new FlowLayout());
-		panDroite.setBounds(700, 0, 500, 800);
-		panDroite.setBackground(Color.red);
-		// boutonChargementLivraison.setBounds(400,350,400,200);
-		// panDroite.add(boutonChargementLivraison);
-		// this.setContentPane(panPrincipal);
-		// boutonChargementLivraison.addActionListener(ecouteurBoutons);*/
+		panDroite.setLayout(null);
+		panDroite.setBounds(800, 0, 400, 800);
+		panDroite.setBackground(backgroundTurquoise);
 		panPrincipal.add(panDroite);
 
-		// Panel de Gauche : partie qui contiendra le plan et le nom du plan+ bouton
+		// Panel de GAUCHE : partie qui contiendra le plan et le nom du plan+ bouton
 		// chargement d'un autre plan
 		panGauche.setVisible(true);
 		panGauche.setLayout(null);
-		panGauche.setBackground(backgroundColor3);
-		panGauche.setBounds(0, 100, 700, 700);
+		panGauche.setBackground(Color.white);
+		panGauche.setBounds(0, 0, 800, 800);
 		panPrincipal.add(panGauche);
 
-		// Panel haut dessus du plan : partie qui contiendra le plan et le nom du plan+
-		// bouton chargement d'un autre plan
-		panHautGauche.setVisible(true);
-		panHautGauche.setLayout(null);
-		panHautGauche.setBackground(backgroundColor2);
-		panHautGauche.setBounds(0, 0, 700, 35);
-		panGauche.add(panHautGauche);
+		// Panel CHARGEMENT PLAN : haut dessus du plan : partie qui contiendra le plan
+		// et le nom du plan+ bouton chargement d'un autre plan
+		panChargePlan.setVisible(true);
+		panChargePlan.setLayout(null);
+		panChargePlan.setBackground(backgroundJaune);
+		panChargePlan.setBounds(0, 0, 400, 200);
+		panGauche.add(panChargePlan);
 
-		// Panel de plan : partie qui contiendra le plan et le nom du plan+ bouton
+		// Panel de CHARGEMENT LIVRAISON : partie qui contiendra le bouton de chargement
+		// d'une livraison
+		panChargeLivraison.setVisible(true);
+		panChargeLivraison.setLayout(null);
+		panChargeLivraison.setBounds(400, 0, 400, 200);
+		panChargeLivraison.setBackground(backgroundOrange);
+			//bouton chargement livraison
+		boutonChargementLivraison.setVisible(true);
+		boutonChargementLivraison.setBounds(40,50,200,50);
+		panChargeLivraison.add(boutonChargementLivraison);
+		boutonChargementLivraison.addActionListener(ecouteurBoutons);
+		panGauche.add(panChargeLivraison);
+
+		// Panel de PLAN : partie qui contiendra le plan et le nom du plan+ bouton
 		// chargement d'un autre plan
 		panPlan.setVisible(true);
 		panPlan.setLayout(null);
-		panPlan.setBackground(backgroundColor1);
-		panPlan.setBounds(0, 35, 700, 765);
+		panPlan.setBackground(backgroundBleuCiel);
+		panPlan.setBounds(0, 200, 800, 600);
 		panGauche.add(panPlan);
-
 	}
 
 	public JPanel getPanAccueil() {
@@ -156,22 +166,20 @@ public class Fenetre extends JFrame {
 		// fenetre.repaint();
 	}
 
-
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
-	    
-	}	
-	
+
+	}
+
 	@Override
 	public void paint(Graphics g) {
-        super.paint(g);
-        if(plan != null)
-        	affichagePlan.dessinerPlan(g);
-    }
-	
+		super.paint(g);
+		if (plan != null)
+			affichagePlan.dessinerPlan(g);
+	}
+
 	@Override
-	public void update( Graphics g )
-	{
-		paint( g );
+	public void update(Graphics g) {
+		paint(g);
 	}
 }
