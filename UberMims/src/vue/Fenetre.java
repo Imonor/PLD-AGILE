@@ -255,9 +255,9 @@ public class Fenetre extends JFrame {
 	public void afficherInfos() {
 		panDroite2.setVisible(false);
 		panInformation.setVisible(true);
-		System.out.println("Droite2 non visible");
+		//System.out.println("Droite2 non visible");
 		this.setContentPane(panPrincipal);
-		this.repaint();
+		//this.repaint();
 	}
 	
 	
