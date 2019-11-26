@@ -3,11 +3,13 @@ package algo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Iterator;
 
 import model.Chemin;
 import model.ContraintesTournee;
 import model.Intersection;
+import model.Tournee;
 
 public class TSP1 extends TemplateTSP{
 
@@ -26,9 +28,10 @@ public class TSP1 extends TemplateTSP{
 	}
 
 	@Override
-	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree) {
+	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins) {
 		// TODO Auto-generated method stub
-		
+		return super.chercheSolution(tpsLimite, contraintes, plusCourtsChemins);
 	}
+
 
 }

@@ -127,7 +127,8 @@ public class Fenetre extends JFrame {
 		panChargeLivraison.setLayout(null);
 		panChargeLivraison.setBounds(400, 0, 400, 200);
 		panChargeLivraison.setBackground(backgroundOrange);
-			//bouton chargement livraison
+			
+		//bouton chargement livraison
 		boutonChargementLivraison.setVisible(true);
 		boutonChargementLivraison.setBounds(40,50,200,50);
 		panChargeLivraison.add(boutonChargementLivraison);
@@ -156,6 +157,7 @@ public class Fenetre extends JFrame {
 		this.plan = plan;
 		this.affichagePlan.SetPlan(plan);
 	}
+	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
@@ -173,7 +175,6 @@ public class Fenetre extends JFrame {
 
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
-
 	}
 
 	

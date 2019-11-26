@@ -28,7 +28,7 @@ public abstract class TemplateTSP implements TSP{
 		return tempsLimiteAtteint;
 	}
 	
-	public void chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins, int[] duree){
+	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		
 //		tempsLimiteAtteint = false;
 //		coutMeilleureSolution = Integer.MAX_VALUE;
@@ -42,7 +42,8 @@ public abstract class TemplateTSP implements TSP{
 		Iterator<PointLivraison> itLiv = (Iterator<PointLivraison>)contraintes.getPointsLivraison().iterator();
 		
 		//Remplissage HashMap
-		int nbSommets = 0;
+		intersections.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		int nbSommets = 1;
 		while(itEnlev.hasNext()) {
 			Intersection intersec = (Intersection) itEnlev.next();
 			intersections.put(intersec.getId(), intersec);
@@ -67,17 +68,22 @@ public abstract class TemplateTSP implements TSP{
 		    }
 		}
 		
-		//Mettre premier noeud comme deja visite
+		//Mettre premier noeud comme deja visite - ici le premier est l'entrepot
 		HashMap.Entry<String,Paire> first = vuDispo.entrySet().iterator().next();
 		first.getValue().setDispo(false);
 		first.getValue().setVu(true);
+//		if( intersections.get(first.getKey()) instanceof PointEnlevement ) {
+//			String cleTmp = ((PointEnlevement)intersections.get(first.getKey())).getIdLivraison();
+//			vuDispo.get(cleTmp).setDispo(true);
+//		}
+		
 		
 		Tournee tournee = new Tournee();
 		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
+//		testerCalcul(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
 		
-		//A TESTER ICI L'OBJET TOURNEE CREE
-		//
-		//
+		
+		return tournee;
 		
 //		List<String> vus = new LinkedList<String>();
 //		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
@@ -90,7 +96,7 @@ public abstract class TemplateTSP implements TSP{
 		
 		Iterator<String> it = iterator(restants, intersections, vuDispo);
 		String noeudPreced = null;
-		
+
 		while(it.hasNext()) {
 			String noeudSuivant = it.next();
 			
@@ -99,7 +105,7 @@ public abstract class TemplateTSP implements TSP{
 			
 			//Mettre dispo le pt de livraison si celui actuel est un pt d'enlevement
 			if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
-				String cleTmp = intersections.get(noeudSuivant).getId();
+				String cleTmp = ((PointEnlevement)intersections.get(noeudSuivant)).getIdLivraison();
 				vuDispo.get(cleTmp).setDispo(true);
 			}
 			
@@ -111,32 +117,51 @@ public abstract class TemplateTSP implements TSP{
 				depart = intersections.get(first);
 			}
 			Intersection arrivee = intersections.get(noeudSuivant);
-			List<Intersection> listeInter =  plusCourtsChemins.get(depart).get(arrivee).getIntersections();
-			int duree = plusCourtsChemins.get(depart).get(arrivee).getDuree();
+			List<Intersection> listeInter =  plusCourtsChemins.get(depart.getId()).get(arrivee.getId()).getIntersections();
+			int duree = plusCourtsChemins.get(depart.getId()).get(arrivee.getId()).getDuree();
 			Chemin chemin = new Chemin(listeInter, duree);
 			tournee.addChemin(chemin);
 			
 			noeudPreced = noeudSuivant;
 		}
 		
+		Intersection depart = intersections.get(noeudPreced);
+		List<Intersection> listeInter =  plusCourtsChemins.get(depart.getId()).get(first).getIntersections();
+		int duree = plusCourtsChemins.get(depart.getId()).get(first).getDuree();
+		Chemin chemin = new Chemin(listeInter, duree);
+		tournee.addChemin(chemin);
+		
 	}
 	
-	
-//	//Peut-etre inutile
-//	private Map<String, Map<String, Integer>> extraitCouts(Map<String,Map<String, Chemin>> aTraiter, List<PointLivraison> aLivrer, List<PointEnlevement> aEnlever)	{
-//		Map<String, Map<String, Integer>> couts = new HashMap();
-//		for(PointEnlevement currentEnlevement : aEnlever) {
-//			Map<String, Integer> coutsIntermediaraies = new HashMap();
-//			for (PointLivraison currentLivraison : aLivrer) {
-//				coutsIntermediaraies.put(currentLivraison.getId(),
-//						aTraiter.get(currentEnlevement.getId()).get(currentLivraison.getId()).getDuree());
+//	protected void testerCalcul(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+//			
+//		Iterator<String> it = iterator(restants, intersections, vuDispo);
+//		String noeudPreced = null;
+//		
+//		while(it.hasNext()) {
+//			String noeudSuivant = it.next();
+//			
+//			vuDispo.get(noeudSuivant).setDispo(false);
+//			vuDispo.get(noeudSuivant).setVu(true);
+//			
+//			if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
+//				String cleTmp = ((PointEnlevement) intersections.get(noeudSuivant)).getIdLivraison();
+//				vuDispo.get(cleTmp).setDispo(true);
 //			}
-//			couts.put(currentEnlevement.getId(),
-//					coutsIntermediaraies);
+//			
+//			//Creation d'un chemin et l'ajout a la tournee
+//			Intersection depart;
+//			if(noeudPreced != null) {
+//				System.out.println("preced="+noeudPreced+"; actuel="+noeudSuivant);
+//			}else {
+//				System.out.println("preced="+first+"; actuel="+noeudSuivant);
+//			}
+//			
+//			noeudPreced = noeudSuivant;
 //		}
-//		return couts;
+//		
 //	}
-	
+		
 	
 	public String getMeilleureSolution(int i){
 		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
