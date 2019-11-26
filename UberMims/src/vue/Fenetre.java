@@ -49,7 +49,6 @@ public class Fenetre extends JFrame {
 	private final int HAUTEUR_FENETRE = 800;
 	
 	private Plan plan;
-	private AffichagePlan affichagePlan;
 
 	private Controleur controleur;
 	// Panels
@@ -59,6 +58,7 @@ public class Fenetre extends JFrame {
 	private JPanel panDroite = new JPanel();
 	private JPanel panHautGauche = new JPanel();
 	private JPanel panPlan = new JPanel();
+	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 
 	public Fenetre() {
 
@@ -74,7 +74,7 @@ public class Fenetre extends JFrame {
 		// BOUTONS
 		EcouteurBoutons ecouteurBoutons = new EcouteurBoutons(controleur, this);
 		JButton boutonChargementPlan = new JButton("Charger le plan de la ville");
-		JButton boutonChargementLivraison = new JButton("Charger une livraison");
+		JButton boutonChargementLivraison = new JButton("Charger une livraison");	
 
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -121,12 +121,18 @@ public class Fenetre extends JFrame {
 		panGauche.add(panHautGauche);
 
 		// Panel de plan : partie qui contiendra le plan et le nom du plan+ bouton
-		// chargement d'un autre plan
-		panPlan.setVisible(true);
-		panPlan.setLayout(null);
-		panPlan.setBackground(backgroundColor1);
-		panPlan.setBounds(0, 35, 700, 765);
-		panGauche.add(panPlan);
+		// chargement d'un autre plan		
+//		panPlan.setVisible(true);
+//		panPlan.setLayout(null);
+//		panPlan.setBackground(backgroundColor1);
+//		panPlan.setBounds(0, 35, 700, 765);
+//		panGauche.add(panPlan);
+		
+		affichagePlan.setVisible(true);
+		affichagePlan.setLayout(null);
+		affichagePlan.setBackground(backgroundColor1);	
+		affichagePlan.setBounds(0, 35, 700, 765);
+		panGauche.add(affichagePlan);
 
 	}
 
@@ -137,13 +143,15 @@ public class Fenetre extends JFrame {
 	public JPanel getPanPrincipal() {
 		return panPrincipal;
 	}
-
+	
+	public void setPlan(Plan plan){
+		this.plan = plan;
+		this.affichagePlan.SetPlan(plan);
+	}
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
 		panPrincipal.setVisible(true);
-		// panGauche.setVisible(true);
-		// panDroite.setVisible(true);
 		this.setContentPane(panPrincipal);
 
 		this.repaint();
@@ -163,8 +171,11 @@ public class Fenetre extends JFrame {
 	@Override
 	public void paint(Graphics g) {
         super.paint(g);
-        if(plan != null)
-        	affichagePlan.dessinerPlan(g);
+//        if(plan != null)
+//        {
+//        	affichagePlan = new AffichagePlan(this,plan);
+//        	affichagePlan.dessinerPlan(g);
+//        }
     }
 	
 	@Override

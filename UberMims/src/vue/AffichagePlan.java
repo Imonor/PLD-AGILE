@@ -20,7 +20,7 @@ import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
 
-public class AffichagePlan extends JFrame{
+public class AffichagePlan extends JPanel{
 
 	/**
 	 * Page d'accueil : chargement du plan
@@ -41,30 +41,34 @@ public class AffichagePlan extends JFrame{
 	//Controleur du plan
 	private Controleur controleur;
 	
-	public AffichagePlan(Fenetre fenetre, Plan plan) {
-		 //String path = "H:\\Mes documents\\PLDAgile\\PLD-AGILE\\UberMims\\fichiersXML2019\\moyenPlan.xml";
-		 //plan = XMLParser.chargerPlan(path);
-		    
+	
+	public AffichagePlan(Plan plan) {		    
 		 this.plan = plan;
-		 this.fenetre = fenetre;
 	}
 	
-	public void dessinerPlan(Graphics g){
-		Graphics2D g2d = (Graphics2D) g;
-	    for (Intersection intersection : plan.getIntersections().values()) {
-	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(),intersection.getLatitude(),2, 2);
-	    	g2d.draw(shape);
-	    	g2d.fill(shape);
-	    	for (Troncon troncon : intersection.getTronconsSortants().values()) {
-	    		Intersection destination = troncon.getDestination();
-				g2d.drawLine((int)intersection.getLongitude(),(int)intersection.getLatitude() ,
-						(int)destination.getLongitude(),(int)destination.getLatitude());
-			}
-	    	
-		}
-	    
+	public void SetPlan(Plan plan){
+		this.plan = plan;
 	}
 	
+	@Override 
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g); 
+        if(plan != null)
+        {
+        	Graphics2D g2d = (Graphics2D) g;
+    	    for (Intersection intersection : plan.getIntersections().values()) {
+    	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(),intersection.getLatitude(),2, 2);
+    	    	g2d.draw(shape);
+    	    	g2d.fill(shape);
+    	    	for (Troncon troncon : intersection.getTronconsSortants().values()) {
+    	    		Intersection destination = troncon.getDestination();
+    				g2d.drawLine((int)intersection.getLongitude(),(int)intersection.getLatitude() ,
+    						(int)destination.getLongitude(),(int)destination.getLatitude());
+    			}
+    	    	
+    		}
+        }     
+    }
 	public void miseALEchelle(){
 		if(plan != null){
 			//coefX = (double) (LARGEUR_PLAN) / (double)(plan.getLattitudeMax() - plan.getLattitudeMin());

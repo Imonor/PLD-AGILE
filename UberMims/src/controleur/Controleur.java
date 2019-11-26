@@ -4,8 +4,8 @@ import util.XMLParser;
 import model.*;
 
 public class Controleur {
-	private final int LARGEUR_PLAN = 1200;
-	private final int HAUTEUR_PLAN = 800;
+	private final int LARGEUR_PLAN = 800;
+	private final int HAUTEUR_PLAN = 600;
 	
 	public Chemin[][] plusCourtsChemins;
 	private Tournee tournee;
@@ -21,8 +21,9 @@ public class Controleur {
 		cmdListe = new CmdListe();
 	}
 	
-	public void chargerPlan(String filePathPlan) {
+	public Plan chargerPlan(String filePathPlan) {
 		plan = XMLParser.chargerPlan(filePathPlan,HAUTEUR_PLAN, LARGEUR_PLAN);
+		return plan;
 	}
 	
 	public void chargerTournee(String filePathTournee) {
