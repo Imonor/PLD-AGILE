@@ -105,6 +105,7 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan);
 					controleur.chargerTournee(cheminFichierTournee);
 					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.setTournee(null);
 					fenetre.afficherBoutonCalcul();
 
 				}
@@ -113,7 +114,6 @@ public class EcouteurBoutons implements ActionListener{
 			case "Calculer une tournee":
 				System.out.println("Calculer une tournee");
 					controleur.chargerTournee(cheminFichierTournee);
-
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
 					
