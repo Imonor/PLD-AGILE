@@ -1,98 +1,61 @@
-//package algo;
-//
-//import java.util.HashMap;
-//import java.util.LinkedList;
-//import java.util.List;
-//
-//import model.Chemin;
-//import model.Intersection;
-//
-//public class IteratorSeq implements Iterator<Triplet>{
-//	
-//	/*
-//	private Intersection current;
-//	
-//	private LinkedList<Triplet> dependences;
-//	
-//	public IteratorSeq(LinkedList<Triplet> dependeces) {
-//		this.dependences = dependences;
-//		current = dependeces.getFirst().getIntersection();
-//		
-//	}
-//	
-//	
-//	@Override
-//	public boolean hasNext() {
-//		return current != null;
-//	}
-//
-//	@Override
-//	public Iterator<Triplet> next() {
-//		
-//		//found1 et found2 sont utilises pour avoir l'iterateur a it.next().next()
-//		Iterator<Triplet> it = (Iterator<Triplet>) dependences.iterator();
-//		boolean found1 = false;
-//		boolean found2 = false;
-//		while(!found1&&!found2) {
-//			if(found1) {
-//				found2 = true;
-//			}
-//			if( ((Triplet) it.next()).getIntersection() == current){
-//				found1 = true;
-//				((Triplet) it.next()).setVisite(true);
-//			}
-//		}
-//		
-//		return it.next();
-//	}
-//	
-//	@Override
-//	public void remove(Triplet... triplet) {
-//		Iterator<Triplet> it = (Iterator<Triplet>) dependences.iterator();
-//		boolean found = false;
-//		while(!found) {
-//			if( ((Triplet) it.next()).getIntersection() == current){
-//				found = true;
-//				
-//			}
-//		}
-//	}
-//	*/
-//	
-//	
-//	
-//	
-//	
-//	private String[] dispos;
-//	private String[] indispos;
-//	private String[] vus;
-//	
-//	private int nbCandidats;
-//
-//	/**
-//	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
-//	 * @param nonVus
-//	 * @param sommetCrt
-//	 */
-//	public IteratorSeq(Collection<Integer> nonVus, int sommetCrt){
-//		this.candidats = new Integer[nonVus.size()];
-//		nbCandidats = 0;
-//		for (Integer s : nonVus){
-//			candidats[nbCandidats++] = s;
-//		}
-//	}
-//	
-//	@Override
-//	public boolean hasNext() {
-//		return nbCandidats > 0;
-//	}
-//
-//	@Override
-//	public Integer next() {
-//		return candidats[--nbCandidats];
-//	}
-//
-//	@Override
-//	public void remove() {}
-//
-//}
+package algo;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Iterator;
+
+import model.Intersection;
+import model.PointEnlevement;
+
+public class IteratorSeq implements Iterator<String>{
+	
+	HashMap<String, Intersection> intersections;
+	HashMap<String, Paire> vuDispo;
+	private int restants;
+	
+	/**
+	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
+	 * @param nonVus
+	 * @param sommetCrt
+	 */
+	public IteratorSeq(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo){
+		this.intersections = intersections;
+		this.vuDispo = vuDispo;
+		this.restants = restants;
+	}
+	
+	@Override
+	public boolean hasNext() {
+		return restants > 0;
+	}
+	@Override
+	public String next() {
+		
+		boolean trouve = false;
+		Iterator<Entry<String, Paire>> it = vuDispo.entrySet().iterator();
+		String cle = "";
+		
+		//Recherche du premier noeud dans la HashMap qui est disponible et non vu
+		while (it.hasNext() && !trouve) {
+			HashMap.Entry<String, Paire> entry = (HashMap.Entry<String, Paire>) it.next();
+			if( entry.getValue().getDispo() == true && entry.getValue().getVu() == false) {
+				trouve = true;
+				cle = entry.getKey();
+				restants--;
+			}
+		}
+		
+		if(trouve) {
+			return cle;
+		}else {
+			return "";
+		}
+	}
+	
+	
+	public void remove(String... args) {
+	}
+	
+	
+
+}

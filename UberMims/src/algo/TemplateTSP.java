@@ -1,11 +1,11 @@
 package algo;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import model.Chemin;
 import model.Intersection;
@@ -20,9 +20,9 @@ public abstract class TemplateTSP implements TSP{
 	private int coutMeilleureSolution = 0;
 	private Boolean tempsLimiteAtteint;
 	
-	/*public TemplateTSP(ContraintesTournee contraintes) {
-		
-	}*/
+	//Constructeur par defaut
+	public TemplateTSP() {
+	}
 	
 	public Boolean getTempsLimiteAtteint(){
 		return tempsLimiteAtteint;
@@ -30,16 +30,14 @@ public abstract class TemplateTSP implements TSP{
 	
 	public void chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins, int[] duree){
 		
-		tempsLimiteAtteint = false;
-		coutMeilleureSolution = Integer.MAX_VALUE;
-		
-//		int nbSommets = contraintes.getPointsEnlevement().size()+contraintes.getPointsLivraison().size();//initialisation du nombre de sommets a visiter
+//		tempsLimiteAtteint = false;
+//		coutMeilleureSolution = Integer.MAX_VALUE;
 //		meilleureSolution = new String[nbSommets];
 		
-		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
+//		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
 		
-		//HashMap avec la position dans le tableau et l'id de l'intersection correspondantes
-		HashMap<Integer, String> positions = new HashMap<Integer, String>();
+		//HashMap avec l'id et le point pour pouvoir recuperer le point a partir de l'id
+		HashMap<String, Intersection> intersections = new HashMap<String, Intersection>();
 		Iterator<PointEnlevement> itEnlev = (Iterator<PointEnlevement>)contraintes.getPointsEnlevement().iterator();
 		Iterator<PointLivraison> itLiv = (Iterator<PointLivraison>)contraintes.getPointsLivraison().iterator();
 		
@@ -47,60 +45,98 @@ public abstract class TemplateTSP implements TSP{
 		int nbSommets = 0;
 		while(itEnlev.hasNext()) {
 			Intersection intersec = (Intersection) itEnlev.next();
-			positions.put(nbSommets, intersec.getId());
+			intersections.put(intersec.getId(), intersec);
 			nbSommets++;
 		}
 		while(itLiv.hasNext()) {
 			Intersection intersec = (Intersection) itLiv.next();
-			positions.put(nbSommets, intersec.getId());
+			intersections.put(intersec.getId(), intersec);
 			nbSommets++;
 		}
 		
-		meilleureSolution = new String[nbSommets];
+//		meilleureSolution = new String[nbSommets];
 		
-		//Initialisation tableaux avec les elements aux positions attribuees plus haut
-		boolean[] dispos = new boolean[nbSommets];
-		boolean[] vus = new boolean[nbSommets];
+		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
+		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
 		
-		for(int i = 0; i<nbSommets; ++i) {
-			vus[i] = false;
-			
-			//Les points d'enlevement sont les premiers dans le tableau
-			if( i < (nbSommets/2) ) {
-				dispos[i] = true;
-			}else {
-				dispos[i] = false;
-			}
+		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
+		    if( iterator.getValue() instanceof PointEnlevement ) {
+		    	vuDispo.put( iterator.getKey(), new Paire(true, false) );
+		    }else {
+		    	vuDispo.put( iterator.getKey(), new Paire(false, false) );
+		    }
 		}
 		
+		//Mettre premier noeud comme deja visite
+		HashMap.Entry<String,Paire> first = vuDispo.entrySet().iterator().next();
+		first.getValue().setDispo(false);
+		first.getValue().setVu(true);
 		
-			
-//		List<String> dispos = new LinkedList<String>();
-//		ArrayList<String> indispos = new ArrayList<String>(nbSommets);
-//		for(PointEnlevement intersectionDispo : contraintes.getPointsEnlevement()) dispos.add(intersectionDispo.getId()); // Marquage des points d'enlevement comme potentiellement visitables
-//		for(PointLivraison intersectionIndispo : contraintes.getPointsLivraison()) indispos.add(intersectionIndispo.getId()); // Marqueges des point de livraison comme non visitables
+		Tournee tournee = new Tournee();
+		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
+		
+		//A TESTER ICI L'OBJET TOURNEE CREE
+		//
+		//
+		
 //		List<String> vus = new LinkedList<String>();
 //		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
+//		branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
 		
-		//branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
-		
-//		cheminDebile(contraintes.getDepot().getId(), indispos, dispos, vus, plusCourtsChemins);
 	}
 	
-	//Peut-etre inutile
-	private Map<String, Map<String, Integer>> extraitCouts(Map<String,Map<String, Chemin>> aTraiter, List<PointLivraison> aLivrer, List<PointEnlevement> aEnlever)	{
-		Map<String, Map<String, Integer>> couts = new HashMap();
-		for(PointEnlevement currentEnlevement : aEnlever) {
-			Map<String, Integer> coutsIntermediaraies = new HashMap();
-			for (PointLivraison currentLivraison : aLivrer) {
-				coutsIntermediaraies.put(currentLivraison.getId(),
-						aTraiter.get(currentEnlevement.getId()).get(currentLivraison.getId()).getDuree());
+	
+	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		
+		Iterator<String> it = iterator(restants, intersections, vuDispo);
+		String noeudPreced = null;
+		
+		while(it.hasNext()) {
+			String noeudSuivant = it.next();
+			
+			vuDispo.get(noeudSuivant).setDispo(false);
+			vuDispo.get(noeudSuivant).setVu(true);
+			
+			//Mettre dispo le pt de livraison si celui actuel est un pt d'enlevement
+			if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
+				String cleTmp = intersections.get(noeudSuivant).getId();
+				vuDispo.get(cleTmp).setDispo(true);
 			}
-			couts.put(currentEnlevement.getId(),
-					coutsIntermediaraies);
+			
+			//Creation d'un chemin et l'ajout a la tournee
+			Intersection depart;
+			if(noeudPreced != null) {
+				depart = intersections.get(noeudPreced);
+			}else {
+				depart = intersections.get(first);
+			}
+			Intersection arrivee = intersections.get(noeudSuivant);
+			List<Intersection> listeInter =  plusCourtsChemins.get(depart).get(arrivee).getIntersections();
+			int duree = plusCourtsChemins.get(depart).get(arrivee).getDuree();
+			Chemin chemin = new Chemin(listeInter, duree);
+			tournee.addChemin(chemin);
+			
+			noeudPreced = noeudSuivant;
 		}
-		return couts;
+		
 	}
+	
+	
+//	//Peut-etre inutile
+//	private Map<String, Map<String, Integer>> extraitCouts(Map<String,Map<String, Chemin>> aTraiter, List<PointLivraison> aLivrer, List<PointEnlevement> aEnlever)	{
+//		Map<String, Map<String, Integer>> couts = new HashMap();
+//		for(PointEnlevement currentEnlevement : aEnlever) {
+//			Map<String, Integer> coutsIntermediaraies = new HashMap();
+//			for (PointLivraison currentLivraison : aLivrer) {
+//				coutsIntermediaraies.put(currentLivraison.getId(),
+//						aTraiter.get(currentEnlevement.getId()).get(currentLivraison.getId()).getDuree());
+//			}
+//			couts.put(currentEnlevement.getId(),
+//					coutsIntermediaraies);
+//		}
+//		return couts;
+//	}
+	
 	
 	public String getMeilleureSolution(int i){
 		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
@@ -121,7 +157,7 @@ public abstract class TemplateTSP implements TSP{
 	 * @return une borne inferieure du cout des permutations commencant par sommetCourant, 
 	 * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
 	 */
-	protected abstract int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
+	protected abstract int bound();
 	
 	/**
 	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
@@ -131,7 +167,7 @@ public abstract class TemplateTSP implements TSP{
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
 	 */
-	protected abstract Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
+	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo);
 	
 	/**
 	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
@@ -167,13 +203,5 @@ public abstract class TemplateTSP implements TSP{
 //	        }	    
 //	    }
 //	}
-	 
-//	 Tournee cheminDebile(String sommetCrt, LinkedList<String> dispos, ArrayList<String> indispos, LinkedList<String> vus, Map<String,Map<String, Chemin>> cout){
-//		 Tournee tourneeDebile = new Tournee();
-//		 while(!dispos.isEmpty()) {
-//			 String current = dispos.poll();
-//			 
-//		 }
-//		 return tourneeDebile;		 
-//	}
+
 }
