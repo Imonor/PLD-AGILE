@@ -31,18 +31,16 @@ public class Fenetre extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Color backgroundColor = new Color(191,252,251);
-	private final int LARGEUR_PLAN = 1200;
-	private final int HAUTEUR_PLAN = 800;
+	private final int LARGEUR_FENETRE = 1200;
+	private final int HAUTEUR_FENETRE = 800;
 	
 	
-	private double coefX;
-	private double coefY;
-	
-	private final int mapHeight = 600;
-	private final int mapWidth = 1000;
+	private final int LARGEUR_PLAN = 600;
+	private final int HAUTEUR_PLAN = 1000;
 
 	private JButton boutonChargementPlan = new JButton("Charger le plan de la ville" );
 	private Plan plan;
+	private AffichagePlan affichagePlan;
 
 	public Fenetre(){
 		this.setTitle("Accueil UberMims");
@@ -62,7 +60,6 @@ public class Fenetre extends JFrame{
 	    boutonChargementPlan.setBounds(400,350,400,200);
 	    pan.add(boutonChargementPlan);
 		this.setContentPane(pan);    
-
 		boutonChargementPlan.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -80,78 +77,32 @@ public class Fenetre extends JFrame{
 						
 						//Chargement du fichier
 						// A RAJOUTER A LA DEUXIEME ITERATION : VERIFICATION DU FICHIER 
-						plan = XMLParser.chargerPlan(planPath);
+						plan = XMLParser.chargerPlan(planPath,HAUTEUR_PLAN, LARGEUR_PLAN);
 						
 						boutonChargementPlan.setVisible(false);
 
 						//Affichage du plan :
-						 //creerPlan();	
+						//creerPlan();	
+						affichagePlan = new AffichagePlan(Fenetre.this,plan);
+						repaint();
 					}
 				}
 			}
 		});
 	    
-	}
-	
-	
-	
-	
-	
-	
-	public void creerPlan(JFrame frame){
-		 String path = "H:\\Mes documents\\PLDAgile\\PLD-AGILE\\UberMims\\fichiersXML2019\\moyenPlan.xml";
-		 plan = XMLParser.chargerPlan(path);
-		    
-		 //Cr?ation du panel plan
-		 JPanel panel = new JPanel();
-		 panel.setSize(500, 500);
-		 Border blackline = BorderFactory.createLineBorder(Color.black);
-		 panel.setBorder(blackline);
-		    	      
-		 //this.setContentPane(pan);    
-		 frame.getContentPane().add(panel, BorderLayout.CENTER);
-	}
-	
-	public void dessinerIntersections(Graphics g){
-		Graphics2D g2d = (Graphics2D) g;
-		miseALEchelle();
-		int i = 10;
-	    for (Intersection intersection : plan.getIntersections().values()) {
-	    	//g2d.drawLine(120+i, 50, 360, 50);
-	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLatitude(),  intersection.getLongitude(), 2, 2);
-	    	g2d.draw(shape);
-	    	g2d.fill(shape);
-	    	i+=10;
-		}
-
-        //g2d.draw(new Line2D.Double(59.2d, 99.8d, 419.1d, 99.8d));
- 
-        //g2d.draw(new Line2D.Float(21.50f, 132.50f, 459.50f, 132.50f));
-	}
-	
-	
-	public void miseALEchelle(){
-		
-		double lol = plan.getLattitudeMax();
-		double lol2 = plan.getLattitudeMin();
-		if(plan != null){
-			coefX = (double) (LARGEUR_PLAN) / (double)(plan.getLattitudeMax() - plan.getLattitudeMin());
-			coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax() - plan.getLongitudeMin());
-		}
-	}
-	
-	
+	}	
 	
 	@Override
 	public void paint(Graphics g) {
         super.paint(g);
-        dessinerIntersections(g);
+        if(plan != null)
+        	affichagePlan.dessinerPlan(g);
     }
 	
 	@Override
 	public void update( Graphics g )
 	{
-	  paint( g );
+		paint( g );
 	}
 	
 	public static void main(String[] args){   
