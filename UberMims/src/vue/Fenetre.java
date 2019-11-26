@@ -70,7 +70,7 @@ public class Fenetre extends JFrame {
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 	
-	private JLabel label = new JLabel("Légende");
+	private JLabel titreLegende = new JLabel("Légende");
 
 	public Fenetre() {
 
@@ -140,6 +140,7 @@ public class Fenetre extends JFrame {
 		panLegende.setLayout(null);
 		panLegende.setBackground(backgroundJaune);
 		panLegende.setBounds(0, 0, 400, 200);
+		panLegende.add(titreLegende);
 		panGauche.add(panLegende);
 		
 		// Panel CHARGEMENT PLAN : haut dessus du plan : partie qui contiendra le plan
@@ -201,7 +202,7 @@ public class Fenetre extends JFrame {
 	}
 
 
-	// Passage a la page principale apres le chargement d'une demande de tourn�e
+	// Passage a la page principale apres le chargement d'une demande de tourn�e
 	public void afficherDetailTournee() {
 		// this.setContentPane(nouveau pan);
 		 this.repaint();

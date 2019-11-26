@@ -96,6 +96,7 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
 					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setTournee(null);
 					fenetre.setContraintes(controleur.getContraintes());
 					fenetre.afficherBoutonCalcul();
 
@@ -105,8 +106,6 @@ public class EcouteurBoutons implements ActionListener{
 			case "Calculer une tournee":
 				System.out.println("Calculer une tournee");
 					controleur.chargerTournee(cheminFichierTournee);
-					fenetre.setContraintes(controleur.getContraintes());
-
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
 					fenetre.afficherInfos();
