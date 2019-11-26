@@ -120,10 +120,8 @@ public class AffichagePlan extends JPanel {
 						}
 					}
 				}
-
 			}
 		}
-
 	}
 
 	public void miseALEchelle() {
