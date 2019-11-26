@@ -3,13 +3,21 @@ package vue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import algo.Dijkstra;
+import algo.TSP1;
+import algo.TemplateTSP;
 import controleur.Controleur;
+import model.Chemin;
+import model.ContraintesTournee;
 import model.Plan;
+import model.Tournee;
 import util.XMLParser;
 
 
@@ -98,6 +106,7 @@ public class EcouteurBoutons implements ActionListener{
 					controleur.chargerTournee(cheminFichierTournee);
 					fenetre.setTournee(null);
 					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.setTournee(null);
 					fenetre.afficherBoutonCalcul();
 
 				}
@@ -108,7 +117,10 @@ public class EcouteurBoutons implements ActionListener{
 					controleur.chargerTournee(cheminFichierTournee);
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
+					
+					System.out.println("Affichage des rues d'une demande de tournee");
 					fenetre.afficherInfos();
+					fenetre.afficherDetailTournee(fenetre.getTournee());
 			break;
 			
 			}

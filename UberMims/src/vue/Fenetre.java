@@ -2,7 +2,9 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -21,8 +23,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import controleur.Controleur;
+import model.Chemin;
+import model.Intersection;
+import model.Plan;
+import model.Tournee;
+import model.Troncon;
 import model.ContraintesTournee;
 import model.Intersection;
 import model.Plan;
@@ -61,6 +69,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAccueil = new JPanel();
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
+	private JPanel panInformation = new JPanel();
 	private JPanel panDroite1 = new JPanel();
 	private JPanel panDroite2 = new JPanel();
 	private JPanel panLegende = new JPanel();
@@ -108,6 +117,7 @@ public class Fenetre extends JFrame {
 		panPrincipal.setBackground(backgroundBleuCiel);
 		panPrincipal.setSize(1200, 800);
 
+		
 		// Panel de DROITE 1 : partie vide
 		panDroite1.setVisible(true);
 		panDroite1.setLayout(null);
@@ -126,6 +136,12 @@ public class Fenetre extends JFrame {
 		panDroite2.add(boutonCalculTournee);
 		boutonCalculTournee.addActionListener(ecouteurBoutons);
 		panDroite1.add(panDroite2);
+		
+		panInformation.setVisible(false);
+		panInformation.setLayout(null);
+		panInformation.setBounds(0, 200, 400, 800);
+		panInformation.setBackground(backgroundTurquoise);
+		panDroite1.add(panInformation);
 
 		// Panel de GAUCHE : partie qui contiendra le plan et le nom du plan+ bouton
 		// chargement d'un autre plan
@@ -191,7 +207,11 @@ public class Fenetre extends JFrame {
 		this.plan = plan;
 		this.affichagePlan.setPlan(plan);
 	}
-
+	
+	public Plan getPlan(){
+		return this.plan;
+	}
+	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
@@ -202,10 +222,28 @@ public class Fenetre extends JFrame {
 	}
 
 
-	// Passage a la page principale apres le chargement d'une demande de tourn�e
-	public void afficherDetailTournee() {
-		// this.setContentPane(nouveau pan);
-		 this.repaint();
+	// Passage a la page principale apres le chargement d'un plan
+	public void afficherDetailTournee(Tournee tournee) {
+		JLabel jlabel = new JLabel("<html> <center> Itin�raire propos� : <br><br>");
+		jlabel.setFont(new Font("Verdana",1,10));
+		panInformation.add(jlabel);
+		panInformation.setLayout(null);
+		jlabel.setBounds(100, -25, 200, 600);
+		String previous = "x";
+		
+		for (Chemin c : tournee.getPlusCourteTournee()) {
+			List<Intersection> inters =  c.getIntersections();
+			for(int i = 0; i< inters.size() -1; ++i) {
+				Intersection inter = inters.get(i);
+				Troncon tronc = inter.getTronconsSortants().get(inters.get(i+1).getId());
+				if(!previous.equals(tronc.getNomRue())) {
+					jlabel.setText(jlabel.getText() + tronc.getNomRue() + ", <br> ");
+					previous = tronc.getNomRue();
+				}
+			}
+		}
+		
+		jlabel.setText(jlabel.getText()+" <br> Dur�e totale : " + tournee.getDuree() + " secondes. </center> </html>");
 	}
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
@@ -218,6 +256,7 @@ public class Fenetre extends JFrame {
 	// Affichage des informations apres avoir clique sur bouton calculer tournee
 	public void afficherInfos() {
 		panDroite2.setVisible(false);
+		panInformation.setVisible(true);
 		System.out.println("Droite2 non visible");
 		this.setContentPane(panPrincipal);
 		this.repaint();
