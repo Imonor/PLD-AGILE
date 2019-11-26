@@ -3,13 +3,21 @@ package vue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import algo.Dijkstra;
+import algo.TSP1;
+import algo.TemplateTSP;
 import controleur.Controleur;
+import model.Chemin;
+import model.ContraintesTournee;
 import model.Plan;
+import model.Tournee;
 import util.XMLParser;
 
 
@@ -65,11 +73,17 @@ public class EcouteurBoutons implements ActionListener{
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
 				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
 				
-				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
+				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) {
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
+					Plan plan = fenetre.getPlan();
+					ContraintesTournee contraintesTournee = XMLParser.chargerContraintesTournee(cheminFichierTournee, plan);
+					Dijkstra d = new Dijkstra();
+					Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(plan.getIntersections());
+					TSP1 tsp1 = new TSP1();
+					Tournee tournee = tsp1.chercheSolution(0, contraintesTournee, plusCourtsChemins);
 					//controleur.creerPlan(cheminFichierPlan);
-					fenetre.afficherDetailTournee();
+					fenetre.afficherDetailTournee(tournee);
 
 				}
 			break;

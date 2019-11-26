@@ -2,7 +2,9 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -18,13 +20,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import controleur.Controleur;
+import model.Chemin;
 import model.Intersection;
 import model.Plan;
-
+import model.Tournee;
+import model.Troncon;
 import util.XMLParser;
 
 public class Fenetre extends JFrame {
@@ -57,6 +63,7 @@ public class Fenetre extends JFrame {
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
+	private JPanel panInformation = new JPanel();
 	private JPanel panChargePlan = new JPanel();
 	private JPanel panChargeTournee = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
@@ -104,6 +111,12 @@ public class Fenetre extends JFrame {
 		panDroite.setBounds(800, 0, 400, 800);
 		panDroite.setBackground(backgroundTurquoise);
 		panPrincipal.add(panDroite);
+		
+		panInformation.setVisible(false);
+		panInformation.setLayout(null);
+		panInformation.setBounds(800, 0, 400, 800);
+		panInformation.setBackground(Color.pink);
+		panPrincipal.add(panInformation);
 
 		// Panel de GAUCHE : partie qui contiendra le plan et le nom du plan+ bouton
 		// chargement d'un autre plan
@@ -161,6 +174,10 @@ public class Fenetre extends JFrame {
 		this.affichagePlan.SetPlan(plan);
 	}
 	
+	public Plan getPlan(){
+		return this.plan;
+	}
+	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
@@ -171,9 +188,29 @@ public class Fenetre extends JFrame {
 	}
 
 	// Passage a la page principale apres le chargement d'un plan
-	public void afficherDetailTournee() {
-		// this.setContentPane(nouveau pan);
-		// fenetre.repaint();
+	public void afficherDetailTournee(Tournee tournee) {
+		JLabel jlabel = new JLabel("<html> Itinéraire proposé : <br>");
+		jlabel.setFont(new Font("Verdana",1,10));
+		panDroite.setVisible(false);
+		panInformation.setVisible(true);
+		panInformation.add(jlabel);
+		panInformation.setLayout(null);
+		jlabel.setBounds(100, 150, 200, 600);
+		String previous = "x";
+		
+		for (Chemin c : tournee.getPlusCourteTournee()) {
+			List<Intersection> inters =  c.getIntersections();
+			for(int i = 0; i< inters.size() -1; ++i) {
+				Intersection inter = inters.get(i);
+				Troncon tronc = inter.getTronconsSortants().get(inters.get(i+1).getId());
+				if(!previous.equals(tronc.getNomRue())) {
+					jlabel.setText(jlabel.getText() + tronc.getNomRue() + ", <br> ");
+					previous = tronc.getNomRue();
+				}
+			}
+		}
+		
+		jlabel.setText(jlabel.getText()+" <br> Durée totale : " + tournee.getDuree() + " secondes. </html>");
 	}
 
 	public static void main(String[] args) {
