@@ -79,7 +79,7 @@ public class Fenetre extends JFrame {
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 	
-	private JLabel label = new JLabel("LÃ©gende");
+	private JLabel titreLegende = new JLabel("LÃ©gende");
 
 	public Fenetre() {
 
@@ -156,6 +156,7 @@ public class Fenetre extends JFrame {
 		panLegende.setLayout(null);
 		panLegende.setBackground(backgroundJaune);
 		panLegende.setBounds(0, 0, 400, 200);
+		panLegende.add(titreLegende);
 		panGauche.add(panLegende);
 		
 		// Panel CHARGEMENT PLAN : haut dessus du plan : partie qui contiendra le plan
@@ -220,9 +221,10 @@ public class Fenetre extends JFrame {
 		this.repaint();
 	}
 
+
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee) {
-		JLabel jlabel = new JLabel("<html> <center> Itinéraire proposé : <br><br>");
+		JLabel jlabel = new JLabel("<html> <center> Itinï¿½raire proposï¿½ : <br><br>");
 		jlabel.setFont(new Font("Verdana",1,10));
 		panInformation.add(jlabel);
 		panInformation.setLayout(null);
@@ -241,7 +243,7 @@ public class Fenetre extends JFrame {
 			}
 		}
 		
-		jlabel.setText(jlabel.getText()+" <br> Durée totale : " + tournee.getDuree() + " secondes. </center> </html>");
+		jlabel.setText(jlabel.getText()+" <br> Durï¿½e totale : " + tournee.getDuree() + " secondes. </center> </html>");
 	}
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
