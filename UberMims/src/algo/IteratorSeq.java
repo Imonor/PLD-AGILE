@@ -45,6 +45,12 @@ public class IteratorSeq implements Iterator<String>{
 			}
 		}
 		
+//		System.out.println("---ITERATEUR---");
+//		for (HashMap.Entry<String, Paire> iterator : vuDispo.entrySet()) {
+//		    System.out.println( iterator.getKey()+" : dispo="+iterator.getValue().getDispo() + "- vu=" + iterator.getValue().getVu() );
+//		}
+//		System.out.println("---FIN ITERATEUR---");
+		
 		if(trouve) {
 			return cle;
 		}else {
