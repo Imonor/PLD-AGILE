@@ -24,7 +24,7 @@ import javax.swing.border.Border;
 import controleur.Controleur;
 import model.Intersection;
 import model.Plan;
-
+import model.Tournee;
 import util.XMLParser;
 
 public class Fenetre extends JFrame {
@@ -50,6 +50,7 @@ public class Fenetre extends JFrame {
 	private final int HAUTEUR_FENETRE = 800;
 
 	private Plan plan;
+	private Tournee tournee;
 
 	private Controleur controleur;
 	// Panels
@@ -65,6 +66,8 @@ public class Fenetre extends JFrame {
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 
 	public Fenetre() {
+		
+		controleur = new Controleur();
 
 		// Page globale
 		this.setTitle("Accueil UberMims");
@@ -173,7 +176,7 @@ public class Fenetre extends JFrame {
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee() {
 		// this.setContentPane(nouveau pan);
-		// fenetre.repaint();
+		 this.repaint();
 	}
 
 	public static void main(String[] args) {
@@ -189,5 +192,14 @@ public class Fenetre extends JFrame {
 	@Override
 	public void update(Graphics g) {
 		paint(g);
+	}
+
+	public Tournee getTournee() {
+		return tournee;
+	}
+
+	public void setTournee(Tournee tournee) {
+		this.tournee = tournee;
+		this.affichagePlan.setTournee(tournee);
 	}
 }

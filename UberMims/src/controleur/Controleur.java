@@ -28,6 +28,13 @@ public class Controleur {
 		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		cmdListe = new CmdListe();
 	}
+	
+	public Controleur() {
+		tournee = new Tournee ();
+		uniteCalculChemins = new Dijkstra();
+		cmdListe = new CmdListe();
+	}
+	
 	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 
@@ -38,6 +45,8 @@ public class Controleur {
 	}
 	
 	public void calculerTournee() {
+		if(plusCourtsChemins == null)
+			plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());	
 		TSP1 tsp = new TSP1();
 		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
 		for (Chemin c : tournee.getPlusCourteTournee()) {
@@ -77,6 +86,10 @@ public class Controleur {
 	public static void main(String[] args) {
 		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,800);
 		contr.calculerTournee();
+	}
+
+	public Tournee getTournee() {
+		return tournee;
 	}
 
 }
