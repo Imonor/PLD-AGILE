@@ -10,6 +10,7 @@ import model.PointLivraison;
 import model.ContraintesTournee;
 
 import javax.xml.parsers.*;
+
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public class XMLParser {
 
-	public static Plan chargerPlan(String filePathPlan) {
+	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
 		Map<String, Intersection> intersections = new HashMap<>();
 		Plan plan = new Plan();
 		try {
@@ -31,12 +32,28 @@ public class XMLParser {
 			NodeList nInter = doc.getElementsByTagName("noeud");
 			NodeList nTronc = doc.getElementsByTagName("troncon");
 
+			double latMax = 0, longMax = 0, latMin = Double.MAX_VALUE, longMin = Double.MAX_VALUE;
+			for (int i = 0; i < nInter.getLength(); ++i) {
+				Element elem = (Element) nInter.item(i);
+				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
+				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
+
+				latMax = (latitude > latMax) ? latitude : latMax;
+				longMax = (longitude > longMax) ? longitude : longMax;
+				latMin = (latitude < latMin) ? latitude : latMin;
+				longMin = (longitude < longMin) ? longitude : longMin;
+			}
+
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
 				String id = elem.getAttribute("id");
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
-				Intersection inter = new Intersection(id, latitude, longitude);
+
+				int longitudeEcran = (int) ((longitude - longMin) * (screenWidth / (longMax - longMin)));
+				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * screenHeight / (latMax - latMin));
+
+				Intersection inter = new Intersection(id, latitudeEcran, longitudeEcran);
 				intersections.put(id, inter);
 			}
 
@@ -85,7 +102,8 @@ public class XMLParser {
 				int dureeEnlevement = Integer.parseInt(elem.getAttribute("dureeEnlevement"));
 				int dureeLivraison = Integer.parseInt(elem.getAttribute("dureeLivraison"));
 
-				PointEnlevement enlevement = new PointEnlevement(interEnlevement, interLivraison.getId(), dureeEnlevement);
+				PointEnlevement enlevement = new PointEnlevement(interEnlevement, interLivraison.getId(),
+						dureeEnlevement);
 				PointLivraison livraison = new PointLivraison(interLivraison, interEnlevement.getId(), dureeLivraison);
 
 				livraisons.add(livraison);
@@ -101,13 +119,13 @@ public class XMLParser {
 
 		return tournee;
 	}
-	
-	public static void main(String[] args) {
-		Plan plan = XMLParser.chargerPlan("fichiersXML2019/grandPlan.xml");
-		ContraintesTournee tournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
-		for(PointEnlevement enl: tournee.getPointsEnlevement()) {
-			System.out.println(enl.getId() + " --> " + enl.getIdLivraison());
-		}
-	}
+
+//	public static void main(String[] args) {
+//		Plan plan = XMLParser.chargerPlan("fichiersXML2019/grandPlan.xml");
+//		ContraintesTournee tournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
+//		for (PointEnlevement enl : tournee.getPointsEnlevement()) {
+//			System.out.println(enl.getId() + " --> " + enl.getIdLivraison());
+//		}
+//	}
 
 }
