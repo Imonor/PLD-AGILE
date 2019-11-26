@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import controleur.Controleur;
+import model.ContraintesTournee;
 import model.Intersection;
 import model.Plan;
 import model.Tournee;
@@ -53,6 +54,7 @@ public class Fenetre extends JFrame {
 
 	private Plan plan;
 	private Tournee tournee;
+	private ContraintesTournee contraintes;
 
 	private Controleur controleur;
 	// Panels
@@ -186,7 +188,7 @@ public class Fenetre extends JFrame {
 
 	public void setPlan(Plan plan) {
 		this.plan = plan;
-		this.affichagePlan.SetPlan(plan);
+		this.affichagePlan.setPlan(plan);
 	}
 
 	// Passage a la page principale apres le chargement d'un plan
@@ -196,6 +198,13 @@ public class Fenetre extends JFrame {
 		this.setContentPane(panPrincipal);
 
 		this.repaint();
+	}
+
+
+	// Passage a la page principale apres le chargement d'une demande de tournée
+	public void afficherDetailTournee() {
+		// this.setContentPane(nouveau pan);
+		 this.repaint();
 	}
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
@@ -235,5 +244,10 @@ public class Fenetre extends JFrame {
 	public void setTournee(Tournee tournee) {
 		this.tournee = tournee;
 		this.affichagePlan.setTournee(tournee);
+	}
+
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
+		this.affichagePlan.setContraintes(contraintes);
 	}
 }

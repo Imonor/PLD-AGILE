@@ -78,6 +78,7 @@ public class EcouteurBoutons implements ActionListener{
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 					Plan plan = XMLParser.chargerPlan(cheminFichierPlan2,600, 800);
 					fenetre.setPlan(plan);
+					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
 				}
 			break;
@@ -92,7 +93,10 @@ public class EcouteurBoutons implements ActionListener{
 				
 				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
-					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();					
+					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
+					//controleur.creerPlan(cheminFichierPlan);
+					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setContraintes(controleur.getContraintes());
 					fenetre.afficherBoutonCalcul();
 
 				}
@@ -101,6 +105,8 @@ public class EcouteurBoutons implements ActionListener{
 			case "Calculer une tournee":
 				System.out.println("Calculer une tournee");
 					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setContraintes(controleur.getContraintes());
+
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
 					fenetre.afficherInfos();
