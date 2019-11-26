@@ -1,8 +1,6 @@
 package algo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -18,8 +16,8 @@ public class TSP1 extends TemplateTSP{
 	}
 	
 	@Override
-	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo) {
-		return new IteratorSeq(restants, intersections, vuDispo);
+	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		return new IteratorSeq(restants, intersections, vuDispo, plusCourtsChemins);
 	}
 
 	@Override

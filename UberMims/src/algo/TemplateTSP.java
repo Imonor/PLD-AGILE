@@ -41,7 +41,7 @@ public abstract class TemplateTSP implements TSP{
 		Iterator<PointEnlevement> itEnlev = (Iterator<PointEnlevement>)contraintes.getPointsEnlevement().iterator();
 		Iterator<PointLivraison> itLiv = (Iterator<PointLivraison>)contraintes.getPointsLivraison().iterator();
 		
-		//Remplissage HashMap
+		//Remplissage HashMap des intersections 
 		intersections.put(contraintes.getDepot().getId(), contraintes.getDepot());
 		int nbSommets = 1;
 		while(itEnlev.hasNext()) {
@@ -94,7 +94,7 @@ public abstract class TemplateTSP implements TSP{
 	
 	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
 		
-		Iterator<String> it = iterator(restants, intersections, vuDispo);
+		Iterator<String> it = iterator(restants, intersections, vuDispo, plusCourtsChemins);
 		String noeudPreced = null;
 
 		while(it.hasNext()) {
@@ -192,7 +192,7 @@ public abstract class TemplateTSP implements TSP{
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
 	 */
-	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo);
+	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins);
 	
 	/**
 	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
