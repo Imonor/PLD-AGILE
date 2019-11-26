@@ -38,6 +38,9 @@ public class Fenetre extends JFrame{
 	private double coefX;
 	private double coefY;
 	
+	private final int mapHeight = 600;
+	private final int mapWidth = 1000;
+
 	private JButton boutonChargementPlan = new JButton("Charger le plan de la ville" );
 	private Plan plan;
 
@@ -59,7 +62,7 @@ public class Fenetre extends JFrame{
 	    boutonChargementPlan.setBounds(400,350,400,200);
 	    pan.add(boutonChargementPlan);
 		this.setContentPane(pan);    
-	    
+
 		boutonChargementPlan.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

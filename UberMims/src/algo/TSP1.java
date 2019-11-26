@@ -1,30 +1,34 @@
 package algo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Iterator;
 
 import model.Chemin;
 import model.ContraintesTournee;
+import model.Intersection;
 
 public class TSP1 extends TemplateTSP{
 
-	//ContraintesTournee - juste pour test
-	//Constructeur sans parametres normalement
-	public TSP1(ContraintesTournee contraintes) {
-		super(contraintes);
-		// TODO Auto-generated constructor stub
+	public TSP1() {
+		super();
+	}
+	
+	@Override
+	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo) {
+		return new IteratorSeq(restants, intersections, vuDispo);
 	}
 
-	//Bound - premiere approche : 0
 	@Override
-	public int bound() {
+	protected int bound() {
 		return 0;
 	}
 
 	@Override
-	public Chemin iterator() {
+	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 }
