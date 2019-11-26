@@ -79,7 +79,6 @@ public class Fenetre extends JFrame {
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 	
-	private JLabel titreLegende = new JLabel("Légende");
 
 	public Fenetre() {
 
@@ -156,6 +155,10 @@ public class Fenetre extends JFrame {
 		panLegende.setLayout(null);
 		panLegende.setBackground(backgroundJaune);
 		panLegende.setBounds(0, 0, 400, 200);
+		JLabel titreLegende = new JLabel("<html> <center> Legende : <br><br>");
+		titreLegende.setFont(new Font("Verdana",1,20));
+		panLegende.setLayout(null);
+		titreLegende.setBounds(100, 50, 200, 100);
 		panLegende.add(titreLegende);
 		panGauche.add(panLegende);
 		
