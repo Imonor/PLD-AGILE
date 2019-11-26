@@ -70,8 +70,7 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
 					controleur.chargerTournee(cheminFichierTournee);
-					controleur.calculerTournee();
-					fenetre.setTournee(controleur.getTournee());
+					fenetre.setContraintes(controleur.getContraintes());
 					fenetre.afficherDetailTournee();
 
 				}
@@ -93,6 +92,7 @@ public class EcouteurBoutons implements ActionListener{
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 					Plan plan = XMLParser.chargerPlan(cheminFichierPlan2,600, 800);
 					fenetre.setPlan(plan);
+					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
 				}
 			break;
