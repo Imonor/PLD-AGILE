@@ -39,8 +39,8 @@ public class Fenetre extends JFrame {
 	private Color backgroundJaune = new Color(226, 179, 72);
 	private Color backgroundOrange = new Color(229, 138, 86);
 
-	private final int LARGEUR_PLAN = 1200;
-	private final int HAUTEUR_PLAN = 800;
+	private final int LARGEUR_PLAN = 800;
+	private final int HAUTEUR_PLAN = 600;
 
 	private double coefX;
 	private double coefY;
@@ -50,7 +50,6 @@ public class Fenetre extends JFrame {
 	private final int HAUTEUR_FENETRE = 800;
 
 	private Plan plan;
-	private AffichagePlan affichagePlan;
 
 	private Controleur controleur;
 	// Panels
@@ -58,10 +57,13 @@ public class Fenetre extends JFrame {
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
+
 	private JPanel panChargePlan = new JPanel();
-	private JPanel panPlan = new JPanel();
 	private JPanel panChargeLivraison = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
+
+	private JPanel panHautGauche = new JPanel();
+	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 
 	public Fenetre() {
 
@@ -73,11 +75,11 @@ public class Fenetre extends JFrame {
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
-
+		
 		// BOUTONS
 		EcouteurBoutons ecouteurBoutons = new EcouteurBoutons(controleur, this);
 		JButton boutonChargementPlan = new JButton("Charger le plan de la ville");
-		JButton boutonChargementLivraison = new JButton("Charger une livraison");
+		JButton boutonChargementLivraison = new JButton("Charger une livraison");	
 
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -132,13 +134,14 @@ public class Fenetre extends JFrame {
 		boutonChargementLivraison.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargeLivraison);
 
-		// Panel de PLAN : partie qui contiendra le plan et le nom du plan+ bouton
-		// chargement d'un autre plan
-		panPlan.setVisible(true);
-		panPlan.setLayout(null);
-		panPlan.setBackground(backgroundBleuCiel);
-		panPlan.setBounds(0, 200, 800, 600);
-		panGauche.add(panPlan);
+		
+		//Panel PLAN
+		affichagePlan.setVisible(true);
+		affichagePlan.setLayout(null);
+		affichagePlan.setBackground(backgroundBleuCiel);	
+		affichagePlan.setBounds(0, 200, 800, 600);
+		panGauche.add(affichagePlan);
+
 	}
 
 	public JPanel getPanAccueil() {
@@ -148,13 +151,15 @@ public class Fenetre extends JFrame {
 	public JPanel getPanPrincipal() {
 		return panPrincipal;
 	}
-
+	
+	public void setPlan(Plan plan){
+		this.plan = plan;
+		this.affichagePlan.SetPlan(plan);
+	}
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
 		panPrincipal.setVisible(true);
-		// panGauche.setVisible(true);
-		// panDroite.setVisible(true);
 		this.setContentPane(panPrincipal);
 
 		this.repaint();
@@ -171,13 +176,12 @@ public class Fenetre extends JFrame {
 
 	}
 
+	
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
-		if (plan != null)
-			affichagePlan.dessinerPlan(g);
-	}
-
+        super.paint(g);
+    }
+	
 	@Override
 	public void update(Graphics g) {
 		paint(g);

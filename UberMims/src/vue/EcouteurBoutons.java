@@ -9,19 +9,24 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import controleur.Controleur;
+import model.Plan;
 import util.XMLParser;
 
 
 public class EcouteurBoutons implements ActionListener{
 	private Controleur controleur;
 	private Fenetre fenetre;
-	private JPanel panAccueil = new JPanel();
-	private JPanel panPrincipal = new JPanel();
+	private JPanel panAccueil;
+	private JPanel panPrincipal;
+	private JPanel panPlan;
 	
 	//Constructeur
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
 		this.fenetre = fenetre;
+		panAccueil = new JPanel();
+		panPrincipal = new JPanel();
+		panPlan = new JPanel();
 	}
 	
 	@Override
@@ -35,18 +40,20 @@ public class EcouteurBoutons implements ActionListener{
 				
 				String cheminFichierPlan ;
 				String nomFichierPlan;
-				//JFileChooser choixPlan = new JFileChooser();
-				//int boiteDialogue = choixPlan.showOpenDialog(bouton);
+				JFileChooser choixPlan = new JFileChooser();
+				int boiteDialogue = choixPlan.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
 				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
 				
-				//if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
-					//nomFichierPlan = choixPlan.getSelectedFile().getName();
-					//cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
+				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
+					nomFichierPlan = choixPlan.getSelectedFile().getName();
+					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
-					
+					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
+					Plan plan = XMLParser.chargerPlan(cheminFichierPlan,600, 800);
+					fenetre.setPlan(plan);
 					fenetre.afficherPanPrincipal();
-				//}
+				}
 			break;
 		
 			case "Charger une livraison":
