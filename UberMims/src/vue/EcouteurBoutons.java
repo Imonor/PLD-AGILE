@@ -119,7 +119,7 @@ public class EcouteurBoutons implements ActionListener{
 					
 					System.out.println("Affichage des rues d'une demande de tournee");
 					fenetre.afficherInfos();
-					//fenetre.afficherDetailTournee(fenetre.getTournee());
+					fenetre.afficherDetailTournee(fenetre.getTournee());
 			break;
 			
 			}
