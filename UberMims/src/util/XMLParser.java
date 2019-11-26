@@ -2,11 +2,14 @@ package util;
 
 import org.w3c.dom.*;
 
+import algo.TSP1;
 import model.PointEnlevement;
 import model.Intersection;
 import model.Troncon;
 import model.Plan;
 import model.PointLivraison;
+import model.Tournee;
+import model.Chemin;
 import model.ContraintesTournee;
 
 import javax.xml.parsers.*;
@@ -101,6 +104,7 @@ public class XMLParser {
 
 		return tournee;
 	}
+	
 	
 	public static void main(String[] args) {
 		Plan plan = XMLParser.chargerPlan("fichiersXML2019/grandPlan.xml");

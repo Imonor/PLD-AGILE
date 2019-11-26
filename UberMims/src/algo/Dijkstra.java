@@ -169,21 +169,20 @@ public class Dijkstra {
 		Intersection i2 = new Intersection("i2", 0.0, 0.0);
 		Intersection i3 = new Intersection("i3", 0.0, 0.0);
 		Intersection i4 = new Intersection("i4", 0.0, 0.0);
-		Intersection i5 = new Intersection("i5", 0.0, 0.0);
 		
-		i1.addTroncon("i2", new Troncon(i2, "", 2.0));
-		i1.addTroncon("i3", new Troncon(i3, "", 4.0));
-		i1.addTroncon("i4", new Troncon(i4, "", 5.0));
-		i2.addTroncon("i3", new Troncon(i3, "", 3.0));
-		i3.addTroncon("i5", new Troncon(i5, "", 4.0));
-		i4.addTroncon("i5", new Troncon(i5, "", 2.0));
+		i1.addTroncon("i2", new Troncon(i2, "", 100.0));
+		i2.addTroncon("i3", new Troncon(i3, "", 50.0));
+		i2.addTroncon("i1", new Troncon(i1, "", 50.0));
+		i3.addTroncon("i4", new Troncon(i4, "", 100.0));
+		i3.addTroncon("i2", new Troncon(i2, "", 80.0));
+		i3.addTroncon("i1", new Troncon(i1, "", 300.0));
+		
 		
 		Map<String, Intersection> intersections = new HashMap<>();
 		intersections.put("i1", i1);
 		intersections.put("i2", i2);
 		intersections.put("i3", i3);
 		intersections.put("i4", i4);
-		intersections.put("i5", i5);
 		
 		Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(intersections);
 		for(String interDepart: plusCourtsChemins.keySet()) {
@@ -195,8 +194,9 @@ public class Dijkstra {
 						System.out.print(i.getId() + " -> ");
 					}
 				}
-				System.out.println("duree: " + plusCourtsChemins.get(interDepart).get(interArrivee).getDuree());
+				System.out.println("duree: " + (int) (plusCourtsChemins.get(interDepart).get(interArrivee).getDuree() * (15/3.6)));
 			}
 		}
+
 	}
 }
