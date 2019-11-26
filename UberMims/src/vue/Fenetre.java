@@ -138,7 +138,6 @@ public class Fenetre extends JFrame {
 		panChargeTournee.add(boutonChargementTournee);
 		boutonChargementTournee.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargeTournee);
-
 		
 		//Panel PLAN
 		affichagePlan.setVisible(true);
@@ -161,6 +160,7 @@ public class Fenetre extends JFrame {
 		this.plan = plan;
 		this.affichagePlan.SetPlan(plan);
 	}
+	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panAccueil.setVisible(false);
@@ -178,7 +178,6 @@ public class Fenetre extends JFrame {
 
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
-
 	}
 
 	

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import controleur.Controleur;
+import model.ContraintesTournee;
 import model.Intersection;
 import model.Plan;
 import model.Tournee;
@@ -23,24 +24,22 @@ import util.XMLParser;
 public class AffichagePlan extends JPanel{
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Page d'accueil : chargement du plan
 	 */
 	
-	//Fenetre sur laquelle s'affiche le plan
-	private Fenetre fenetre;
-	
-	//Taille du plan
-	private int sideLength;
-	
-	//Endroit de placement du plan dans la page
+	//Endroit de placement du plan dans la page 
 	private Point placementPlan;
 
 	//Plan chargé via le fichier XML
-	private Plan plan;
+	private Plan plan;	
 	
-	//Controleur du plan
-	private Controleur controleur;
-	
+	//Trajet de livraison
+	private Tournee tournee;
 	
 	public AffichagePlan(Plan plan) {		    
 		 this.plan = plan;
@@ -50,12 +49,16 @@ public class AffichagePlan extends JPanel{
 		this.plan = plan;
 	}
 	
+	public void SetContraintesTournee(Tournee tournee){
+		this.tournee = tournee;
+	}
+	
 	@Override 
 	public void paintComponent(Graphics g) {
         super.paintComponent(g); 
+        Graphics2D g2d = (Graphics2D) g;
         if(plan != null)
-        {
-        	Graphics2D g2d = (Graphics2D) g;
+        {      	
     	    for (Intersection intersection : plan.getIntersections().values()) {
     	    	Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(),intersection.getLatitude(),2, 2);
     	    	g2d.draw(shape);
@@ -67,7 +70,18 @@ public class AffichagePlan extends JPanel{
     			}
     	    	
     		}
-        }     
+    	    if(tournee != null){
+    	    	//Ellipse2D.Double shape = new Ellipse2D.Double(depot.getLongitude(),depot.getLatitude(),3, 3);
+    	    	//g2d.setPaint(Color.red);
+    	    	//g2d.fill(shape);
+//    	    	for (Chemin chemin : tournee.get) {
+//					
+//				}
+
+            }
+        }
+        
+        
     }
 	public void miseALEchelle(){
 		if(plan != null){
