@@ -3,6 +3,8 @@ package model;
 import java.util.List;
 import java.util.LinkedList;
 
+import model.ContraintesTournee;
+
 public class Tournee {
 	
 	private int duree;
@@ -35,6 +37,12 @@ public class Tournee {
 	
 	public void addChemin (Chemin chemin) {
 		plusCourteTournee.add(chemin);
-		duree+=chemin.getDuree();
+	}
+	
+	public void calculDuree(int tempsElevementLivraison) {
+		for(Chemin currentChemin : plusCourteTournee) {
+			duree+=currentChemin.getDuree();
+		}
+		duree+=tempsElevementLivraison;
 	}
 }
