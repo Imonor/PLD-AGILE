@@ -1,32 +1,217 @@
 package vue;
 
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import controleur.Controleur;
+import model.Chemin;
+import model.ContraintesTournee;
+import model.Intersection;
 import model.Plan;
+import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
+import model.Troncon;
+import util.XMLParser;
 
-public class AffichagePlan extends JFrame{
+public class AffichagePlan extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Page d'accueil : chargement du plan
 	 */
-	
-	
-	//Taille du plan
-	private int sideLength;
-	
-	//Endroit de placement du plan dans la page
+
+	// Endroit de placement du plan dans la page
 	private Point placementPlan;
 
-	public AffichagePlan(Fenetre fenetre,Controleur controleur) {
+	// Plan chargé via le fichier XML
+	private Plan plan;
+
+	// Contraintes chargées via le fichier XML
+	private ContraintesTournee contraintes;
+
+	// Trajet de livraison
+	private Tournee tournee;
+
+	public AffichagePlan(Plan plan) {
+		this.plan = plan;
 	}
 
+	public void setPlan(Plan plan) {
+		this.plan = plan;
+	}
+
+	public void setTournee(Tournee tournee) {
+		this.tournee = tournee;
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		if (plan != null) {
+			for (Intersection intersection : plan.getIntersections().values()) {
+				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(), intersection.getLatitude(),
+						2, 2);
+				g2d.draw(shape);
+				g2d.fill(shape);
+				for (Troncon troncon : intersection.getTronconsSortants().values()) {
+					Intersection destination = troncon.getDestination();
+					g2d.drawLine((int) intersection.getLongitude(), (int) intersection.getLatitude(),
+							(int) destination.getLongitude(), (int) destination.getLatitude());
+				}
+
+			}
+			if (contraintes != null) {
+				Intersection depot = contraintes.getDepot();
+				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude(),depot.getLatitude(),10, 10);
+				g2d.setPaint(Color.black);
+				g2d.fill(depotg);
+				
+				List<PointEnlevement> pointsEnlevement = contraintes.getPointsEnlevement();
+				List<PointLivraison> pointsLivraison = contraintes.getPointsLivraison();
+				Random rand = new Random();
+				for (int i = 0; i < pointsEnlevement.size(); i++) {
+					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(pointsEnlevement.get(i).getLongitude(),pointsEnlevement.get(i).getLatitude(),10, 10);
+					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude(),pointsLivraison.get(i).getLatitude(),10, 10);
+					
+					g2d.setPaint(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+					g2d.fill(pointEnlevement);
+					g2d.fill(pointLivraison);
+				}
+				
+				if(tournee != null){
+					List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
+					for (Chemin c : plusCourtChemin) {
+						List<Intersection> inters = c.getIntersections();
+						for (int i = 0; i < inters.size() - 1; ++i) {
+							Intersection inter = inters.get(i);
+							if(rand.nextInt(5) == 0) {
+								LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
+										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude(), Color.ORANGE, 2);
+								line.draw(g2d);
+							} else {
+								g2d.setStroke(new BasicStroke(2));
+								g2d.setPaint(Color.ORANGE);
+								g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
+										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude()));
+							}
+						    
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void miseALEchelle() {
+		if (plan != null) {
+			// coefX = (double) (LARGEUR_PLAN) / (double)(plan.getLattitudeMax()
+			// - plan.getLattitudeMin());
+			// coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax()
+			// - plan.getLongitudeMin());
+		}
+	}
+
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
+	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    private static final Polygon ARROW_HEAD = new Polygon();
+
+    static {
+        ARROW_HEAD.addPoint(0, 0);
+        ARROW_HEAD.addPoint(-5, -10);
+        ARROW_HEAD.addPoint(5, -10);
+    }
+
+    public static class LineArrow {
+
+        private final int x;
+        private final int y;
+        private final int endX;
+        private final int endY;
+        private final Color color;
+        private final int thickness;
+
+        public LineArrow(int x, int y, int x2, int y2, Color color, int thickness) {
+            super();
+            this.x = x;
+            this.y = y;
+            this.endX = x2;
+            this.endY = y2;
+            this.color = color;
+            this.thickness = thickness;
+        }
+
+        public void draw(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+
+            // Calcula o ângulo da seta.
+            double angle = Math.atan2(endY - y, endX - x);
+
+            g2.setColor(color);
+            g2.setStroke(new BasicStroke(thickness));
+
+            // Desenha a linha. Corta 10 pixels na ponta para a ponta não ficar grossa.
+            g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
+
+            // Obtém o AffineTransform original.
+            AffineTransform tx1 = g2.getTransform();
+
+            // Cria uma cópia do AffineTransform.
+            AffineTransform tx2 = (AffineTransform) tx1.clone();
+
+            // Translada e rotaciona o novo AffineTransform.
+            tx2.translate(endX, endY);
+            tx2.rotate(angle - Math.PI / 2);
+
+            // Desenha a ponta com o AffineTransform transladado e rotacionado.
+            g2.setTransform(tx2);
+            g2.fill(ARROW_HEAD);
+
+            // Restaura o AffineTransform original.
+            g2.setTransform(tx1);
+        }
+    }
+	
+	
+
 }
+
+
