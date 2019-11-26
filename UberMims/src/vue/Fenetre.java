@@ -57,7 +57,6 @@ public class Fenetre extends JFrame {
 	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
 	private JPanel panHautGauche = new JPanel();
-	private JPanel panPlan = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 
 	public Fenetre() {
@@ -119,14 +118,6 @@ public class Fenetre extends JFrame {
 		panHautGauche.setBackground(backgroundColor2);
 		panHautGauche.setBounds(0, 0, 700, 35);
 		panGauche.add(panHautGauche);
-
-		// Panel de plan : partie qui contiendra le plan et le nom du plan+ bouton
-		// chargement d'un autre plan		
-//		panPlan.setVisible(true);
-//		panPlan.setLayout(null);
-//		panPlan.setBackground(backgroundColor1);
-//		panPlan.setBounds(0, 35, 700, 765);
-//		panGauche.add(panPlan);
 		
 		affichagePlan.setVisible(true);
 		affichagePlan.setLayout(null);
