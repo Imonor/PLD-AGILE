@@ -30,4 +30,12 @@ public class Chemin {
 		intersections.add(intersection);
 	}
 	
+	public Intersection getPremiere() {
+		return intersections.get(0);
+	}
+
+	public Intersection getDerniere() {
+		return intersections.get(intersections.size()-1);
+	}
+	
 }
