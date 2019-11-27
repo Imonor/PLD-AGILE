@@ -33,9 +33,7 @@ public abstract class TemplateTSP implements TSP{
 //		tempsLimiteAtteint = false;
 //		coutMeilleureSolution = Integer.MAX_VALUE;
 //		meilleureSolution = new String[nbSommets];
-		
-//		Map<String, Map<String, Integer>> couts = extraitCouts(plusCourtsChemins,contraintes.getPointsLivraison(), contraintes.getPointsEnlevement()); //Pas frocement utile
-		
+
 		//HashMap avec l'id et le point pour pouvoir recuperer le point a partir de l'id
 		HashMap<String, Intersection> intersections = new HashMap<String, Intersection>();
 		Iterator<PointEnlevement> itEnlev = (Iterator<PointEnlevement>)contraintes.getPointsEnlevement().iterator();
@@ -55,7 +53,27 @@ public abstract class TemplateTSP implements TSP{
 			nbSommets++;
 		}
 		
-//		meilleureSolution = new String[nbSommets];
+		//Calcul des couts des combinaisons des noeuds
+		HashMap<String, Integer> couts = new HashMap<String, Integer>();
+		for (Map.Entry<String, Intersection> entry : intersections.entrySet()) {
+			for (Map.Entry<String, Intersection> entry2 : intersections.entrySet()) {
+				String idid = ((String)entry.getKey()).concat(entry2.getKey());
+				int duree;
+				if(entry.getKey().equals(entry2.getKey())) {
+					duree = Integer.MAX_VALUE;
+				}else {
+					duree = plusCourtsChemins.get(entry.getKey()).get(entry2.getKey()).getDuree();
+				}
+				couts.put(idid, duree);
+			}
+		}
+		
+//		System.out.println("apres calcul couts");
+//		for (HashMap.Entry<String, Integer> entry : couts.entrySet()) {
+//			System.out.println(entry.getKey()+" "+entry.getValue());
+//		}
+//		System.out.println("fin ici");
+		
 		
 		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
 		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
@@ -72,34 +90,23 @@ public abstract class TemplateTSP implements TSP{
 		HashMap.Entry<String,Paire> first = vuDispo.entrySet().iterator().next();
 		first.getValue().setDispo(false);
 		first.getValue().setVu(true);
-//		if( intersections.get(first.getKey()) instanceof PointEnlevement ) {
-//			String cleTmp = ((PointEnlevement)intersections.get(first.getKey())).getIdLivraison();
-//			vuDispo.get(cleTmp).setDispo(true);
-//		}
 		
 		
 		Tournee tournee = new Tournee();
-		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
-//		testerCalcul(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);
-		
+		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
 		
 		return tournee;
-		
-//		List<String> vus = new LinkedList<String>();
-//		vus.add(contraintes.getDepot().getId()); // le premier sommet visite est le depot
-//		branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
-		
 	}
 	
 	
-	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts) {
 		
-		Iterator<String> it = iterator(restants, intersections, vuDispo, plusCourtsChemins);
+		Iterator<String> it = iterator(restants, intersections, vuDispo, plusCourtsChemins, couts);
 		String noeudPreced = null;
 
 		while(it.hasNext()) {
 			String noeudSuivant = it.next();
-			
+			System.out.println("noeudSuiv=" + noeudSuivant);
 			vuDispo.get(noeudSuivant).setDispo(false);
 			vuDispo.get(noeudSuivant).setVu(true);
 			
@@ -192,7 +199,7 @@ public abstract class TemplateTSP implements TSP{
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
 	 */
-	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins);
+	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts);
 	
 	/**
 	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
