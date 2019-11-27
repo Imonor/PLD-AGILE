@@ -51,5 +51,23 @@ public class ContraintesTournee {
 	public void setPointsLivraison(List<PointLivraison> pointsLivraison) {
 		this.pointsLivraison = pointsLivraison;
 	}
+	
+	public void addLivraison(PointEnlevement e, PointLivraison l) {
+		if(e.getIdLivraison() == l.getId() && l.getIdEnlevement() == e.getId()) {
+			pointsEnlevement.add(e);
+			pointsLivraison.add(l);
+		} else {
+			System.err.println("ERROR: PICKUP AND DELIVERY ARE NOT RELATED");
+		}
+	}
+	
+	public void removeLivraison(PointEnlevement e, PointLivraison l) {
+		if(e.getIdLivraison() == l.getId() && l.getIdEnlevement() == e.getId()) {
+			pointsEnlevement.remove(e);
+			pointsLivraison.remove(l);
+		} else {
+			System.err.println("ERROR: PICKUP AND DELIVERY ARE NOT RELATED");
+		}
+	}
 
 }
