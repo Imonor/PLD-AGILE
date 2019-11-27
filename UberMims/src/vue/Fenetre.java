@@ -217,6 +217,8 @@ public class Fenetre extends JFrame {
 	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
+		panInformation.setVisible(false);
+		panInformation.removeAll();
 		panAccueil.setVisible(false);
 		panPrincipal.setVisible(true);
 		this.setContentPane(panPrincipal);
@@ -247,8 +249,8 @@ public class Fenetre extends JFrame {
 				}
 			}
 		}
-		
-		jlabel.setText(jlabel.getText()+" <br> DurÃ©e totale : " + tournee.getDuree() + " secondes. </center> </html>");
+		int duree = (int) (tournee.getDuree()/60) ;
+		jlabel.setText(jlabel.getText()+" <br> Durée totale : " + duree + " minutes. </center> </html>");
 	}
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
