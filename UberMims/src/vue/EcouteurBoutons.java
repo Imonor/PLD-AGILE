@@ -86,6 +86,7 @@ public class EcouteurBoutons implements ActionListener{
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 					Plan plan = XMLParser.chargerPlan(cheminFichierPlan2,600, 800);
 					fenetre.setPlan(plan);
+					fenetre.setContraintes(null);
 					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
 				}

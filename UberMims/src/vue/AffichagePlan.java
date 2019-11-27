@@ -137,21 +137,7 @@ public class AffichagePlan extends JPanel {
 	public void setContraintes(ContraintesTournee contraintes) {
 		this.contraintes = contraintes;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
     private static final Polygon ARROW_HEAD = new Polygon();
 
