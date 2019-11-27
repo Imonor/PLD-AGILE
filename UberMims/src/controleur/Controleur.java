@@ -38,11 +38,12 @@ public class Controleur {
 
 	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vérifier
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections()); 
+																					// vérifier
 																					// que
 																					// le
 																					// plan

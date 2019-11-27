@@ -73,6 +73,12 @@ public class XMLParser {
 				intersections.get(idOrig).addTroncon(idDest, tronc);
 			}
 
+			for(Intersection i : intersections.values()) {
+				if(i.getTronconsSortants().isEmpty()) {
+					intersections.remove(i.getId());
+				}
+			}
+
 			plan.setIntersections(intersections);
 
 		} catch (Exception e) {
