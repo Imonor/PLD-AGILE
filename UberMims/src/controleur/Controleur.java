@@ -56,6 +56,18 @@ public class Controleur {
 			plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		TSP2 tsp = new TSP2();
 		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
+		int dureeEnlevementLivraison = 0;
+		
+		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
+			dureeEnlevementLivraison += p.getTempsEnlevement();
+		}
+		
+		for(PointLivraison p : contraintes.getPointsLivraison()) {
+			dureeEnlevementLivraison += p.getTempsLivraison();
+		}
+		
+		tournee.calculDuree(dureeEnlevementLivraison);
+		
 		for (Chemin c : tournee.getPlusCourteTournee()) {
 			List<Intersection> inters = c.getIntersections();
 			for (int i = 0; i < inters.size() - 1; ++i) {
