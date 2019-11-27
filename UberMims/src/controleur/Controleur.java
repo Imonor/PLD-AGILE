@@ -38,7 +38,7 @@ public class Controleur {
 
 	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 	}
 
 	public void chargerTournee(String filePathTournee) {
@@ -52,8 +52,6 @@ public class Controleur {
 	}
 
 	public void calculerTournee() {
-		if (plusCourtsChemins == null)
-			plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		TSP2 tsp = new TSP2();
 		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
 		int dureeEnlevementLivraison = 0;
