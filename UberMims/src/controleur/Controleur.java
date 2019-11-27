@@ -7,6 +7,7 @@ import java.util.Map;
 
 import algo.Dijkstra;
 import algo.TSP1;
+import algo.TSP2;
 import model.*;
 
 public class Controleur {
@@ -53,7 +54,7 @@ public class Controleur {
 	public void calculerTournee() {
 		if (plusCourtsChemins == null)
 			plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
-		TSP1 tsp = new TSP1();
+		TSP2 tsp = new TSP2();
 		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
 		for (Chemin c : tournee.getPlusCourteTournee()) {
 			List<Intersection> inters = c.getIntersections();
@@ -62,7 +63,7 @@ public class Controleur {
 				Troncon tronc = inter.getTronconsSortants().get(inters.get(i + 1).getId());
 				System.out.print(tronc.getNomRue() + ", ");
 			}
-			System.out.println();
+			System.out.println("; duree= " + c.getDuree());
 		}
 	}
 

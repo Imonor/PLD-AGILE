@@ -14,6 +14,7 @@ public class IteratorMinFirst implements Iterator<String>{
 	HashMap<String, Paire> vuDispo;
 	Map<String, Map<String, Chemin>> plusCourtsChemins;
 	HashMap<String, Integer> couts;
+	HashMap<String, Integer> testMap;
 	private int restants;
 	String courant;
 	
@@ -22,12 +23,11 @@ public class IteratorMinFirst implements Iterator<String>{
 	 * @param nonVus
 	 * @param sommetCrt
 	 */
-	public IteratorMinFirst(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins){
+	public IteratorMinFirst(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, HashMap<String, Integer> couts){
 		this.intersections = intersections;
 		this.vuDispo = vuDispo;
-		this.plusCourtsChemins = plusCourtsChemins;
+		this.couts = couts;
 		this.restants = restants;
-		this.calculerCouts();
 		courant = "";
 	}
 	
@@ -38,6 +38,7 @@ public class IteratorMinFirst implements Iterator<String>{
 	
 	@Override
 	public String next() {
+		System.out.println("debut next");
 		
 		Iterator<Entry<String, Paire>> it = vuDispo.entrySet().iterator();
 		String cle = "";
@@ -51,14 +52,21 @@ public class IteratorMinFirst implements Iterator<String>{
 			actual = courant;
 		}
 		
+		System.out.println("actual=" + actual);
+		
 		//Recherche du min
-		for (Map.Entry<String, Integer> entry : couts.entrySet()) {
+		for (HashMap.Entry<String, Intersection> entry : intersections.entrySet()) {
 			String idid = actual.concat(entry.getKey());
-			if( couts.get(idid) < min ) {
+			System.out.println("idid=" + idid + "; dureeAssociee=" + couts.get(idid));
+			if( couts.get(idid) < min && vuDispo.get(entry.getKey()).getDispo() == true && vuDispo.get(entry.getKey()).getVu() == false ) {
 				cle = entry.getKey();
+				min = couts.get(idid);
 			}
+			System.out.println("inside-fin");
 		}
 		
+		System.out.println("+++++ITERATEUR++++");
+		System.out.println("cle=" + cle);
 		restants--;
 		courant = cle;
 		return cle;
@@ -67,18 +75,27 @@ public class IteratorMinFirst implements Iterator<String>{
 	public void remove(String... args) {
 	}
 	
-	private void calculerCouts(){
-		
-		this.couts = new HashMap<String, Integer>();
-		
-		HashMap<String, Integer> couts = new HashMap<String, Integer>();
-		for (Map.Entry<String, Intersection> entry : intersections.entrySet()) {
-			for (Map.Entry<String, Intersection> entry2 : intersections.entrySet()) {
-				String idid = ((String)entry.getKey()).concat(entry2.getKey());
-				int duree = plusCourtsChemins.get(entry.getKey()).get(entry2.getKey()).getDuree();
-				couts.put(idid, duree);
-			}
-		}
-	}
+//	private void calculerCouts(){
+////		
+////		this.couts = new HashMap<String, Integer>();
+//		
+//		HashMap<String, Integer> couts = new HashMap<String, Integer>();
+//		for (Map.Entry<String, Intersection> entry : intersections.entrySet()) {
+//			for (Map.Entry<String, Intersection> entry2 : intersections.entrySet()) {
+//				String idid = ((String)entry.getKey()).concat(entry2.getKey());
+//				int duree;
+//				if(entry.getKey().equals(entry2.getKey())) {
+//					duree = Integer.MAX_VALUE;
+//				}else {
+//					duree = plusCourtsChemins.get(entry.getKey()).get(entry2.getKey()).getDuree();
+//				}
+//				couts.put(idid, duree);
+//			}
+//		}
+//		
+//		for (Map.Entry<String, Integer> entry : couts.entrySet()) {
+//			System.out.println("idid= "+ entry.getKey() + "; duree=" + entry.getValue());
+//		}
+//	}
 
 }

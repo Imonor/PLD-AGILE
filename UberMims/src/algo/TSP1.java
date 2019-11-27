@@ -16,7 +16,7 @@ public class TSP1 extends TemplateTSP{
 	}
 	
 	@Override
-	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts) {
 		return new IteratorSeq(restants, intersections, vuDispo, plusCourtsChemins);
 	}
 
