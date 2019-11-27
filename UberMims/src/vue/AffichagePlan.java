@@ -106,7 +106,8 @@ public class AffichagePlan extends JPanel {
 						List<Intersection> inters = c.getIntersections();
 						for (int i = 0; i < inters.size() - 1; ++i) {
 							Intersection inter = inters.get(i);
-							if(rand.nextInt(5) == 0) {
+
+							if(inter.getTronconsSortants().size() > 3 || rand.nextInt(5) == 0) {
 								LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude(), Color.ORANGE, 2);
 								line.draw(g2d);
@@ -150,7 +151,7 @@ public class AffichagePlan extends JPanel {
 	
 	
 	
-	
+	// The code snippet below was found on the forum https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 	
     private static final Polygon ARROW_HEAD = new Polygon();
 
