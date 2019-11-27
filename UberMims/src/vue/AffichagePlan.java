@@ -149,7 +149,21 @@ public class AffichagePlan extends JPanel {
 	public void setContraintes(ContraintesTournee contraintes) {
 		this.contraintes = contraintes;
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// The code snippet below was found on the forum https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 	
     private static final Polygon ARROW_HEAD = new Polygon();
 
