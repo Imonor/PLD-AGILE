@@ -7,6 +7,7 @@ import java.util.Map;
 
 import algo.Dijkstra;
 import algo.TSP1;
+import algo.TSP2;
 import model.*;
 
 public class Controleur {
