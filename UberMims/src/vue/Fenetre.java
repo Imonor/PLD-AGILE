@@ -217,6 +217,8 @@ public class Fenetre extends JFrame {
 	
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
+		panInformation.setVisible(false);
+		panInformation.removeAll();
 		panAccueil.setVisible(false);
 		panPrincipal.setVisible(true);
 		this.setContentPane(panPrincipal);
