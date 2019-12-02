@@ -366,7 +366,10 @@ public class Fenetre extends JFrame {
 
 		// Affichage des informations apres avoir clique sur bouton calculer tournee
 		public void afficherInfos() {
+			panAjoutLivraison1.setVisible(false);
+			panAjoutLivraison2.setVisible(false);
 			panAjoutLivraison3.setVisible(false);
+			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
