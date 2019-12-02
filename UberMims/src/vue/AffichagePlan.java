@@ -56,10 +56,12 @@ public class AffichagePlan extends JPanel {
 	
 	//Liste de couleurs pour les points
 	private List<Color> couleurs;
+	
 
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
 		chargementCouleurs();
+		this.addMouseListener(new EcouteurSouris(this));
 	}
 
 	public void setPlan(Plan plan) {
