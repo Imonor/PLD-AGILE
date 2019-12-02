@@ -72,11 +72,11 @@ public class AffichagePlan extends JPanel {
 	private Intersection nouvelleLivraison;
 
 	
-	public AffichagePlan(Plan plan) {
+	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
 		this.planClickable = false;
-		this.addMouseListener(new EcouteurSouris(this));
+		this.addMouseListener(new EcouteurSouris(this, fenetre));
 		this.etat = etat.LIVRAISON;
 	}
 	

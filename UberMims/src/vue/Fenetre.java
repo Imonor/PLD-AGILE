@@ -97,7 +97,7 @@ public class Fenetre extends JFrame {
 	private JPanel panChargeTournee = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
-	private AffichagePlan affichagePlan = new AffichagePlan(plan);
+	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panAnnulerAjoutLivraison = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
