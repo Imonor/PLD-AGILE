@@ -64,8 +64,8 @@ public class Fenetre extends JFrame {
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 
-	private final int LARGEUR_PLAN = 750;
-	private final int HAUTEUR_PLAN = 750;
+	public static final int LARGEUR_PLAN = 750;
+	public static final int HAUTEUR_PLAN = 750;
 
 	private double coefX;
 	private double coefY;
@@ -241,7 +241,7 @@ public class Fenetre extends JFrame {
 		affichagePlan.setVisible(true);
 		affichagePlan.setLayout(null);
 		affichagePlan.setBackground(backgroundBleuCiel);
-		affichagePlan.setBounds(0, 50, 750, 750);
+		affichagePlan.setBounds(0, 50, LARGEUR_PLAN, HAUTEUR_PLAN);
 		panGauche.add(affichagePlan);
 //***************************************//
 		

@@ -48,7 +48,6 @@ public class EcouteurBoutons implements ActionListener{
 		JButton bouton = (JButton) e.getSource();
 		panAccueil = fenetre.getPanAccueil();
 		
-
 		
 		//panPrincipal = fenetre.getPanPrincipal();
 		switch (e.getActionCommand()) {
@@ -64,13 +63,9 @@ public class EcouteurBoutons implements ActionListener{
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
-					//controleur.creerPlan(cheminFichierPlan)
-					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
-
-						controleur.chargerPlan(cheminFichierPlan,600, 800);
-						fenetre.setPlan(Controleur.plan);
-						fenetre.afficherPanPrincipal();
-					
+					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
+					fenetre.setPlan(Controleur.plan);
+					fenetre.afficherPanPrincipal();
 				}
 			break;
 			
@@ -88,7 +83,7 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 
-					controleur.chargerPlan(cheminFichierPlan2,600, 800);
+					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
 					fenetre.setTournee(null);
@@ -108,10 +103,10 @@ public class EcouteurBoutons implements ActionListener{
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
-						controleur.chargerTournee(cheminFichierTournee);
-						fenetre.setTournee(null);
-						fenetre.setContraintes(controleur.getContraintes());
-						fenetre.afficherBoutonCalcul();
+					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setTournee(null);
+					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.afficherBoutonCalcul();
 					
 				}
 			break;

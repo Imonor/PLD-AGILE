@@ -36,7 +36,8 @@ public class XMLParser {
 			doc.getDocumentElement().normalize();
 			NodeList nInter = doc.getElementsByTagName("noeud");
 			NodeList nTronc = doc.getElementsByTagName("troncon");
-
+			
+			
 			double latMax = 0, longMax = 0, latMin = Double.MAX_VALUE, longMin = Double.MAX_VALUE;
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
@@ -58,8 +59,8 @@ public class XMLParser {
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
 				
-				int longitudeEcran = (int) ((longitude - longMin) * ratio);
-				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratio);
+				int longitudeEcran = (int) ((longitude - longMin) * ratioLargeur);
+				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratioHauteur);
 
 				Intersection inter = new Intersection(id, latitudeEcran, longitudeEcran);
 				intersections.put(id, inter);
@@ -74,27 +75,26 @@ public class XMLParser {
 				Troncon tronc = new Troncon(intersections.get(idDest), nomRue, longueur);
 				intersections.get(idOrig).addTroncon(idDest, tronc);
 			}
-//
-//			for(Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator.hasNext();) {
-//				Intersection inter = iterator.next().getValue();
-//				if(inter.getTronconsSortants().isEmpty()) {
-//					iterator.remove();
-//				}
-//			}
-//			
-//			List<String> idInters = new ArrayList<String>(intersections.keySet());
-//			
-//			for (int i = 0; i < nTronc.getLength(); ++i) {
-//				Element elem = (Element) nTronc.item(i);
-//				String idDest = elem.getAttribute("destination");
-//				if(idInters.contains(idDest))
-//					idInters.remove(idDest);
-//			}
-//			
-//			for(String id : idInters) {
-//				intersections.remove(id);
-//			}
+
+			for(Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator.hasNext();) {
+				Intersection inter = iterator.next().getValue();
+				if(inter.getTronconsSortants().isEmpty()) {
+					iterator.remove();
+				}
+			}
 			
+			List<String> idInters = new ArrayList<String>(intersections.keySet());
+			
+			for (int i = 0; i < nTronc.getLength(); ++i) {
+				Element elem = (Element) nTronc.item(i);
+				String idDest = elem.getAttribute("destination");
+				if(idInters.contains(idDest))
+					idInters.remove(idDest);
+			}
+			
+			for(String id : idInters) {
+				intersections.remove(id);
+			}
 			
 
 			plan.setIntersections(intersections);
@@ -149,7 +149,7 @@ public class XMLParser {
 		return tournee;
 	}
 	
-	public static void main(String[] args) {
-		
-	}
+//	public static void main(String[] args) {
+//		
+//	}
 }
