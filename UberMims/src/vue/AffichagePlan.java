@@ -53,8 +53,8 @@ public class AffichagePlan extends JPanel {
 
 	// Trajet de livraison
 	private Tournee tournee;
-	
-	//Liste de couleurs pour les points
+
+	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
 
@@ -71,23 +71,24 @@ public class AffichagePlan extends JPanel {
 	public void setTournee(Tournee tournee) {
 		this.tournee = tournee;
 	}
-	
-	public void chargementCouleurs(){
+
+	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
 		Random rand = new Random();
 		for (int i = 0; i < 100; i++) {
 			couleurs.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
 		}
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
-				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(), intersection.getLatitude(),
-						2, 2);
+				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,
+						intersection.getLatitude() - 1, 2, 2);
 				g2d.draw(shape);
 				g2d.fill(shape);
 				for (Troncon troncon : intersection.getTronconsSortants().values()) {
@@ -96,44 +97,52 @@ public class AffichagePlan extends JPanel {
 							(int) destination.getLongitude(), (int) destination.getLatitude());
 				}
 			}
+
+			if (tournee != null) {
+				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
+				for (Chemin c : plusCourtChemin) {
+					List<Intersection> inters = c.getIntersections();
+					int k = 0;
+					for (int i = 0; i < inters.size() - 1; ++i) {
+						Intersection inter = inters.get(i);
+
+						if (inter.getTronconsSortants().size() > 3 || k == 3) {
+							LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
+									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude(),
+									Color.ORANGE, 2);
+							line.draw(g2d);
+							k = 0;
+						} else {
+							g2d.setStroke(new BasicStroke(2));
+							g2d.setPaint(Color.ORANGE);
+							g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
+									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude()));
+							k++;
+						}
+					}
+				}
+			}
+
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
-				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude(),depot.getLatitude(),10, 10);
+				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,
+						10, 10);
 				g2d.setPaint(Color.black);
 				g2d.fill(depotg);
-				
+
 				List<PointEnlevement> pointsEnlevement = contraintes.getPointsEnlevement();
 				List<PointLivraison> pointsLivraison = contraintes.getPointsLivraison();
-				Random rand = new Random();
+
 				for (int i = 0; i < pointsEnlevement.size(); i++) {
-					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(pointsEnlevement.get(i).getLongitude(),pointsEnlevement.get(i).getLatitude(),10, 10);
-					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude(),pointsLivraison.get(i).getLatitude(),10, 10);
-					
+					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(
+							pointsEnlevement.get(i).getLongitude() - 5, pointsEnlevement.get(i).getLatitude() - 5, 10,
+							10);
+					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude() - 5,
+							pointsLivraison.get(i).getLatitude() - 5, 10, 10);
+
 					g2d.setPaint(couleurs.get(i));
 					g2d.fill(pointEnlevement);
 					g2d.fill(pointLivraison);
-				}
-				
-				if(tournee != null){
-					List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
-					for (Chemin c : plusCourtChemin) {
-						List<Intersection> inters = c.getIntersections();
-						for (int i = 0; i < inters.size() - 1; ++i) {
-							Intersection inter = inters.get(i);
-
-							if(inter.getTronconsSortants().size() > 3 || rand.nextInt(5) == 0) {
-								LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
-										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude(), Color.ORANGE, 2);
-								line.draw(g2d);
-							} else {
-								g2d.setStroke(new BasicStroke(2));
-								g2d.setPaint(Color.ORANGE);
-								g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
-										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude()));
-							}
-						    
-						}
-					}
 				}
 			}
 		}
@@ -151,82 +160,67 @@ public class AffichagePlan extends JPanel {
 	public void setContraintes(ContraintesTournee contraintes) {
 		this.contraintes = contraintes;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// The code snippet below was found on the forum https://itqna.net/questions/3389/how-draw-arrow-using-java2d
-	
-    private static final Polygon ARROW_HEAD = new Polygon();
 
-    static {
-        ARROW_HEAD.addPoint(0, 0);
-        ARROW_HEAD.addPoint(-5, -10);
-        ARROW_HEAD.addPoint(5, -10);
-    }
+	// The code snippet below was found on the forum
+	// https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 
-    public static class LineArrow {
+	private static final Polygon ARROW_HEAD = new Polygon();
 
-        private final int x;
-        private final int y;
-        private final int endX;
-        private final int endY;
-        private final Color color;
-        private final int thickness;
+	static {
+		ARROW_HEAD.addPoint(0, 0);
+		ARROW_HEAD.addPoint(-5, -10);
+		ARROW_HEAD.addPoint(5, -10);
+	}
 
-        public LineArrow(int x, int y, int x2, int y2, Color color, int thickness) {
-            super();
-            this.x = x;
-            this.y = y;
-            this.endX = x2;
-            this.endY = y2;
-            this.color = color;
-            this.thickness = thickness;
-        }
+	public static class LineArrow {
 
-        public void draw(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g;
+		private final int x;
+		private final int y;
+		private final int endX;
+		private final int endY;
+		private final Color color;
+		private final int thickness;
 
-            // Calcula o ângulo da seta.
-            double angle = Math.atan2(endY - y, endX - x);
+		public LineArrow(int x, int y, int x2, int y2, Color color, int thickness) {
+			super();
+			this.x = x;
+			this.y = y;
+			this.endX = x2;
+			this.endY = y2;
+			this.color = color;
+			this.thickness = thickness;
+		}
 
-            g2.setColor(color);
-            g2.setStroke(new BasicStroke(thickness));
+		public void draw(Graphics g) {
+			Graphics2D g2 = (Graphics2D) g;
 
-            // Desenha a linha. Corta 10 pixels na ponta para a ponta não ficar grossa.
-            g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
+			// Calcula o ângulo da seta.
+			double angle = Math.atan2(endY - y, endX - x);
 
-            // Obtém o AffineTransform original.
-            AffineTransform tx1 = g2.getTransform();
+			g2.setColor(color);
+			g2.setStroke(new BasicStroke(thickness));
 
-            // Cria uma cópia do AffineTransform.
-            AffineTransform tx2 = (AffineTransform) tx1.clone();
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta não ficar
+			// grossa.
+			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
-            // Translada e rotaciona o novo AffineTransform.
-            tx2.translate(endX, endY);
-            tx2.rotate(angle - Math.PI / 2);
+			// Obtém o AffineTransform original.
+			AffineTransform tx1 = g2.getTransform();
 
-            // Desenha a ponta com o AffineTransform transladado e rotacionado.
-            g2.setTransform(tx2);
-            g2.fill(ARROW_HEAD);
+			// Cria uma cópia do AffineTransform.
+			AffineTransform tx2 = (AffineTransform) tx1.clone();
 
-            // Restaura o AffineTransform original.
-            g2.setTransform(tx1);
-        }
-    }
-	
-	
+			// Translada e rotaciona o novo AffineTransform.
+			tx2.translate(endX, endY);
+			tx2.rotate(angle - Math.PI / 2);
+
+			// Desenha a ponta com o AffineTransform transladado e rotacionado.
+			g2.setTransform(tx2);
+			g2.fill(ARROW_HEAD);
+
+			// Restaura o AffineTransform original.
+			g2.setTransform(tx1);
+		}
+	}
 
 }
-
-
