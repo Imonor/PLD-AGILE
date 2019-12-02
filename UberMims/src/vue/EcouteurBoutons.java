@@ -127,6 +127,16 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.ajouterLivraison();					
 					fenetre.afficherAjoutLivraison();
 			break;
+			
+			case "Annuler l'ajout d'une livraison":
+				System.out.println("Annuler ajout d'une livraison");
+					//controleur.ajouterLivraison();					
+				fenetre.afficherInfos();
+				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+			break;
+			
+			
+			
 			}
 		}
 	}
