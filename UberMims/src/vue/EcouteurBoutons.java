@@ -47,7 +47,6 @@ public class EcouteurBoutons implements ActionListener{
 		JButton bouton = (JButton) e.getSource();
 		panAccueil = fenetre.getPanAccueil();
 		
-
 		
 		//panPrincipal = fenetre.getPanPrincipal();
 		switch (e.getActionCommand()) {

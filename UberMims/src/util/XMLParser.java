@@ -36,7 +36,7 @@ public class XMLParser {
 			doc.getDocumentElement().normalize();
 			NodeList nInter = doc.getElementsByTagName("noeud");
 			NodeList nTronc = doc.getElementsByTagName("troncon");
-
+			
 			double latMax = 0, longMax = 0, latMin = Double.MAX_VALUE, longMin = Double.MAX_VALUE;
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
