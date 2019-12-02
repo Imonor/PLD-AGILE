@@ -53,7 +53,7 @@ public class Dijkstra {
 				Map<String, Troncon> troncons = plan.get(sommetAEtudier).getTronconsSortants();
 				//Procédure de relâchement pour chaque arc partant du sommet étudié
 				for(String idDestination: troncons.keySet()) {
-					if(couleurSommet.get(idDestination) == 0 ||couleurSommet.get(idDestination) == 1) {
+					if(couleurSommet.containsKey(idDestination) && (couleurSommet.get(idDestination) == 0 ||couleurSommet.get(idDestination) == 1)) {
 						this.relacher(sommetAEtudier, idDestination, troncons.get(idDestination).getLongueur(), precedence, distance);
 						if(couleurSommet.get(idDestination) == 0) {
 							couleurSommet.put(idDestination, 1);

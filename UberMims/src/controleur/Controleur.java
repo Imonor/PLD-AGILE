@@ -107,11 +107,11 @@ public class Controleur {
 		cmdListe.redo();
 	}
 
-	public static void main(String[] args) {
-		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,
-				800);
-		contr.calculerTournee();
-	}
+//	public static void main(String[] args) {
+//		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,
+//				800);
+//		contr.calculerTournee();
+//	}
 
 	public Tournee getTournee() {
 		return tournee;
