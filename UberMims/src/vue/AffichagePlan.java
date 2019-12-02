@@ -41,7 +41,12 @@ public class AffichagePlan extends JPanel {
 	/**
 	 * Page d'accueil : chargement du plan
 	 */
-
+	public enum Etat{
+		LIVRAISON,
+		ENLEVEMENT;
+	}
+	
+	private Etat etat;
 	// Endroit de placement du plan dans la page
 	private Point placementPlan;
 
@@ -72,6 +77,7 @@ public class AffichagePlan extends JPanel {
 		chargementCouleurs();
 		this.planClickable = true;
 		this.addMouseListener(new EcouteurSouris(this));
+		this.etat = etat.LIVRAISON;
 	}
 	
 	public void setPlanClickable(boolean planClickable) {
@@ -81,6 +87,15 @@ public class AffichagePlan extends JPanel {
 	public boolean getPlanClickable() {
 		return this.planClickable;
 	}
+	
+	public Etat getEtat() {
+		return etat;
+	}
+
+	public void setEtat(Etat etat) {
+		this.etat = etat;
+	}
+	
 	
 	public Plan getPlan() {
 		return this.plan;
@@ -96,6 +111,14 @@ public class AffichagePlan extends JPanel {
 	
 	public void setContraintes(ContraintesTournee contraintes) {
 		this.contraintes = contraintes;
+	}
+	
+	public Intersection getNouveauPickUp() {
+		return nouveauPickUp;
+	}
+
+	public Intersection getNouvelleLivraison() {
+		return nouvelleLivraison;
 	}
 
 	public void setNouveauPickUp(Intersection nouveauPickUp) {
@@ -267,6 +290,5 @@ public class AffichagePlan extends JPanel {
 			g2.setTransform(tx1);
 		}
 	}
-
 
 }
