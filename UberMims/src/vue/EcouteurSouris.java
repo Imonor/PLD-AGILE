@@ -29,6 +29,8 @@ public class EcouteurSouris implements MouseListener{
 	    		interLaPlusProche = i;
 	    	}
 	    }
+	    affichagePlan.setNouvelleLivraison(interLaPlusProche);
+	    affichagePlan.repaint();
 	    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
 		
 	}
