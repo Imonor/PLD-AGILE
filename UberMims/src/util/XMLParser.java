@@ -74,26 +74,26 @@ public class XMLParser {
 				Troncon tronc = new Troncon(intersections.get(idDest), nomRue, longueur);
 				intersections.get(idOrig).addTroncon(idDest, tronc);
 			}
-
-			for(Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator.hasNext();) {
-				Intersection inter = iterator.next().getValue();
-				if(inter.getTronconsSortants().isEmpty()) {
-					iterator.remove();
-				}
-			}
-			
-			List<String> idInters = new ArrayList<String>(intersections.keySet());
-			
-			for (int i = 0; i < nTronc.getLength(); ++i) {
-				Element elem = (Element) nTronc.item(i);
-				String idDest = elem.getAttribute("destination");
-				if(idInters.contains(idDest))
-					idInters.remove(idDest);
-			}
-			
-			for(String id : idInters) {
-				intersections.remove(id);
-			}
+//
+//			for(Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator.hasNext();) {
+//				Intersection inter = iterator.next().getValue();
+//				if(inter.getTronconsSortants().isEmpty()) {
+//					iterator.remove();
+//				}
+//			}
+//			
+//			List<String> idInters = new ArrayList<String>(intersections.keySet());
+//			
+//			for (int i = 0; i < nTronc.getLength(); ++i) {
+//				Element elem = (Element) nTronc.item(i);
+//				String idDest = elem.getAttribute("destination");
+//				if(idInters.contains(idDest))
+//					idInters.remove(idDest);
+//			}
+//			
+//			for(String id : idInters) {
+//				intersections.remove(id);
+//			}
 			
 			
 
