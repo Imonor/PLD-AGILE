@@ -63,6 +63,10 @@ public class AffichagePlan extends JPanel {
 		chargementCouleurs();
 		this.addMouseListener(new EcouteurSouris(this));
 	}
+	
+	public Plan getPlan() {
+		return this.plan;
+	}
 
 	public void setPlan(Plan plan) {
 		this.plan = plan;
