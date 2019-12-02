@@ -226,28 +226,34 @@ public class Fenetre extends JFrame {
 		
 		
 		//Panel DETAILS AJOUT LIVRAISON 1
-		panAjoutLivraison1.setVisible(true);
+		panAjoutLivraison1.setVisible(false);
 		panAjoutLivraison1.setLayout(null);
 		panAjoutLivraison1.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison1.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 		//Texte Ajout Livraison Debut
-		JLabel CliquezSurCarte1 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>pick up </b> de la nouvelle livraison<br>");
+		JLabel CliquezSurCarte1 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point d'<b>enlevement </b> de la nouvelle livraison<br>");
 		CliquezSurCarte1.setFont(new Font("Verdana", 0, 15));
 		CliquezSurCarte1.setBounds(100, 200, 250, 200);
 		panAjoutLivraison1.add(CliquezSurCarte1);
 
 		//Panel DETAILS AJOUT LIVRAISON 1
-		panAjoutLivraison2.setVisible(false);
+		panAjoutLivraison2.setVisible(true);
 		panAjoutLivraison2.setLayout(null);
 		panAjoutLivraison2.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison2.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
 		//Texte Ajout Livraison Debut
-		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>delivery </b> de la nouvelle livraison<br>");
+		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
 		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
-		CliquezSurCarte2.setBounds(100, 500, 250, 200);
-		panAjoutLivraison1.add(CliquezSurCarte2);
+		CliquezSurCarte2.setBounds(100, 400, 250, 200);
+		panAjoutLivraison2.add(CliquezSurCarte2);
+		//Infos pick-up
+		//Intersection inter = inters.get(0);
+		//Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
+		JLabel textePickUp = new JLabel("<html> <center> Pick up : </center> <left>  <br><br> Adresse de depart : ");
+		//caminos.put("Pick up n�" + compteurPickUp, c);
+		//textePickUp.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 		
 //***************************************//
 		
@@ -361,12 +367,11 @@ public class Fenetre extends JFrame {
 		}
 		
 		// Passage aux details d'ajout de livraison 2
-				public void afficherAjoutLivraison2() {
-					panAjoutLivraison1.setVisible(false);
-					panAjoutLivraison2.setVisible(true);
-					this.setContentPane(panPrincipal);
-					// this.repaint();
-				}
+		public void afficherAjoutLivraison2() {
+			panAjoutLivraison1.setVisible(false);
+			panAjoutLivraison2.setVisible(true);
+			this.setContentPane(panAjoutLivraisonGlobal);
+		}
 		
 
 	// ***** INFOS TOURNEE *****
@@ -611,6 +616,10 @@ public class Fenetre extends JFrame {
 
 	public Tournee getTournee() {
 		return tournee;
+	}
+	
+	public AffichagePlan getAffichagePlan() {
+		return this.affichagePlan;
 	}
 
 	public void setTournee(Tournee tournee) {
