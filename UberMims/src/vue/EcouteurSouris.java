@@ -17,24 +17,26 @@ public class EcouteurSouris implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (affichagePlan.getPlanClickable()) {
-			int xClic = e.getX();
-			int yClic = e.getY();
-			System.out.println("posX:" + xClic + " posY:" + yClic);
-
-			Intersection interLaPlusProche = new Intersection();
-			double distanceMin = Double.MAX_VALUE;
-			for (String intersectionId : affichagePlan.getPlan().getIntersections().keySet()) {
-				Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
-				double distance = (xClic - i.getLongitude()) * (xClic - i.getLongitude())
-						+ (yClic - i.getLatitude()) * (yClic - i.getLatitude());
-				if (distance < distanceMin) {
-					distanceMin = distance;
-					interLaPlusProche = i;
-				}
-			}
-			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "
-					+ interLaPlusProche.getLatitude());
+		    int xClic=e.getX();
+		    int yClic=e.getY();
+		    System.out.println("posX:" + xClic + " posY:" + yClic);
+		    
+		    Intersection interLaPlusProche = new Intersection();
+		    double distanceMin = Double.MAX_VALUE;
+		    for(String intersectionId: affichagePlan.getPlan().getIntersections().keySet()) {
+		    	Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
+		    	double distance = (xClic-i.getLongitude())*(xClic-i.getLongitude()) + (yClic-i.getLatitude())*(yClic-i.getLatitude());
+		    	if(distance < distanceMin) {
+		    		distanceMin = distance;
+		    		interLaPlusProche = i;
+		    	}
+		    }
+		    affichagePlan.setNouvelleLivraison(interLaPlusProche);
+		    affichagePlan.repaint();
+		    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
 		}
+
+
 	}
 
 	@Override

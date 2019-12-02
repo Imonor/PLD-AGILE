@@ -57,13 +57,20 @@ public class AffichagePlan extends JPanel {
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
-	private boolean planClickable;
-	
 
+	private boolean planClickable;
+
+	//Point de pickUp ajouté
+	private Intersection nouveauPickUp;
+	
+	//Point de livraison ajouté
+	private Intersection nouvelleLivraison;
+
+	
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
 		chargementCouleurs();
-		this.planClickable = false;
+		this.planClickable = true;
 		this.addMouseListener(new EcouteurSouris(this));
 	}
 	
@@ -85,6 +92,18 @@ public class AffichagePlan extends JPanel {
 
 	public void setTournee(Tournee tournee) {
 		this.tournee = tournee;
+	}
+	
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
+	}
+
+	public void setNouveauPickUp(Intersection nouveauPickUp) {
+		this.nouveauPickUp = nouveauPickUp;
+	}
+
+	public void setNouvelleLivraison(Intersection nouvelleLivraison) {
+		this.nouvelleLivraison = nouvelleLivraison;
 	}
 
 	public void chargementCouleurs() {
@@ -160,8 +179,23 @@ public class AffichagePlan extends JPanel {
 					g2d.fill(pointLivraison);
 				}
 			}
+			
+			if(nouvelleLivraison != null){
+				Ellipse2D.Double pointLivraison = new Ellipse2D.Double(nouvelleLivraison.getLongitude() - 5,
+						nouvelleLivraison.getLatitude() - 5, 10, 10);
+				g2d.setPaint(Color.RED);
+				g2d.draw(pointLivraison);
+			}
+			
+			if(nouveauPickUp != null){
+				Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(nouveauPickUp.getLongitude() - 5,
+						nouveauPickUp.getLatitude() - 5, 10, 10);
+				g2d.setPaint(Color.RED);
+				g2d.draw(pointEnlevement);
+			}
 		}
 	}
+	
 
 	public void miseALEchelle() {
 		if (plan != null) {
@@ -170,10 +204,6 @@ public class AffichagePlan extends JPanel {
 			// coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax()
 			// - plan.getLongitudeMin());
 		}
-	}
-
-	public void setContraintes(ContraintesTournee contraintes) {
-		this.contraintes = contraintes;
 	}
 
 	// The code snippet below was found on the forum
@@ -237,5 +267,6 @@ public class AffichagePlan extends JPanel {
 			g2.setTransform(tx1);
 		}
 	}
+
 
 }
