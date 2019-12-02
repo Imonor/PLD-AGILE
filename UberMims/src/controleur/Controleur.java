@@ -43,7 +43,7 @@ public class Controleur {
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vérifier que le plan nest pas incohérent
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vï¿½rifier que le plan nest pas incohï¿½rent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
 		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
@@ -83,10 +83,11 @@ public class Controleur {
 		}
 	}
 
-	// public void ajouterLivraison (Livraison livraison) {
+	public void ajouterLivraison() {
+	//public void ajouterLivraison (Livraison livraison) {
 	// CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
 	// cmdListe.addCommande(cmd);
-	// }
+	}
 	//
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
