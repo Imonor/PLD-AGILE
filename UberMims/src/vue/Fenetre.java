@@ -89,7 +89,7 @@ public class Fenetre extends JFrame {
 	private JPanel panInformationDetail = new JPanel();
 	private JLabel textInfo = new JLabel();
 	private JPanel panDroite = new JPanel();
-	private JPanel panDroite2 = new JPanel();
+	private JPanel panCalculTournee = new JPanel();
 	private JPanel panHautDroite = new JPanel();
 	private JPanel panChargePlan = new JPanel();
 	private JPanel panChargeTournee = new JPanel();
@@ -154,7 +154,7 @@ public class Fenetre extends JFrame {
 		panPrincipal.add(panDroite);
 		
 		// Panel HAUT DROITE : haut tout a droite
-		panHautDroite.setVisible(true);
+		panHautDroite.setVisible(false);
 		panHautDroite.setLayout(null);
 		panHautDroite.setBackground(backgroundRougeClair);
 		panHautDroite.setBounds(0, 0, 450, 200);
@@ -166,23 +166,23 @@ public class Fenetre extends JFrame {
 		panDroite.add(panHautDroite);
 		
 
-		// Panel de DROITE 2 : partie qui contient le bouton Calculer Tournee
-		panDroite2.setVisible(false);
-		panDroite2.setLayout(null);
-		panDroite2.setBounds(0, 200, 450, 600);
-		panDroite2.setBackground(backgroundTurquoise);
+		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
+		panCalculTournee.setVisible(false);
+		panCalculTournee.setLayout(null);
+		panCalculTournee.setBounds(0, 0, 450, 800);
+		panCalculTournee.setBackground(backgroundTurquoise);
 		// bouton chargement autre plan
 		boutonCalculTournee.setVisible(true);
-		boutonCalculTournee.setBounds(50, 225, 300, 75);
-		panDroite2.add(boutonCalculTournee);
+		boutonCalculTournee.setBounds(75, 300, 300, 75);
+		panCalculTournee.add(boutonCalculTournee);
 		boutonCalculTournee.addActionListener(ecouteurBoutons);
-		panDroite.add(panDroite2);
+		panDroite.add(panCalculTournee);
 
 		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee, apparait quand bouton calul de tournee cliqué
 		panInformation.setVisible(false);
 		panInformation.setLayout(null);
 		panInformation.setBounds(0, 200, 450, 800);
-		panInformation.setBackground(backgroundTurquoise);
+		panInformation.setBackground(Color.white);
 		panDroite.add(panInformation);
 		
 		
@@ -275,6 +275,26 @@ public class Fenetre extends JFrame {
 
 		this.repaint();
 	}
+	
+	// Affichage du bouton calculer tournee apres le chargement d'une tournee
+		public void afficherBoutonCalcul() {
+			panInformation.setVisible(false);
+			panInformation.removeAll();
+			panCalculTournee.setVisible(true);
+			this.setContentPane(panPrincipal);
+			this.repaint();
+		}
+
+		// Affichage des informations apres avoir clique sur bouton calculer tournee
+		public void afficherInfos() {
+			panCalculTournee.setVisible(false);
+			panHautDroite.setVisible(true);
+			//panInformation.setVisible(true);
+			panInformationAll.setVisible(true);
+			panInformationDetail.setVisible(true);
+			this.setContentPane(panPrincipal);
+			// this.repaint();
+		}
 
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
@@ -501,27 +521,7 @@ public class Fenetre extends JFrame {
 	    return ret;
 	}
 
-	// Affichage du bouton calculer tournee apres le chargement d'une tournee
-	public void afficherBoutonCalcul() {
-		panInformation.setVisible(false);
-		panInformation.removeAll();
-		panDroite2.setVisible(true);
-		this.setContentPane(panPrincipal);
-		this.repaint();
-	}
-
-	// Affichage des informations apres avoir clique sur bouton calculer tournee
-	public void afficherInfos() {
-		panDroite2.setVisible(false);
-
-		panInformation.setVisible(false);
-		panInformationAll.setVisible(true);
-		panInformationDetail.setVisible(true);
-		//System.out.println("Droite2 non visible");
-		this.setContentPane(panPrincipal);
-		// this.repaint();
-	}
-
+	
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
 	}
