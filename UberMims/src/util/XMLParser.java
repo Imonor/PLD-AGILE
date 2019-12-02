@@ -95,7 +95,6 @@ public class XMLParser {
 				intersections.remove(id);
 			}
 			
-			
 
 			plan.setIntersections(intersections);
 		} catch (Exception e) {
