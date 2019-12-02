@@ -3,6 +3,7 @@ package vue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -65,9 +66,11 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
-					controleur.chargerPlan(cheminFichierPlan,600, 600);
-					fenetre.setPlan(Controleur.plan);
-					fenetre.afficherPanPrincipal();
+
+						controleur.chargerPlan(cheminFichierPlan,600, 800);
+						fenetre.setPlan(Controleur.plan);
+						fenetre.afficherPanPrincipal();
+					
 				}
 			break;
 			
@@ -84,6 +87,7 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan2 = choixPlan2.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
+
 					controleur.chargerPlan(cheminFichierPlan2,600, 800);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
@@ -104,11 +108,11 @@ public class EcouteurBoutons implements ActionListener{
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
-					controleur.chargerTournee(cheminFichierTournee);
-					fenetre.setTournee(null);
-					fenetre.setContraintes(controleur.getContraintes());
-					fenetre.afficherBoutonCalcul();
-
+						controleur.chargerTournee(cheminFichierTournee);
+						fenetre.setTournee(null);
+						fenetre.setContraintes(controleur.getContraintes());
+						fenetre.afficherBoutonCalcul();
+					
 				}
 			break;
 			
@@ -120,7 +124,7 @@ public class EcouteurBoutons implements ActionListener{
 					
 					System.out.println("Affichage des rues d'une demande de tournee");
 					fenetre.afficherInfos();
-					fenetre.afficherDetailTournee(fenetre.getTournee());
+					fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
 			break;
 			
 			}
