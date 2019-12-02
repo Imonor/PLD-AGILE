@@ -55,8 +55,8 @@ public class Fenetre extends JFrame {
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 
-	private final int LARGEUR_PLAN = 750;
-	private final int HAUTEUR_PLAN = 750;
+	public static final int LARGEUR_PLAN = 750;
+	public static final int HAUTEUR_PLAN = 750;
 
 	private double coefX;
 	private double coefY;
