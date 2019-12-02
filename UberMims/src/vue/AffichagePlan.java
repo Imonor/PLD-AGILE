@@ -57,17 +57,29 @@ public class AffichagePlan extends JPanel {
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
+
+	private boolean planClickable;
+
 	//Point de pickUp ajouté
 	private Intersection nouveauPickUp;
 	
 	//Point de livraison ajouté
 	private Intersection nouvelleLivraison;
-	
 
+	
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
 		chargementCouleurs();
+		this.planClickable = true;
 		this.addMouseListener(new EcouteurSouris(this));
+	}
+	
+	public void setPlanClickable(boolean planClickable) {
+		this.planClickable = planClickable;
+	}
+	
+	public boolean getPlanClickable() {
+		return this.planClickable;
 	}
 	
 	public Plan getPlan() {
