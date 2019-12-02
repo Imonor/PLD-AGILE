@@ -84,7 +84,7 @@ public class AffichagePlan extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
-				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude(), intersection.getLatitude(),
+				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude()-1, intersection.getLatitude()-1,
 						2, 2);
 				g2d.draw(shape);
 				g2d.fill(shape);
@@ -104,8 +104,8 @@ public class AffichagePlan extends JPanel {
 				List<PointLivraison> pointsLivraison = contraintes.getPointsLivraison();
 				Random rand = new Random();
 				for (int i = 0; i < pointsEnlevement.size(); i++) {
-					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(pointsEnlevement.get(i).getLongitude(),pointsEnlevement.get(i).getLatitude(),10, 10);
-					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude(),pointsLivraison.get(i).getLatitude(),10, 10);
+					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(pointsEnlevement.get(i).getLongitude()-5,pointsEnlevement.get(i).getLatitude()-5,10, 10);
+					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude()-5,pointsLivraison.get(i).getLatitude()-5,10, 10);
 					
 					g2d.setPaint(couleurs.get(i));
 					g2d.fill(pointEnlevement);
