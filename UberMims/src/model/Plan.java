@@ -12,7 +12,7 @@ public class Plan {
 	public Plan() {
 	}
 
-	public Plan(Map<String, Intersection> intersections, List<Troncon> troncons) {
+	public Plan(Map<String, Intersection> intersections) {
 		this.intersections = intersections;
 	}
 
@@ -24,35 +24,4 @@ public class Plan {
 		this.intersections = intersections;
 	}
 
-	public double getLattitudeMin(){
-		List<Double> lattitudes = new ArrayList<Double>();
-		for (Intersection it : intersections.values()) {
-			lattitudes.add(it.getLatitude());
-		}	
-		return Collections.min(lattitudes);
-	}
-	
-	public double getLattitudeMax(){
-		List<Double> lattitudes = new ArrayList<Double>();
-		for (Intersection it : intersections.values()) {
-			lattitudes.add(it.getLatitude());
-		}	
-		return Collections.max(lattitudes);
-	}
-	
-	public double getLongitudeMin(){
-		List<Double> longitudes = new ArrayList<Double>();
-		for (Intersection it : intersections.values()) {
-			longitudes.add(it.getLongitude());
-		}	
-		return Collections.min(longitudes);
-	}
-	
-	public double getLongitudeMax(){
-		List<Double> longitudes = new ArrayList<Double>();
-		for (Intersection it : intersections.values()) {
-			longitudes.add(it.getLongitude());
-		}	
-		return Collections.max(longitudes);
-	}
 }

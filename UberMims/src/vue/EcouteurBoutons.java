@@ -86,13 +86,12 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan2 = choixPlan2.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
-					Plan plan;
-						plan = XMLParser.chargerPlan(cheminFichierPlan2,600, 800);
-						fenetre.setPlan(plan);
-						fenetre.setTournee(null);
-						fenetre.afficherPanPrincipal();
-					
-					
+
+					controleur.chargerPlan(cheminFichierPlan2,600, 800);
+					fenetre.setPlan(Controleur.plan);
+					fenetre.setContraintes(null);
+					fenetre.setTournee(null);
+					fenetre.afficherPanPrincipal();
 				}
 			break;
 			

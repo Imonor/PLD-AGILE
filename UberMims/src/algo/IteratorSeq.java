@@ -11,8 +11,8 @@ import model.PointEnlevement;
 
 public class IteratorSeq implements Iterator<String>{
 	
-	HashMap<String, Intersection> intersections;
-	HashMap<String, Paire> vuDispo;
+	private HashMap<String, Intersection> intersections;
+	private HashMap<String, Paire> vuDispo;
 	private int restants;
 	
 	/**

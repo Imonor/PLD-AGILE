@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -52,9 +53,13 @@ public class AffichagePlan extends JPanel {
 
 	// Trajet de livraison
 	private Tournee tournee;
+	
+	//Liste de couleurs pour les points
+	private List<Color> couleurs;
 
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
+		chargementCouleurs();
 	}
 
 	public void setPlan(Plan plan) {
@@ -64,7 +69,15 @@ public class AffichagePlan extends JPanel {
 	public void setTournee(Tournee tournee) {
 		this.tournee = tournee;
 	}
-
+	
+	public void chargementCouleurs(){
+		couleurs = new ArrayList<Color>();
+		Random rand = new Random();
+		for (int i = 0; i < 100; i++) {
+			couleurs.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+		}
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -80,7 +93,6 @@ public class AffichagePlan extends JPanel {
 					g2d.drawLine((int) intersection.getLongitude(), (int) intersection.getLatitude(),
 							(int) destination.getLongitude(), (int) destination.getLatitude());
 				}
-
 			}
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
@@ -95,7 +107,7 @@ public class AffichagePlan extends JPanel {
 					Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(pointsEnlevement.get(i).getLongitude(),pointsEnlevement.get(i).getLatitude(),10, 10);
 					Ellipse2D.Double pointLivraison = new Ellipse2D.Double(pointsLivraison.get(i).getLongitude(),pointsLivraison.get(i).getLatitude(),10, 10);
 					
-					g2d.setPaint(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+					g2d.setPaint(couleurs.get(i));
 					g2d.fill(pointEnlevement);
 					g2d.fill(pointLivraison);
 				}
@@ -106,7 +118,8 @@ public class AffichagePlan extends JPanel {
 						List<Intersection> inters = c.getIntersections();
 						for (int i = 0; i < inters.size() - 1; ++i) {
 							Intersection inter = inters.get(i);
-							if(rand.nextInt(5) == 0) {
+
+							if(inter.getTronconsSortants().size() > 3 || rand.nextInt(5) == 0) {
 								LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 										(int)  inters.get(i+1).getLongitude(), (int)  inters.get(i+1).getLatitude(), Color.ORANGE, 2);
 								line.draw(g2d);
@@ -150,7 +163,7 @@ public class AffichagePlan extends JPanel {
 	
 	
 	
-	
+	// The code snippet below was found on the forum https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 	
     private static final Polygon ARROW_HEAD = new Polygon();
 

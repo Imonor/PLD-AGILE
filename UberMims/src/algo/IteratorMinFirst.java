@@ -10,13 +10,12 @@ import model.Intersection;
 
 public class IteratorMinFirst implements Iterator<String>{
 	
-	HashMap<String, Intersection> intersections;
-	HashMap<String, Paire> vuDispo;
-	Map<String, Map<String, Chemin>> plusCourtsChemins;
-	HashMap<String, Integer> couts;
-	HashMap<String, Integer> testMap;
+	private HashMap<String, Intersection> intersections;
+	private HashMap<String, Paire> vuDispo;
+	private HashMap<String, Integer> couts;
+	private HashMap<String, Integer> testMap;
 	private int restants;
-	String courant;
+	private String courant;
 	
 	/**
 	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
