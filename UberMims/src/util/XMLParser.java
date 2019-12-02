@@ -59,8 +59,8 @@ public class XMLParser {
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
 				
-				int longitudeEcran = (int) ((longitude - longMin) * ratio);
-				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratio);
+				int longitudeEcran = (int) ((longitude - longMin) * ratioLargeur);
+				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratioHauteur);
 
 				Intersection inter = new Intersection(id, latitudeEcran, longitudeEcran);
 				intersections.put(id, inter);
@@ -150,7 +150,7 @@ public class XMLParser {
 		return tournee;
 	}
 	
-	public static void main(String[] args) {
-		
-	}
+//	public static void main(String[] args) {
+//		
+//	}
 }

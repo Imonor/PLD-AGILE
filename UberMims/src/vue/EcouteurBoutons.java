@@ -63,8 +63,6 @@ public class EcouteurBoutons implements ActionListener{
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
-					//controleur.creerPlan(cheminFichierPlan)
-					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.afficherPanPrincipal();
@@ -85,7 +83,7 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 
-					controleur.chargerPlan(cheminFichierPlan2,600, 800);
+					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
 					fenetre.setTournee(null);

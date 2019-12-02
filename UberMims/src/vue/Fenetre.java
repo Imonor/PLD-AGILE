@@ -249,7 +249,7 @@ public class Fenetre extends JFrame {
 		affichagePlan.setVisible(true);
 		affichagePlan.setLayout(null);
 		affichagePlan.setBackground(backgroundBleuCiel);
-		affichagePlan.setBounds(0, 50, 750, 750);
+		affichagePlan.setBounds(0, 50, LARGEUR_PLAN, HAUTEUR_PLAN);
 		panGauche.add(affichagePlan);
 
 	}
