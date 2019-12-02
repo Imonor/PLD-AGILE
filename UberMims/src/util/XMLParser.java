@@ -99,7 +99,6 @@ public class XMLParser {
 			
 
 			plan.setIntersections(intersections);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -152,10 +151,6 @@ public class XMLParser {
 	}
 	
 	public static void main(String[] args) {
-		Plan plan = XMLParser.chargerPlan("fichiersXML2019/grandPlan.xml",1900,1600);
-		ContraintesTournee tournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandeGrand7.xml", plan);
-		for(PointEnlevement enl: tournee.getPointsEnlevement()) {
-			System.out.println(enl.getId() + " --> " + enl.getIdLivraison());
-		}
+		
 	}
 }
