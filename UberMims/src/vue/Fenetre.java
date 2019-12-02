@@ -96,7 +96,8 @@ public class Fenetre extends JFrame {
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
-	
+	private JPanel panAjoutLivraison = new JPanel();
+
 	
 	public Fenetre() {
 
@@ -117,7 +118,7 @@ public class Fenetre extends JFrame {
 		JButton boutonChargementTournee = new JButton("Charger une demande de tournee");
 		JButton boutonChargementPlan2 = new JButton("Charger un autre plan de la ville");
 		JButton boutonCalculTournee = new JButton("Calculer une tournee");
-		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison");
+		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 
 		
 //************** ACCUEIL ****************//
@@ -157,12 +158,17 @@ public class Fenetre extends JFrame {
 		panHautDroite.setVisible(false);
 		panHautDroite.setLayout(null);
 		panHautDroite.setBackground(backgroundRougeClair);
-		panHautDroite.setBounds(0, 0, 450, 200);
-		JLabel titreLegende = new JLabel("<html> <center> Legende <br>");
+		panHautDroite.setBounds(0, 0, 450, 100);
+		// bouton chargement autre plan
+		boutonAjouterLivraison.setVisible(true);
+		boutonAjouterLivraison.setBounds(75, 30, 300, 30);
+		panHautDroite.add(boutonAjouterLivraison);
+		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
+		/*JLabel titreLegende = new JLabel("<html> <center> Legende <br>");
 		titreLegende.setFont(new Font("Verdana", 1, 10));
 		panHautDroite.setLayout(null);
 		titreLegende.setBounds(10, 10, 100, 30);
-		panHautDroite.add(titreLegende);
+		panHautDroite.add(titreLegende);*/
 		panDroite.add(panHautDroite);
 		
 
@@ -173,7 +179,7 @@ public class Fenetre extends JFrame {
 		panCalculTournee.setBackground(backgroundTurquoise);
 		// bouton chargement autre plan
 		boutonCalculTournee.setVisible(true);
-		boutonCalculTournee.setBounds(75, 300, 300, 75);
+		boutonCalculTournee.setBounds(75, 350, 300, 75);
 		panCalculTournee.add(boutonCalculTournee);
 		boutonCalculTournee.addActionListener(ecouteurBoutons);
 		panDroite.add(panCalculTournee);
@@ -181,22 +187,27 @@ public class Fenetre extends JFrame {
 		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee, apparait quand bouton calul de tournee cliqué
 		panInformation.setVisible(false);
 		panInformation.setLayout(null);
-		panInformation.setBounds(0, 200, 450, 800);
+		panInformation.setBounds(0, 100, 450, 800);
 		panInformation.setBackground(Color.white);
 		panDroite.add(panInformation);
 		
 		
 		panInformationAll.setVisible(false);
 		//panInformationAll.setLayout(null);
-		panInformationAll.setBounds(0, 200, 450, 400);
+		panInformationAll.setBounds(0, 100, 450, 500);
 		panInformationAll.setBackground(Color.green);
 		panDroite.add(panInformationAll);
 		
 		panInformationDetail.setVisible(false);
 		panInformationDetail.setLayout(null);
-		panInformationDetail.setBounds(0, 600, 450, 300);
+		panInformationDetail.setBounds(0, 600, 450, 200);
 		panInformationDetail.setBackground(Color.red);
 		panDroite.add(panInformationDetail);
+		
+		// Panel AJOUT LIVRAISON
+		panAjoutLivraison.setVisible(false);
+		
+		
 //***************************************//
 		
 
@@ -230,10 +241,10 @@ public class Fenetre extends JFrame {
 		panChargeTournee.setBounds(0, 0, 375, 50);
 		panChargeTournee.setBackground(backgroundJaune);
 		// bouton chargement tournee
-				boutonChargementTournee.setVisible(true);
-				boutonChargementTournee.setBounds(50, 10, 300, 30);
-				panChargeTournee.add(boutonChargementTournee);
-				boutonChargementTournee.addActionListener(ecouteurBoutons);
+		boutonChargementTournee.setVisible(true);
+		boutonChargementTournee.setBounds(50, 10, 300, 30);
+		panChargeTournee.add(boutonChargementTournee);
+		boutonChargementTournee.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargeTournee);
 		
 
@@ -295,6 +306,16 @@ public class Fenetre extends JFrame {
 			this.setContentPane(panPrincipal);
 			// this.repaint();
 		}
+		
+		// Affichage des champs d'ajout de livraison
+		public void afficherAjoutLivraison() {
+			panInformationAll.setVisible(false);
+			panInformationDetail.setVisible(false);
+			panAjoutLivraison.setVisible(true);
+			this.setContentPane(panPrincipal);
+			// this.repaint();
+		}
+		
 
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
