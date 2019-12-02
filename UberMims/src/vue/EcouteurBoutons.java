@@ -122,6 +122,11 @@ public class EcouteurBoutons implements ActionListener{
 					fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
 			break;
 			
+			case "Ajouter une livraison a la tournee":
+				System.out.println("Ajouter une livraison");
+					//controleur.ajouterLivraison();					
+					fenetre.afficherAjoutLivraison();
+			break;
 			}
 		}
 	}
