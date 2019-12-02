@@ -12,6 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -59,8 +64,8 @@ public class Fenetre extends JFrame {
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 
-	private final int LARGEUR_PLAN = 800;
-	private final int HAUTEUR_PLAN = 600;
+	public static final int LARGEUR_PLAN = 750;
+	public static final int HAUTEUR_PLAN = 750;
 
 	private double coefX;
 	private double coefY;
@@ -92,7 +97,7 @@ public class Fenetre extends JFrame {
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan);
 	
-
+	
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -112,16 +117,23 @@ public class Fenetre extends JFrame {
 		JButton boutonChargementTournee = new JButton("Charger une demande de tournee");
 		JButton boutonChargementPlan2 = new JButton("Charger un autre plan de la ville");
 		JButton boutonCalculTournee = new JButton("Calculer une tournee");
+		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison");
 
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
 		panAccueil.setBackground(backgroundBleuCiel);
 		panAccueil.setSize(1200, 800);
 		panAccueil.setVisible(true);
-		boutonChargementPlan.setBounds(400, 350, 400, 200);
+		//Logo
+	
+
+		//Bouton Chargement plan
+		boutonChargementPlan.setBounds(450, 500, 300, 50);
 		panAccueil.add(boutonChargementPlan);
 		boutonChargementPlan.addActionListener(ecouteurBoutons);
 		this.setContentPane(panAccueil);
+		
+		
 
 		// Panel Presentation : affichage de la page globale apres chargement de plan
 		panPrincipal.setVisible(false);
@@ -129,7 +141,6 @@ public class Fenetre extends JFrame {
 		panPrincipal.setBackground(backgroundBleuCiel);
 		panPrincipal.setSize(1200, 800);
 
-		
 		// Panel de DROITE 1 : partie vide
 		panDroite1.setVisible(true);
 		panDroite1.setLayout(null);
@@ -177,50 +188,68 @@ public class Fenetre extends JFrame {
 		panGauche.setBounds(0, 0, 800, 800);
 		panPrincipal.add(panGauche);
 
-		//Panel LEGENDE : haut dessus du plan tout a gauche
+		// Panel LEGENDE : haut tout a droite
 		panLegende.setVisible(true);
 		panLegende.setLayout(null);
-		panLegende.setBackground(backgroundJaune);
+		panLegende.setBackground(backgroundRougeClair);
 		panLegende.setBounds(0, 0, 400, 200);
-		JLabel titreLegende = new JLabel("<html> <center> Legende : <br><br>");
-		titreLegende.setFont(new Font("Verdana",1,20));
+		JLabel titreLegende = new JLabel("<html> <center> Legende <br>");
+		titreLegende.setFont(new Font("Verdana", 1, 10));
 		panLegende.setLayout(null);
-		titreLegende.setBounds(100, 50, 200, 100);
+		titreLegende.setBounds(10, 10, 100, 30);
 		panLegende.add(titreLegende);
-		panGauche.add(panLegende);
-		
+		panDroite1.add(panLegende);
+
 		// Panel CHARGEMENT PLAN : haut dessus du plan : partie qui contiendra le plan
 		// et le nom du plan+ bouton chargement d'un autre plan
 		panChargePlan.setVisible(true);
 		panChargePlan.setLayout(null);
 		panChargePlan.setBackground(backgroundOrange);
-		panChargePlan.setBounds(400, 0, 400, 200);
+		panChargePlan.setBounds(375, 0, 375, 50);
 		// bouton chargement autre plan
 		boutonChargementPlan2.setVisible(true);
-		boutonChargementPlan2.setBounds(75, 75, 250, 75);
+		boutonChargementPlan2.setBounds(50, 10, 300, 30);
 		panChargePlan.add(boutonChargementPlan2);
 		boutonChargementPlan2.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargePlan);
-		
 
 		// Panel de CHARGEMENT TOURNEE : partie qui contiendra le bouton de chargement
 		// d'une livraison
 		panChargeTournee.setVisible(true);
 		panChargeTournee.setLayout(null);
-		panChargeTournee.setBounds(0, 0, 400, 200);
-		panChargeTournee.setBackground(backgroundRougeClair);
+		panChargeTournee.setBounds(0, 0, 375, 50);
+		panChargeTournee.setBackground(backgroundJaune);
 		// bouton chargement tournee
-		boutonChargementTournee.setVisible(true);
-		boutonChargementTournee.setBounds(50, 75, 300, 75);
-		panChargeTournee.add(boutonChargementTournee);
-		boutonChargementTournee.addActionListener(ecouteurBoutons);
-		panDroite1.add(panChargeTournee);
+				boutonChargementTournee.setVisible(true);
+				boutonChargementTournee.setBounds(50, 10, 300, 30);
+				panChargeTournee.add(boutonChargementTournee);
+				boutonChargementTournee.addActionListener(ecouteurBoutons);
+		panGauche.add(panChargeTournee);
+
+		// Panel de DROITE 2 : partie qui contient le bouton Calculer Tournee
+		panDroite2.setVisible(false);
+		panDroite2.setLayout(null);
+		panDroite2.setBounds(0, 200, 400, 600);
+		panDroite2.setBackground(backgroundTurquoise);
+		// bouton chargement autre plan
+		boutonCalculTournee.setVisible(true);
+		boutonCalculTournee.setBounds(50, 225, 300, 75);
+		panDroite2.add(boutonCalculTournee);
+		boutonCalculTournee.addActionListener(ecouteurBoutons);
+		panDroite1.add(panDroite2);
+
+		// Panel INFORMATIONS : partie Ã  droite qui contient les infos de la Tournee
+		panInformation.setVisible(false);
+		panInformation.setLayout(null);
+		panInformation.setBounds(0, 200, 400, 800);
+		panInformation.setBackground(backgroundTurquoise);
+		panDroite1.add(panInformation);
 
 		// Panel PLAN
 		affichagePlan.setVisible(true);
 		affichagePlan.setLayout(null);
 		affichagePlan.setBackground(backgroundBleuCiel);
-		affichagePlan.setBounds(0, 200, 800, 600);
+		affichagePlan.setBounds(0, 50, LARGEUR_PLAN, HAUTEUR_PLAN);
 		panGauche.add(affichagePlan);
 
 	}
@@ -237,11 +266,11 @@ public class Fenetre extends JFrame {
 		this.plan = plan;
 		this.affichagePlan.setPlan(plan);
 	}
-	
-	public Plan getPlan(){
+
+	public Plan getPlan() {
 		return this.plan;
 	}
-	
+
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherPanPrincipal() {
 		panInformation.setVisible(false);
@@ -253,8 +282,7 @@ public class Fenetre extends JFrame {
 		this.repaint();
 	}
 
-
-	//***** INFOS TOURNEE *****
+	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
 
@@ -381,6 +409,7 @@ public class Fenetre extends JFrame {
 			}
 			
 		}
+
 		int duree = tournee.getDuree() ;
 		jlabel.setText(jlabel.getText()+" <br> Durée totale : " + duree + " minutes. </center> </html>");
 		
@@ -490,15 +519,15 @@ public class Fenetre extends JFrame {
 	// Affichage des informations apres avoir clique sur bouton calculer tournee
 	public void afficherInfos() {
 		panDroite2.setVisible(false);
+
 		panInformation.setVisible(false);
 		panInformationAll.setVisible(true);
 		panInformationDetail.setVisible(true);
 		//System.out.println("Droite2 non visible");
 		this.setContentPane(panPrincipal);
-		//this.repaint();
+		// this.repaint();
 	}
-	
-	
+
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
 	}
