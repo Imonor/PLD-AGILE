@@ -13,12 +13,12 @@ import model.Troncon;
 
 public class Dijkstra {
 	
-	private final double vitesse = 15.0/3.6; //Vitesse en m/s
+	private final double vitesse = 1.0;//15.0/3.6; //Vitesse en m/s
 	
 	//Retourne une map dont la clé est l'id de l'intersection considérée, et la valeur est une 
 	//map qui contient en clé l'id de l'intersection vers laquelle on souhaite calculer le +
 	//court chemin, et en valeur le chemin correspondant
-	public Map<String, Map<String, Chemin>> plusCourtsCheminsPlan(Map<String, Intersection> intersections) {
+	public Map<String, Map<String, Chemin>> plusCourtsCheminsPlan(Map<String, Intersection> plan, Map<String, Intersection> intersectionsAVisiter) {
 		Map<String, Map<String, Chemin>> plusCourtsChemins = new HashMap<>();
 		
 		Map<String, String> precedence = new HashMap<>();
@@ -29,10 +29,10 @@ public class Dijkstra {
 		String sommetAEtudier = "";
 
 		//On applique l'algo de Dikstra au depart de l'intersection "intersectionId"
-		for(String intersectionId: intersections.keySet()) { 
+		for(String intersectionId: intersectionsAVisiter.keySet()) { 
 					
 			//Tous les sommets sont blancs, les précédences sont initialisées à null et les distances à +infini
-			initialiserMaps(intersections, precedence, distance, couleurSommet);
+			initialiserMaps(plan, precedence, distance, couleurSommet);
 			
 			//Initialisation du sommet de départ (distance nulle, couleur grise)
 			distance.put(intersectionId, 0.0);
@@ -50,7 +50,7 @@ public class Dijkstra {
 					}
 				}
 				//Récupérer la liste des troncons sortant du sommet étudié
-				Map<String, Troncon> troncons = intersections.get(sommetAEtudier).getTronconsSortants();
+				Map<String, Troncon> troncons = plan.get(sommetAEtudier).getTronconsSortants();
 				//Procédure de relâchement pour chaque arc partant du sommet étudié
 				for(String idDestination: troncons.keySet()) {
 					if(couleurSommet.containsKey(idDestination) && (couleurSommet.get(idDestination) == 0 ||couleurSommet.get(idDestination) == 1)) {
@@ -68,8 +68,8 @@ public class Dijkstra {
 			
 			//On crée la liste des + courts chemins depuis intersectionId vers les autres intersections
 			Map<String, Chemin> chemins = new HashMap<>();
-			for(String intersectionArrivee: intersections.keySet()) {
-				Chemin chemin = this.creerChemin(intersectionId, intersectionArrivee, precedence, intersections);
+			for(String intersectionArrivee: intersectionsAVisiter.keySet()) {
+				Chemin chemin = this.creerChemin(intersectionId, intersectionArrivee, precedence, plan);
 				chemins.put(intersectionArrivee, chemin);
 			}
 			//On ajoute cette liste à la liste globale des + courts chemins
@@ -169,6 +169,7 @@ public class Dijkstra {
 		Intersection i2 = new Intersection("i2", 0.0, 0.0);
 		Intersection i3 = new Intersection("i3", 0.0, 0.0);
 		Intersection i4 = new Intersection("i4", 0.0, 0.0);
+		Intersection i5 = new Intersection("i5", 0.0, 0.0);
 		
 		i1.addTroncon("i2", new Troncon(i2, "", 100.0));
 		i2.addTroncon("i3", new Troncon(i3, "", 50.0));
@@ -176,6 +177,8 @@ public class Dijkstra {
 		i3.addTroncon("i4", new Troncon(i4, "", 100.0));
 		i3.addTroncon("i2", new Troncon(i2, "", 80.0));
 		i3.addTroncon("i1", new Troncon(i1, "", 300.0));
+		i4.addTroncon("i5", new Troncon(i5, "", 150.0));
+		i2.addTroncon("i5", new Troncon(i5, "", 250.0));
 		
 		
 		Map<String, Intersection> intersections = new HashMap<>();
@@ -183,8 +186,14 @@ public class Dijkstra {
 		intersections.put("i2", i2);
 		intersections.put("i3", i3);
 		intersections.put("i4", i4);
+		intersections.put("i5", i5);
 		
-		Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(intersections);
+		Map<String, Intersection> aVisiter = new HashMap<>();
+		aVisiter.put("i1", i1);
+		aVisiter.put("i2", i2);
+		aVisiter.put("i3", i3);
+		
+		Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(intersections, aVisiter);
 		for(String interDepart: plusCourtsChemins.keySet()) {
 			System.out.println("intersection " + interDepart +":");
 			for(String interArrivee: plusCourtsChemins.get(interDepart).keySet()) {
@@ -194,7 +203,7 @@ public class Dijkstra {
 						System.out.print(i.getId() + " -> ");
 					}
 				}
-				System.out.println("duree: " + (int) (plusCourtsChemins.get(interDepart).get(interArrivee).getDuree() * (15/3.6)));
+				System.out.println("duree: " + (int) (plusCourtsChemins.get(interDepart).get(interArrivee).getDuree()));
 			}
 		}
 

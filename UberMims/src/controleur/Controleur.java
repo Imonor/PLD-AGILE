@@ -2,6 +2,8 @@ package controleur;
 
 import util.XMLParser;
 
+
+import java.util.HashMap;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,6 @@ public class Controleur {
 		uniteCalculChemins = new Dijkstra();
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
-		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		cmdListe = new CmdListe();
 	}
 
@@ -42,16 +43,19 @@ public class Controleur {
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
-		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections()); 
-																					// vÃ©rifier
-																					// que
-																					// le
-																					// plan
-																					// est
-																					// pas
-																					// incohÃ©rent
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vérifier que le plan nest pas incohérent
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
 	}
+
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();

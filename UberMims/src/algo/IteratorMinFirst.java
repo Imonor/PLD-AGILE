@@ -53,6 +53,7 @@ public class IteratorMinFirst implements Iterator<String>{
 		
 		System.out.println("actual=" + actual);
 		
+		
 		//Recherche du min
 		for (HashMap.Entry<String, Intersection> entry : intersections.entrySet()) {
 			String idid = actual.concat(entry.getKey());
