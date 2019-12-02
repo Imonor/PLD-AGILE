@@ -271,8 +271,7 @@ public class Fenetre extends JFrame {
 		boutonValiderAjoutLivraison.setVisible(true);
 		boutonValiderAjoutLivraison.setBounds(75, 30, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
-		panAnnulerAjoutLivraison.add(boutonValiderAjoutLivraison);
-		panAjoutLivraisonGlobal.add(panAnnulerAjoutLivraison);
+		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
 	
 		
 //***************************************//
@@ -367,6 +366,7 @@ public class Fenetre extends JFrame {
 
 		// Affichage des informations apres avoir clique sur bouton calculer tournee
 		public void afficherInfos() {
+			panAjoutLivraison3.setVisible(false);
 			panCalculTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
@@ -382,6 +382,7 @@ public class Fenetre extends JFrame {
 			panInformationDetail.setVisible(false);
 			panHautDroite.setVisible(false);
 			panAjoutLivraisonGlobal.setVisible(true);
+			panAjoutLivraison1.setVisible(true);
 			affichagePlan.setEtat(Etat.ENLEVEMENT);
 			this.setContentPane(panPrincipal);
 			// this.repaint();
@@ -392,9 +393,22 @@ public class Fenetre extends JFrame {
 			panAjoutLivraison1.setVisible(false);
 			panAjoutLivraison2.setVisible(true);
 			affichagePlan.setEtat(Etat.LIVRAISON);
-			this.setContentPane(panAjoutLivraisonGlobal);
+			this.setContentPane(panPrincipal);
 		}
 		
+		// Passage aux details d'ajout de livraison 3
+				public void afficherAjoutLivraison3() {
+					panAjoutLivraison2.setVisible(false);
+					panAjoutLivraison3.setVisible(true);
+					affichagePlan.setPlanClickable(false);
+					this.setContentPane(panPrincipal);
+				}
+				
+				public void apresAjoutLivraison() {
+					panAjoutLivraison3.setVisible(false);
+					this.setContentPane(panPrincipal);
+				}
+				
 
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan

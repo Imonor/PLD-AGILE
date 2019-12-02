@@ -44,7 +44,7 @@ public class AffichagePlan extends JPanel {
 	public enum Etat{
 		LIVRAISON,
 		ENLEVEMENT;
-	}
+		}
 	
 	private Etat etat;
 	// Endroit de placement du plan dans la page

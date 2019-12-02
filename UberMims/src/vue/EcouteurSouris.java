@@ -37,6 +37,8 @@ public class EcouteurSouris implements MouseListener {
 		    switch(affichagePlan.getEtat()) {
 		    case LIVRAISON  :
 		    	affichagePlan.setNouvelleLivraison(interLaPlusProche);
+		    	fenetre.afficherAjoutLivraison3();
+
 		    	break;
 		    case ENLEVEMENT :
 		    	affichagePlan.setNouveauPickUp(interLaPlusProche);

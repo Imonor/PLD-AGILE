@@ -139,8 +139,11 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
+				fenetre.getAffichagePlan().setNouveauPickUp(null);
+				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				controleur.ajouterLivraison();
 				fenetre.setTournee(controleur.getTournee());
+				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
 				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
 			break;
