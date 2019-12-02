@@ -57,11 +57,22 @@ public class AffichagePlan extends JPanel {
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
+	private boolean planClickable;
+	
 
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
 		chargementCouleurs();
+		this.planClickable = false;
 		this.addMouseListener(new EcouteurSouris(this));
+	}
+	
+	public void setPlanClickable(boolean planClickable) {
+		this.planClickable = planClickable;
+	}
+	
+	public boolean getPlanClickable() {
+		return this.planClickable;
 	}
 	
 	public Plan getPlan() {
