@@ -87,13 +87,11 @@ public abstract class TemplateTSP implements TSP{
 		}
 		
 		//Mettre premier noeud comme deja visite - ici le premier est l'entrepot
-		HashMap.Entry<String,Paire> first = vuDispo.entrySet().iterator().next();
-		first.getValue().setDispo(false);
-		first.getValue().setVu(true);
-		
+		vuDispo.get(contraintes.getDepot().getId()).setDispo(false);
+		vuDispo.get(contraintes.getDepot().getId()).setVu(true);
 		
 		Tournee tournee = new Tournee();
-		calculerSimplementTournee(tournee, first.getKey(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
 		
 		return tournee;
 	}

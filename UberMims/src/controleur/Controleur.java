@@ -2,6 +2,8 @@ package controleur;
 
 import util.XMLParser;
 
+
+import java.util.HashMap;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,6 @@ public class Controleur {
 		uniteCalculChemins = new Dijkstra();
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
-		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 		cmdListe = new CmdListe();
 	}
 
@@ -42,16 +43,19 @@ public class Controleur {
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
-		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections()); 
-																					// vérifier
-																					// que
-																					// le
-																					// plan
-																					// est
-																					// pas
-																					// incohérent
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // v�rifier que le plan nest pas incoh�rent
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
 	}
+
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
@@ -79,10 +83,11 @@ public class Controleur {
 		}
 	}
 
-	// public void ajouterLivraison (Livraison livraison) {
+	public void ajouterLivraison() {
+	//public void ajouterLivraison (Livraison livraison) {
 	// CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
 	// cmdListe.addCommande(cmd);
-	// }
+	}
 	//
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
@@ -103,11 +108,11 @@ public class Controleur {
 		cmdListe.redo();
 	}
 
-	public static void main(String[] args) {
-		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,
-				800);
-		contr.calculerTournee();
-	}
+//	public static void main(String[] args) {
+//		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,
+//				800);
+//		contr.calculerTournee();
+//	}
 
 	public Tournee getTournee() {
 		return tournee;
