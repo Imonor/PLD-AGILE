@@ -2,7 +2,9 @@ package controleur;
 
 import util.XMLParser;
 
+
 import java.util.HashMap;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +40,6 @@ public class Controleur {
 
 	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		//plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections());
 	}
 
 	public void chargerTournee(String filePathTournee) {
@@ -54,6 +55,7 @@ public class Controleur {
 		}
 		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
 	}
+
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
