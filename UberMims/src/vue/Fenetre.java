@@ -3,7 +3,6 @@ package vue;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -282,7 +281,6 @@ public class Fenetre extends JFrame {
 		// chargement d'un autre plan
 		panGauche.setVisible(true);
 		panGauche.setLayout(null);
-		panGauche.setBackground(Color.white);
 		panGauche.setBounds(0, 0, 800, 800);
 		panPrincipal.add(panGauche);
 
