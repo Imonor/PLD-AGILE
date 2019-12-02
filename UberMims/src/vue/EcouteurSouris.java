@@ -9,9 +9,11 @@ import model.Intersection;
 public class EcouteurSouris implements MouseListener {
 
 	private AffichagePlan affichagePlan;
+	private Fenetre fenetre;
 
-	public EcouteurSouris(AffichagePlan affichagePlan) {
+	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
+		this.fenetre = fenetre;
 	}
 
 	@Override
@@ -38,6 +40,7 @@ public class EcouteurSouris implements MouseListener {
 		    	break;
 		    case ENLEVEMENT :
 		    	affichagePlan.setNouveauPickUp(interLaPlusProche);
+		    	fenetre.afficherAjoutLivraison2();
 		    	break;
 		    }
 		        
