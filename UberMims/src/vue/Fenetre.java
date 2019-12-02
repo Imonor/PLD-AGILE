@@ -126,6 +126,7 @@ public class Fenetre extends JFrame {
 		JButton boutonCalculTournee = new JButton("Calculer une tournee");
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
+		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 
 		
 //************** ACCUEIL ****************//
@@ -237,22 +238,19 @@ public class Fenetre extends JFrame {
 		CliquezSurCarte1.setFont(new Font("Verdana", 0, 15));
 		CliquezSurCarte1.setBounds(75, 200, 300, 200);
 		panAjoutLivraison1.add(CliquezSurCarte1);
+		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 
 		//Panel DETAILS AJOUT LIVRAISON 2
 		panAjoutLivraison2.setVisible(false);
 		panAjoutLivraison2.setLayout(null);
 		panAjoutLivraison2.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison2.setBounds(0, 100, 450, 700);
-		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
-		
-		//Panel DETAILS AJOUT LIVRAISON 3
 		//Texte Ajout Livraison 2
 		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
 		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
 		CliquezSurCarte2.setBounds(75, 400, 250, 200);
 		panAjoutLivraison2.add(CliquezSurCarte2);
-		
-		
+		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
 		//Infos pick-up
 		//Intersection inter = inters.get(0);
 		//Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
@@ -260,12 +258,21 @@ public class Fenetre extends JFrame {
 		//caminos.put("Pick up n�" + compteurPickUp, c);
 		//textePickUp.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 		
-		//Panel DETAILS AJOUT LIVRAISON 2
+		
+		//Panel DETAILS AJOUT LIVRAISON 3
 		panAjoutLivraison3.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
 		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison3.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
+		//Infos pick-up
+		//Infos delivery
+		//bouton Valider
+		boutonValiderAjoutLivraison.setVisible(true);
+		boutonValiderAjoutLivraison.setBounds(75, 30, 300, 30);
+		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
+		panAnnulerAjoutLivraison.add(boutonValiderAjoutLivraison);
+		panAjoutLivraisonGlobal.add(panAnnulerAjoutLivraison);
 	
 		
 //***************************************//
