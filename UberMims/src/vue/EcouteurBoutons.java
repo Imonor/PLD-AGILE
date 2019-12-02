@@ -107,10 +107,10 @@ public class EcouteurBoutons implements ActionListener{
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
-						controleur.chargerTournee(cheminFichierTournee);
-						fenetre.setTournee(null);
-						fenetre.setContraintes(controleur.getContraintes());
-						fenetre.afficherBoutonCalcul();
+					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setTournee(null);
+					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.afficherBoutonCalcul();
 					
 				}
 			break;
