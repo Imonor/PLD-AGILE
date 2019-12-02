@@ -50,10 +50,10 @@ public class AffichagePlan extends JPanel {
 	// Endroit de placement du plan dans la page
 	private Point placementPlan;
 
-	// Plan chargé via le fichier XML
+	// Plan chargï¿½ via le fichier XML
 	private Plan plan;
 
-	// Contraintes chargées via le fichier XML
+	// Contraintes chargï¿½es via le fichier XML
 	private ContraintesTournee contraintes;
 
 	// Trajet de livraison
@@ -65,17 +65,17 @@ public class AffichagePlan extends JPanel {
 
 	private boolean planClickable;
 
-	//Point de pickUp ajouté
+	//Point de pickUp ajoutï¿½
 	private Intersection nouveauPickUp;
 	
-	//Point de livraison ajouté
+	//Point de livraison ajoutï¿½
 	private Intersection nouvelleLivraison;
 
 	
 	public AffichagePlan(Plan plan) {
 		this.plan = plan;
 		chargementCouleurs();
-		this.planClickable = true;
+		this.planClickable = false;
 		this.addMouseListener(new EcouteurSouris(this));
 		this.etat = etat.LIVRAISON;
 	}
@@ -262,20 +262,20 @@ public class AffichagePlan extends JPanel {
 		public void draw(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			// Calcula o ângulo da seta.
+			// Calcula o ï¿½ngulo da seta.
 			double angle = Math.atan2(endY - y, endX - x);
 
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
-			// Desenha a linha. Corta 10 pixels na ponta para a ponta não ficar
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o ficar
 			// grossa.
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
-			// Obtém o AffineTransform original.
+			// Obtï¿½m o AffineTransform original.
 			AffineTransform tx1 = g2.getTransform();
 
-			// Cria uma cópia do AffineTransform.
+			// Cria uma cï¿½pia do AffineTransform.
 			AffineTransform tx2 = (AffineTransform) tx1.clone();
 
 			// Translada e rotaciona o novo AffineTransform.
