@@ -126,7 +126,32 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Ajouter une livraison");
 					//controleur.ajouterLivraison();					
 					fenetre.afficherAjoutLivraison();
+					fenetre.getAffichagePlan().setPlanClickable(true);
+					
+					
 			break;
+			
+			case "Annuler l'ajout d'une livraison":
+				System.out.println("Annuler ajout d'une livraison");
+				fenetre.getAffichagePlan().setNouveauPickUp(null);
+				fenetre.getAffichagePlan().setNouvelleLivraison(null);
+				fenetre.getAffichagePlan().setPlanClickable(false);
+				fenetre.afficherInfos();
+				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+			break;
+			
+			case "Valider l'ajout d'une livraison":
+				System.out.println("Valider ajout d'une livraison");
+				fenetre.getAffichagePlan().setNouveauPickUp(null);
+				fenetre.getAffichagePlan().setNouvelleLivraison(null);
+				controleur.ajouterLivraison();
+				fenetre.setTournee(controleur.getTournee());
+				fenetre.apresAjoutLivraison();
+				fenetre.afficherInfos();
+				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+			break;
+			
+			
 			}
 		}
 	}

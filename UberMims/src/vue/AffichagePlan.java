@@ -41,14 +41,19 @@ public class AffichagePlan extends JPanel {
 	/**
 	 * Page d'accueil : chargement du plan
 	 */
-
+	public enum Etat{
+		LIVRAISON,
+		ENLEVEMENT;
+		}
+	
+	private Etat etat;
 	// Endroit de placement du plan dans la page
 	private Point placementPlan;
 
-	// Plan chargé via le fichier XML
+	// Plan chargï¿½ via le fichier XML
 	private Plan plan;
 
-	// Contraintes chargées via le fichier XML
+	// Contraintes chargï¿½es via le fichier XML
 	private ContraintesTournee contraintes;
 
 	// Trajet de livraison
@@ -56,10 +61,44 @@ public class AffichagePlan extends JPanel {
 
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
+	
 
-	public AffichagePlan(Plan plan) {
+	private boolean planClickable;
+
+	//Point de pickUp ajoutï¿½
+	private Intersection nouveauPickUp;
+	
+	//Point de livraison ajoutï¿½
+	private Intersection nouvelleLivraison;
+
+	
+	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
+		this.planClickable = false;
+		this.addMouseListener(new EcouteurSouris(this, fenetre));
+		this.etat = etat.LIVRAISON;
+	}
+	
+	public void setPlanClickable(boolean planClickable) {
+		this.planClickable = planClickable;
+	}
+	
+	public boolean getPlanClickable() {
+		return this.planClickable;
+	}
+	
+	public Etat getEtat() {
+		return etat;
+	}
+
+	public void setEtat(Etat etat) {
+		this.etat = etat;
+	}
+	
+	
+	public Plan getPlan() {
+		return this.plan;
 	}
 
 	public void setPlan(Plan plan) {
@@ -68,6 +107,26 @@ public class AffichagePlan extends JPanel {
 
 	public void setTournee(Tournee tournee) {
 		this.tournee = tournee;
+	}
+	
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
+	}
+	
+	public Intersection getNouveauPickUp() {
+		return nouveauPickUp;
+	}
+
+	public Intersection getNouvelleLivraison() {
+		return nouvelleLivraison;
+	}
+
+	public void setNouveauPickUp(Intersection nouveauPickUp) {
+		this.nouveauPickUp = nouveauPickUp;
+	}
+
+	public void setNouvelleLivraison(Intersection nouvelleLivraison) {
+		this.nouvelleLivraison = nouvelleLivraison;
 	}
 
 	public void chargementCouleurs() {
@@ -143,8 +202,23 @@ public class AffichagePlan extends JPanel {
 					g2d.fill(pointLivraison);
 				}
 			}
+			
+			if(nouvelleLivraison != null){
+				Ellipse2D.Double pointLivraison = new Ellipse2D.Double(nouvelleLivraison.getLongitude() - 5,
+						nouvelleLivraison.getLatitude() - 5, 10, 10);
+				g2d.setPaint(Color.RED);
+				g2d.draw(pointLivraison);
+			}
+			
+			if(nouveauPickUp != null){
+				Rectangle2D.Double pointEnlevement = new Rectangle2D.Double(nouveauPickUp.getLongitude() - 5,
+						nouveauPickUp.getLatitude() - 5, 10, 10);
+				g2d.setPaint(Color.RED);
+				g2d.draw(pointEnlevement);
+			}
 		}
 	}
+	
 
 	public void miseALEchelle() {
 		if (plan != null) {
@@ -153,10 +227,6 @@ public class AffichagePlan extends JPanel {
 			// coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax()
 			// - plan.getLongitudeMin());
 		}
-	}
-
-	public void setContraintes(ContraintesTournee contraintes) {
-		this.contraintes = contraintes;
 	}
 
 	// The code snippet below was found on the forum
@@ -192,20 +262,20 @@ public class AffichagePlan extends JPanel {
 		public void draw(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			// Calcula o ângulo da seta.
+			// Calcula o ï¿½ngulo da seta.
 			double angle = Math.atan2(endY - y, endX - x);
 
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
-			// Desenha a linha. Corta 10 pixels na ponta para a ponta não ficar
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o ficar
 			// grossa.
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
-			// Obtém o AffineTransform original.
+			// Obtï¿½m o AffineTransform original.
 			AffineTransform tx1 = g2.getTransform();
 
-			// Cria uma cópia do AffineTransform.
+			// Cria uma cï¿½pia do AffineTransform.
 			AffineTransform tx2 = (AffineTransform) tx1.clone();
 
 			// Translada e rotaciona o novo AffineTransform.
