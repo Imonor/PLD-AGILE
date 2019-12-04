@@ -225,8 +225,11 @@ public class AffichagePlan extends JScrollPane {
 
 			if (tournee != null) {
 				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
+				int cptColor = 0;
+				Color couleurLigne; 
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
+					couleurLigne = getArrowColor(cptColor); 
 					int k = 0;
 					for (int i = 0; i < inters.size() - 1; ++i) {
 						Intersection inter = inters.get(i);
@@ -234,17 +237,19 @@ public class AffichagePlan extends JScrollPane {
 						if (inter.getTronconsSortants().size() > 3 || k == 3) {
 							LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude(),
-									Color.ORANGE, 2);
+									couleurLigne, 2);
 							line.draw(g2d);
 							k = 0;
 						} else {
 							g2d.setStroke(new BasicStroke(2));
-							g2d.setPaint(Color.ORANGE);
+							g2d.setPaint(couleurLigne);
 							g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude()));
 							k++;
 						}
 					}
+					
+					cptColor ++;
 				}
 			}
 
@@ -287,6 +292,20 @@ public class AffichagePlan extends JScrollPane {
 		}
 	}
 	
+	
+	public Color getArrowColor(int i){
+		int k = i%3;
+		if(k == 0) {
+			return new Color(226, 226, 72);
+		}
+		else if(k == 1){
+			return new Color(229, 138, 86);
+		}
+		else if(k == 2){
+			return new Color(150, 120, 57);
+		}
+		return new Color(0,0,0);
+	}
 
 	// The code snippet below was found on the forum
 	// https://itqna.net/questions/3389/how-draw-arrow-using-java2d
