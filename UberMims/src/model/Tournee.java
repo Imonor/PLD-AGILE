@@ -85,4 +85,8 @@ public class Tournee {
 		heurePassage.plusSeconds(secondes);
 		return heurePassage;
 	}
+	
+	public ContraintesTournee getContraintes() {
+		return contraintes;
+	}
 }
