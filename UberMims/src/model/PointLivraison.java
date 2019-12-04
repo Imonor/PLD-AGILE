@@ -8,16 +8,19 @@ public class PointLivraison extends Intersection {
 	public PointLivraison(String id, double latitude, double longitude, String idEnlevement, int tempsLivraison) {
 		super(id, latitude, longitude);
 		this.idEnlevement = idEnlevement;
-		this.setTempsLivraison(tempsLivraison);
+		if (tempsLivraison >=0)
+			this.tempsLivraison = tempsLivraison;
+		else
+			this.tempsLivraison = 0;
 	}
 	
 	public PointLivraison(Intersection i, String idEnlevement, int tempsLivraison) {
-		this.setId(i.getId());
-		this.setLatitude(i.getLatitude());
-		this.setLongitude(i.getLongitude());
+		super(i.getId(), i.getLatitude(), i.getLongitude());
 		this.idEnlevement = idEnlevement;
-		this.setTempsLivraison(tempsLivraison);
-	}
+		if (tempsLivraison >=0)
+			this.tempsLivraison = tempsLivraison;
+		else
+			this.tempsLivraison = 0;	}
 
 	public String getIdEnlevement() {
 		return idEnlevement;
@@ -32,7 +35,9 @@ public class PointLivraison extends Intersection {
 	}
 
 	public void setTempsLivraison(int tempsLivraison) {
-		this.tempsLivraison = tempsLivraison;
-	}
+		if (tempsLivraison >=0)
+			this.tempsLivraison = tempsLivraison;
+		else
+			this.tempsLivraison = 0;	}
 
 }

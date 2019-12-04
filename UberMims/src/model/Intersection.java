@@ -49,9 +49,12 @@ public class Intersection {
 		return tronconsSortants;
 	}
 
-	public void addTroncon(String idArrivee, Troncon tronc) {
-		if(!tronconsSortants.containsKey(idArrivee))
+	public boolean addTroncon(String idArrivee, Troncon tronc) {
+		if(!tronconsSortants.containsKey(idArrivee)) {
 			this.tronconsSortants.put(idArrivee, tronc);
+			return true;
+		}
+		return false;
 	}
 
 }
