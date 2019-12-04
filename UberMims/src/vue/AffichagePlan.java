@@ -183,7 +183,7 @@ public class AffichagePlan extends JPanel {
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
 				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,
-						10, 10);
+						15, 15);
 				g2d.setPaint(Color.black);
 				g2d.fill(depotg);
 

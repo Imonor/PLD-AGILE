@@ -242,7 +242,7 @@ public class Fenetre extends JFrame {
 		JLabel CliquezSurCarte2 = new JLabel(
 				"<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
 		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
-		CliquezSurCarte2.setBounds(75, 400, 250, 200);
+		CliquezSurCarte2.setBounds(75, 200, 300, 200);
 		panAjoutLivraison2.add(CliquezSurCarte2);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
 
@@ -252,18 +252,10 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison3.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
-		// Infos pick-up
-		Intersection nouveauPickUp = affichagePlan.getNouveauPickUp();
-		//Troncon tronconNouveauPickUp = nouveauPickUp.getTronconsSortants().get(nouveauPickUp.getId());
-		JLabel textePickUp = new JLabel("<html> <center> Pick up : </center> <left>  <br><br> ");
-		textePickUp.setBounds(75, 150, 250, 250);
-		textePickUp.setForeground(new Color(69, 73, 74));
-		//textePickUp.setText(textePickUp.getText() + "&rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "<br>");
-
-		// Infos delivery
+		// Infos pick up
 		// bouton Valider
 		boutonValiderAjoutLivraison.setVisible(true);
-		boutonValiderAjoutLivraison.setBounds(450, 30, 300, 30);
+		boutonValiderAjoutLivraison.setBounds(75, 450, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
 
@@ -391,6 +383,7 @@ public class Fenetre extends JFrame {
 	// Passage aux details d'ajout de livraison 3
 	public void afficherAjoutLivraison3() {
 		panAjoutLivraison2.setVisible(false);
+		infosPointsAjout();
 		panAjoutLivraison3.setVisible(true);
 		affichagePlan.setPlanClickable(false);
 		this.setContentPane(panPrincipal);
@@ -401,6 +394,34 @@ public class Fenetre extends JFrame {
 		this.setContentPane(panPrincipal);
 	}
 
+	//Affichage Infos du point ajoute avant clic sur bouton valider ajout
+	public void infosPointsAjout() {
+		// Infos pick-up
+		Intersection nouveauPickUp = affichagePlan.getNouveauPickUp();
+		String idTronconNouveauPickUp = nouveauPickUp.getTronconsSortants().keySet().iterator().next();
+		Troncon tronconNouveauPickUp = nouveauPickUp.getTronconsSortants().get(idTronconNouveauPickUp);
+		JLabel textePickUp = new JLabel("<html> <center> <b>Point d'enlevement : </b></center> <left><br> ");
+		textePickUp.setVisible(true);
+		textePickUp.setFont(new Font("Verdana", 0, 15));
+		textePickUp.setBounds(100, 150, 250, 250);
+		//textePickUp.setForeground(new Color(69, 73, 74));
+		textePickUp.setText(textePickUp.getText() + "&rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "<br>");
+		panAjoutLivraison3.add(textePickUp);
+		
+		Intersection nouveauDelivery = affichagePlan.getNouvelleLivraison();
+		String idTronconNouveauDelivery = nouveauDelivery.getTronconsSortants().keySet().iterator().next();
+		Troncon tronconNouveauDelivery = nouveauDelivery.getTronconsSortants().get(idTronconNouveauDelivery);
+		JLabel texteDelivery = new JLabel("<html> <center> <b>Point d'enlevement : </b></center> <left><br> ");
+		texteDelivery.setVisible(true);
+		texteDelivery.setFont(new Font("Verdana", 0, 15));
+		texteDelivery.setBounds(100, 250, 250, 250);
+		//textePickUp.setForeground(new Color(69, 73, 74));
+		texteDelivery.setText(texteDelivery.getText() + "&rarr; Adresse : " + tronconNouveauDelivery.getNomRue() + "<br>");
+		panAjoutLivraison3.add(texteDelivery);
+	}
+	
+	
+	
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {

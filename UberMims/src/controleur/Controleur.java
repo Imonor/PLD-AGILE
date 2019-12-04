@@ -88,8 +88,18 @@ public class Controleur {
 	public void ajouterLivraison(PointEnlevement nouveauPickUp, PointLivraison nouvelleLivraison) {
 		CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, nouveauPickUp, nouvelleLivraison);
 		cmdListe.addCommande(cmd);
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);
 	}
-	//
+
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
 	// livraison);
