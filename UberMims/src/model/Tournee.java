@@ -26,7 +26,14 @@ public class Tournee {
 		this.plusCourteTournee=plusCourteTournee;
 	}
 	
+	public Tournee(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
+		plusCourteTournee = new LinkedList<Chemin>();
+		duree = 0;
+	}
+	
 	public Tournee() {
+		contraintes = new ContraintesTournee();
 		plusCourteTournee = new LinkedList<Chemin>();
 		duree = 0;
 	}
@@ -50,7 +57,7 @@ public class Tournee {
 		duree+=tempsElevementLivraison;
 	}
 	
-	public LocalTime getHeureDePassage (String intersection) {		
+	public LocalTime getHeureDePassage (String intersection) {	
 		LocalTime heurePassage = contraintes.getHeureDepart();
 		int secondes = 0;
 		int i = 0;
