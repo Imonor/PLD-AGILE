@@ -18,10 +18,10 @@ public class ModificationTournee extends JPanel{
 	
 	private JPanel mainList;
 
-    public ModificationTournee(Tournee tournee) {
+    public ModificationTournee() {
         setLayout(new BorderLayout());
         
-        List<Chemin> listeChemins = tournee.getPlusCourteTournee();
+        //List<Chemin> listeChemins = tournee.getPlusCourteTournee();
         
         mainList = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

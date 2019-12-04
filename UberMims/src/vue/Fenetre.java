@@ -110,6 +110,7 @@ public class Fenetre extends JFrame {
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
+	private JPanel panModificationTournee = new ModificationTournee();
 
 	public Fenetre() {
 
@@ -219,14 +220,13 @@ public class Fenetre extends JFrame {
 		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
-		
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
 		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
-
+		
 		// Panel Annuler livraison
 		panAnnulerAjoutLivraison.setVisible(true);
 		panAnnulerAjoutLivraison.setLayout(null);
@@ -290,6 +290,13 @@ public class Fenetre extends JFrame {
 		boutonValiderAjoutLivraison.setBounds(75, 600, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
+		
+		
+		//Panel modification de tournée
+		panModificationTournee.setVisible(false);
+		panModificationTournee.setBounds(0, 100, 450, 800);
+		panModificationTournee.setBackground(Color.white);
+		panDroite.add(panModificationTournee);
 
 //***************************************//
 
