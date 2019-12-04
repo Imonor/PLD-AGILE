@@ -77,6 +77,30 @@ public class ContraintesTourneeTest {
 		
 		ContraintesTournee ct = new ContraintesTournee(LocalTime.MIN, depot, e, l);
 		
+		Intersection i5 = new Intersection("e3", 0.0,0.0);
+		Intersection i6 = new Intersection("l3", 0.0,0.0);
+		PointEnlevement e3 = new PointEnlevement(i5,"l3",10);
+		PointLivraison l3 = new PointLivraison(i6,"e3",10);
+		
+		//Ajout livrason inexistante sans point commun
+		assertTrue(ct.addLivraison(e3, l3));
+		
+		//Ajout livraisons avec points non référencés l'un à l'autre
+		assertFalse(ct.addLivraison(e3, l1));
+		assertFalse(ct.addLivraison(e1, l3));
+		
+		//Ajout livraisons deja presente
+		assertFalse(ct.addLivraison(e3, l3));
+		
+		//Ajout livraison avec un point commun
+		PointEnlevement e4 = new PointEnlevement(i5,"l4",10);
+		PointLivraison l4 = new PointLivraison("l4", 0.0,0.0,e4.getId(),10);
+		
+		PointLivraison l5 = new PointLivraison(i6, "e5",10);
+		PointEnlevement e5 = new PointEnlevement("e5",0.0,0.0,l5.getId(),10);
+		
+		assertTrue(ct.addLivraison(e4, l4));
+		assertTrue(ct.addLivraison(e5, l5));
 		
 	}
 	
@@ -105,6 +129,17 @@ public class ContraintesTourneeTest {
 		l.add(l2);
 		
 		ContraintesTournee ct = new ContraintesTournee(LocalTime.MIN, depot, e, l);
+		
+		//Supprimer une livraison présente
+		assertTrue(ct.removeLivraison(e1, l1));
+		
+		//Supprimer une livraison absente
+		assertFalse(ct.removeLivraison(e1, l1));
+		
+		//Ajout livraisons avec points non référencés l'un à l'autre
+		assertFalse(ct.addLivraison(e1, l2));
+		assertFalse(ct.addLivraison(e2, l1));
+		
 	}
 	
 	

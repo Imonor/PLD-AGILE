@@ -97,19 +97,5 @@ public class ContraintesTournee {
 			return false;
 		}
 	}
-	
-	private boolean PtsEnlevmentContains (PointEnlevement toFind) {
-		for (Intersection i : pointsEnlevement) {
-			if(i.getId().equals(toFind.getId())) return true;
-		}		
-		return false;
-	}
-	
-	private boolean PtsLivraisonContains (PointLivraison toFind) {
-		for (Intersection i : pointsLivraison) {
-			if(i.getId().equals(toFind.getId())) return true;
-		}		
-		return false;
-	}
 
 }
