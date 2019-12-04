@@ -17,7 +17,7 @@ public class Controleur {
 	private final int LARGEUR_PLAN = 800;
 	private final int HAUTEUR_PLAN = 600;
 
-	public Map<String, Map<String, Chemin>> plusCourtsChemins;
+	private Map<String, Map<String, Chemin>> plusCourtsChemins;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
 	public static Plan plan;
@@ -28,7 +28,7 @@ public class Controleur {
 		tournee = new Tournee();
 		uniteCalculChemins = new Dijkstra();
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
+		chargerTournee(filePathTournee);
 		cmdListe = new CmdListe();
 	}
 
@@ -43,7 +43,7 @@ public class Controleur {
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vérifier que le plan nest pas incohérent
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vï¿½rifier que le plan nest pas incohï¿½rent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
 		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
@@ -59,7 +59,7 @@ public class Controleur {
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
-		tournee = tsp.chercheSolution(1000, contraintes, plusCourtsChemins);
+		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
 		int dureeEnlevementLivraison = 0;
 		
 		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
@@ -83,10 +83,11 @@ public class Controleur {
 		}
 	}
 
-	// public void ajouterLivraison (Livraison livraison) {
+	public void ajouterLivraison() {
+	//public void ajouterLivraison (Livraison livraison) {
 	// CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
 	// cmdListe.addCommande(cmd);
-	// }
+	}
 	//
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
@@ -119,6 +120,10 @@ public class Controleur {
 
 	public ContraintesTournee getContraintes() {
 		return contraintes;
+	}
+
+	public Map<String, Map<String, Chemin>> getPlusCourtsChemins() {
+		return plusCourtsChemins;
 	}
 
 }

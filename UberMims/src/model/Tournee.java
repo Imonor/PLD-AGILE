@@ -92,4 +92,8 @@ public class Tournee {
 		heurePassage.plusSeconds(secondes);
 		return heurePassage;
 	}
+
+	public void setPlusCourteTournee(List<Chemin> plusCourteTournee) {
+		this.plusCourteTournee = plusCourteTournee;
+	}
 }

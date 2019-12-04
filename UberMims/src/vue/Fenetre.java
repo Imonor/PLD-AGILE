@@ -3,7 +3,6 @@ package vue;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -50,6 +49,7 @@ import model.Intersection;
 import model.Plan;
 import model.Tournee;
 import util.XMLParser;
+import vue.AffichagePlan.Etat;
 
 public class Fenetre extends JFrame {
 
@@ -96,7 +96,7 @@ public class Fenetre extends JFrame {
 	private JPanel panChargeTournee = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
-	private AffichagePlan affichagePlan = new AffichagePlan(plan);
+	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panAnnulerAjoutLivraison = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
@@ -125,6 +125,7 @@ public class Fenetre extends JFrame {
 		JButton boutonCalculTournee = new JButton("Calculer une tournee");
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
+		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 
 		
 //************** ACCUEIL ****************//
@@ -232,22 +233,45 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison1.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 		//Texte Ajout Livraison Debut
-		JLabel CliquezSurCarte1 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>pick up </b> de la nouvelle livraison<br>");
+		JLabel CliquezSurCarte1 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point d'<b>enlevement </b> de la nouvelle livraison<br>");
 		CliquezSurCarte1.setFont(new Font("Verdana", 0, 15));
-		CliquezSurCarte1.setBounds(100, 200, 250, 200);
+		CliquezSurCarte1.setBounds(75, 200, 300, 200);
 		panAjoutLivraison1.add(CliquezSurCarte1);
+		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 
-		//Panel DETAILS AJOUT LIVRAISON 1
+		//Panel DETAILS AJOUT LIVRAISON 2
 		panAjoutLivraison2.setVisible(false);
 		panAjoutLivraison2.setLayout(null);
 		panAjoutLivraison2.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison2.setBounds(0, 100, 450, 700);
-		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
-		//Texte Ajout Livraison Debut
-		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>delivery </b> de la nouvelle livraison<br>");
+		//Texte Ajout Livraison 2
+		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
 		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
-		CliquezSurCarte2.setBounds(100, 500, 250, 200);
-		panAjoutLivraison1.add(CliquezSurCarte2);
+		CliquezSurCarte2.setBounds(75, 400, 250, 200);
+		panAjoutLivraison2.add(CliquezSurCarte2);
+		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
+		//Infos pick-up
+		//Intersection inter = inters.get(0);
+		//Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
+		JLabel textePickUp = new JLabel("<html> <center> Pick up : </center> <left>  <br><br> Adresse de depart : ");
+		//caminos.put("Pick up n�" + compteurPickUp, c);
+		//textePickUp.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
+		
+		
+		//Panel DETAILS AJOUT LIVRAISON 3
+		panAjoutLivraison3.setVisible(false);
+		panAjoutLivraison3.setLayout(null);
+		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
+		panAjoutLivraison3.setBounds(0, 100, 450, 700);
+		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
+		//Infos pick-up
+		//Infos delivery
+		//bouton Valider
+		boutonValiderAjoutLivraison.setVisible(true);
+		boutonValiderAjoutLivraison.setBounds(75, 30, 300, 30);
+		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
+		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
+	
 		
 //***************************************//
 		
@@ -257,7 +281,6 @@ public class Fenetre extends JFrame {
 		// chargement d'un autre plan
 		panGauche.setVisible(true);
 		panGauche.setLayout(null);
-		panGauche.setBackground(Color.white);
 		panGauche.setBounds(0, 0, 800, 800);
 		panPrincipal.add(panGauche);
 
@@ -341,6 +364,10 @@ public class Fenetre extends JFrame {
 
 		// Affichage des informations apres avoir clique sur bouton calculer tournee
 		public void afficherInfos() {
+			panAjoutLivraison1.setVisible(false);
+			panAjoutLivraison2.setVisible(false);
+			panAjoutLivraison3.setVisible(false);
+			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
@@ -356,18 +383,33 @@ public class Fenetre extends JFrame {
 			panInformationDetail.setVisible(false);
 			panHautDroite.setVisible(false);
 			panAjoutLivraisonGlobal.setVisible(true);
+			panAjoutLivraison1.setVisible(true);
+			affichagePlan.setEtat(Etat.ENLEVEMENT);
 			this.setContentPane(panPrincipal);
 			// this.repaint();
 		}
 		
 		// Passage aux details d'ajout de livraison 2
-				public void afficherAjoutLivraison2() {
-					panAjoutLivraison1.setVisible(false);
-					panAjoutLivraison2.setVisible(true);
-					this.setContentPane(panPrincipal);
-					// this.repaint();
-				}
+		public void afficherAjoutLivraison2() {
+			panAjoutLivraison1.setVisible(false);
+			panAjoutLivraison2.setVisible(true);
+			affichagePlan.setEtat(Etat.LIVRAISON);
+			this.setContentPane(panPrincipal);
+		}
 		
+		// Passage aux details d'ajout de livraison 3
+				public void afficherAjoutLivraison3() {
+					panAjoutLivraison2.setVisible(false);
+					panAjoutLivraison3.setVisible(true);
+					affichagePlan.setPlanClickable(false);
+					this.setContentPane(panPrincipal);
+				}
+				
+				public void apresAjoutLivraison() {
+					panAjoutLivraison3.setVisible(false);
+					this.setContentPane(panPrincipal);
+				}
+				
 
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
@@ -611,6 +653,10 @@ public class Fenetre extends JFrame {
 
 	public Tournee getTournee() {
 		return tournee;
+	}
+	
+	public AffichagePlan getAffichagePlan() {
+		return this.affichagePlan;
 	}
 
 	public void setTournee(Tournee tournee) {

@@ -49,9 +49,29 @@ public class Intersection {
 		return tronconsSortants;
 	}
 
-	public void addTroncon(String idArrivee, Troncon tronc) {
-		if(!tronconsSortants.containsKey(idArrivee))
+	public boolean addTroncon(String idArrivee, Troncon tronc) {
+		if(!tronconsSortants.containsKey(idArrivee)) {
 			this.tronconsSortants.put(idArrivee, tronc);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Intersection other = (Intersection) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }
