@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -18,6 +20,7 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 import controleur.Controleur;
@@ -31,7 +34,7 @@ import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
 
-public class AffichagePlan extends JPanel {
+public class AffichagePlan extends JScrollPane {
 
 	/**
 	 * 
@@ -62,7 +65,7 @@ public class AffichagePlan extends JPanel {
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
-
+	// Determine s'il est possible de cliquer sur le plan
 	private boolean planClickable;
 
 	//Point de pickUp ajout�
@@ -70,14 +73,22 @@ public class AffichagePlan extends JPanel {
 	
 	//Point de livraison ajout�
 	private Intersection nouvelleLivraison;
-
+	
+	// Ecouteur de la souris
+	private EcouteurSouris ecouteurSouris;
+	
+	//Zoom actuel
+	private float zoom;
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
 		this.planClickable = false;
-		this.addMouseListener(new EcouteurSouris(this, fenetre));
-		this.etat = etat.LIVRAISON;
+		this.zoom = 1f;
+		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
+		this.addMouseListener(ecouteurSouris);
+		this.addMouseWheelListener(ecouteurSouris);
+		this.etat = etat.LIVRAISON;		
 	}
 	
 	public void setPlanClickable(boolean planClickable) {
@@ -95,8 +106,7 @@ public class AffichagePlan extends JPanel {
 	public void setEtat(Etat etat) {
 		this.etat = etat;
 	}
-	
-	
+		
 	public Plan getPlan() {
 		return this.plan;
 	}
@@ -128,7 +138,65 @@ public class AffichagePlan extends JPanel {
 	public void setNouvelleLivraison(Intersection nouvelleLivraison) {
 		this.nouvelleLivraison = nouvelleLivraison;
 	}
+	
+	public float getZoom() {
+		return zoom;
+	}
 
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+	}
+	
+	public void ZoomIn(int x, int y){
+		this.zoom = this.zoom * 1.001f;
+		
+		Point pos = this.getViewport().getViewPosition();
+		
+		int newX = (int) (pos.x * 1.1f);
+	    int newY = (int) (pos.y * 1.1f);
+	    this.getViewport().setViewPosition(new Point(newX, newY));
+
+	    this.revalidate();
+		
+		for (Intersection  intersection : plan.getIntersections().values()) {
+			
+			double latitude = intersection.getLatitude();
+			double longitude = intersection.getLongitude();
+			
+			
+//			if( longitude <= x){
+//				intersection.setLongitude(longitude*zoom);
+//			}else{
+//				intersection.setLongitude(longitude/zoom);
+//			}
+//			
+//			if( latitude <= y){
+//				intersection.setLatitude(latitude*zoom);
+//			}else{
+//				intersection.setLatitude(latitude/zoom);
+//			}
+			
+//			if( longitude <= x){
+//				intersection.setLongitude(longitude+10);
+//			}else{
+//				intersection.setLongitude(longitude-10);
+//			}
+//			
+//			if( latitude <= y){
+//				intersection.setLatitude(latitude+10);
+//			}else{
+//				intersection.setLatitude(latitude-10);
+//			}
+				
+		}
+		
+		this.repaint();
+	}
+	
+	public void ZoomOut(){
+		
+	}
+	
 	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
 		Random rand = new Random();
@@ -220,15 +288,6 @@ public class AffichagePlan extends JPanel {
 	}
 	
 
-	public void miseALEchelle() {
-		if (plan != null) {
-			// coefX = (double) (LARGEUR_PLAN) / (double)(plan.getLattitudeMax()
-			// - plan.getLattitudeMin());
-			// coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax()
-			// - plan.getLongitudeMin());
-		}
-	}
-
 	// The code snippet below was found on the forum
 	// https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 
@@ -245,7 +304,7 @@ public class AffichagePlan extends JPanel {
 		private final int x;
 		private final int y;
 		private final int endX;
-		private final int endY;
+		private final int endY; 
 		private final Color color;
 		private final int thickness;
 
