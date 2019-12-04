@@ -68,10 +68,10 @@ public class AffichagePlan extends JScrollPane {
 	// Determine s'il est possible de cliquer sur le plan
 	private boolean planClickable;
 
-	//Point de pickUp ajout�
+	//Point de pickUp ajoute
 	private Intersection nouveauPickUp;
 	
-	//Point de livraison ajout�
+	//Point de livraison ajoute
 	private Intersection nouvelleLivraison;
 	
 	// Ecouteur de la souris
@@ -251,7 +251,7 @@ public class AffichagePlan extends JScrollPane {
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
 				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,
-						10, 10);
+						15, 15);
 				g2d.setPaint(Color.black);
 				g2d.fill(depotg);
 

@@ -30,7 +30,7 @@ public abstract class TemplateTSP implements TSP{
 	
 	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		
-//		tempsLimiteAtteint = false;
+		tempsLimiteAtteint = false;
 //		coutMeilleureSolution = Integer.MAX_VALUE;
 //		meilleureSolution = new String[nbSommets];
 
@@ -68,13 +68,6 @@ public abstract class TemplateTSP implements TSP{
 			}
 		}
 		
-//		System.out.println("apres calcul couts");
-//		for (HashMap.Entry<String, Integer> entry : couts.entrySet()) {
-//			System.out.println(entry.getKey()+" "+entry.getValue());
-//		}
-//		System.out.println("fin ici");
-		
-		
 		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
 		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
 		
@@ -91,7 +84,12 @@ public abstract class TemplateTSP implements TSP{
 		vuDispo.get(contraintes.getDepot().getId()).setVu(true);
 		
 		Tournee tournee = new Tournee();
+		//Sequentiel et MinFirst
 		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+		
+		//MinFirst + 2-Opt
+//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+//		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, couts);
 		
 		return tournee;
 	}
@@ -136,6 +134,51 @@ public abstract class TemplateTSP implements TSP{
 		Chemin chemin = new Chemin(listeInter, duree);
 		tournee.addChemin(chemin);
 		
+	}
+	
+	protected void twoOpt(int tpsLimite, long tpsDebut, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts) {
+		
+		Iterator<Chemin> it = tournee.getPlusCourteTournee().iterator();
+		Iterator<Chemin> it2 = tournee.getPlusCourteTournee().iterator();
+		int nbChemins = tournee.getPlusCourteTournee().size();
+		int i = 0 ;
+		tempsLimiteAtteint = false;
+			
+		//Algo 2-Opt
+		while(it.hasNext() && i<(nbChemins - 2)) {
+			Chemin chemin = it.next();
+			int j = 0 ;
+			while(it2.hasNext() && j<nbChemins) {
+				
+				//Pour ne pas depasser le temps limite
+				if (System.currentTimeMillis() - tpsDebut > tpsLimite){
+					 tempsLimiteAtteint = true;
+					 return;
+				}
+				
+				Chemin chemin2 = it2.next();
+				if(j>i+2) {
+					int dureeIni = chemin.getDuree() + chemin2.getDuree();
+					String depart1Depart2 = chemin.getPremiere().getId() + chemin2.getPremiere().getId();
+					String fin1Fin2 = chemin.getDerniere().getId() + chemin2.getDerniere().getId();
+					if( couts.get(depart1Depart2) + couts.get(fin1Fin2) < dureeIni ) {
+					
+						//Changer l'ordre depart1 -> depart2 ; fin1 -> fin2
+						Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId());
+						Chemin newChemin2 = plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId());
+						int index1 = tournee.getPlusCourteTournee().indexOf(chemin);
+						int index2 = tournee.getPlusCourteTournee().indexOf(chemin2);
+						tournee.getPlusCourteTournee().remove(index1);
+						tournee.getPlusCourteTournee().add(index1, newChemin1);
+						tournee.getPlusCourteTournee().remove(index2);
+						tournee.getPlusCourteTournee().add(index2, newChemin2);
+						
+					}
+				}
+				j++;
+			}
+			++i;
+		}
 	}
 	
 //	protected void testerCalcul(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
