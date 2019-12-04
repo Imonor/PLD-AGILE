@@ -14,6 +14,7 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -72,8 +74,6 @@ public class Fenetre extends JFrame {
 
 	private double coefX;
 	private double coefY;
-
-	private Color backgroundColor = new Color(191, 252, 251);
 	private final int LARGEUR_FENETRE = 1200;
 	private final int HAUTEUR_FENETRE = 800;
 
@@ -104,7 +104,6 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
-
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -254,10 +253,36 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison3.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
-		// Infos pick up
+	    //CHAMP ENLEVEMENT
+		JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
+	    Font police = new Font("Verdana", 0, 15);
+	    champPickUp.setVisible(true);
+	    champPickUp.setFont(police);
+	    champPickUp.setBounds(100,155,100,30);
+	    //champPickUp.setForeground(Color.red);
+	    champPickUp.setBackground(Color.white);
+	    panAjoutLivraison3.add(champPickUp);
+		JLabel texteMinutes1 = new JLabel("<html> minutes<br> ");
+		texteMinutes1.setVisible(true);
+		texteMinutes1.setFont(new Font("Verdana", 0, 15));
+		texteMinutes1.setBounds(205, 155, 100, 30);
+		panAjoutLivraison3.add(texteMinutes1);
+		//Champ livraison
+		JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
+	    champDelivery.setVisible(true);
+	    champDelivery.setFont(police);
+	    champDelivery.setBounds(100,405,100,30);
+	    //champPickUp.setForeground(Color.red);
+	    champDelivery.setBackground(Color.white);
+	    panAjoutLivraison3.add(champDelivery);
+		JLabel texteMinutes2 = new JLabel("<html> minutes<br> ");
+		texteMinutes2.setVisible(true);
+		texteMinutes2.setFont(new Font("Verdana", 0, 15));
+		texteMinutes2.setBounds(205, 405, 100, 30);
+		panAjoutLivraison3.add(texteMinutes2);
 		// bouton Valider
 		boutonValiderAjoutLivraison.setVisible(true);
-		boutonValiderAjoutLivraison.setBounds(75, 450, 300, 30);
+		boutonValiderAjoutLivraison.setBounds(75, 600, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
 
@@ -402,23 +427,22 @@ public class Fenetre extends JFrame {
 		Intersection nouveauPickUp = affichagePlan.getNouveauPickUp();
 		String idTronconNouveauPickUp = nouveauPickUp.getTronconsSortants().keySet().iterator().next();
 		Troncon tronconNouveauPickUp = nouveauPickUp.getTronconsSortants().get(idTronconNouveauPickUp);
-		JLabel textePickUp = new JLabel("<html><b>     Point d'enlevement : </b> <left><br> ");
+		JLabel textePickUp = new JLabel("<html><center><b>Point d'enlevement : </b></center><br> ");
 		textePickUp.setVisible(true);
 		textePickUp.setFont(new Font("Verdana", 0, 15));
-		textePickUp.setBounds(75, 100, 350, 250);
-		//textePickUp.setForeground(new Color(69, 73, 74));
-		textePickUp.setText(textePickUp.getText() + "&rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "<br>");
+		textePickUp.setBounds(75, 0, 350, 200);
+		textePickUp.setText(textePickUp.getText() + "<font color=\"B84039\"> &rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "</font><br><br>Duree au point d'enlevement : <br>");
 		panAjoutLivraison3.add(textePickUp);
 		
 		Intersection nouveauDelivery = affichagePlan.getNouvelleLivraison();
 		String idTronconNouveauDelivery = nouveauDelivery.getTronconsSortants().keySet().iterator().next();
 		Troncon tronconNouveauDelivery = nouveauDelivery.getTronconsSortants().get(idTronconNouveauDelivery);
-		JLabel texteDelivery = new JLabel("<html> <b>     Point de livraison : </b> <left><br> ");
+		JLabel texteDelivery = new JLabel("<html><center><b>Point de livraison : </b> </center><br> ");
 		texteDelivery.setVisible(true);
 		texteDelivery.setFont(new Font("Verdana", 0, 15));
-		texteDelivery.setBounds(75, 200, 350, 250);
+		texteDelivery.setBounds(75, 250, 350,200);
 		//textePickUp.setForeground(new Color(69, 73, 74));
-		texteDelivery.setText(texteDelivery.getText() + "&rarr; Adresse : " + tronconNouveauDelivery.getNomRue() + "<br>");
+		texteDelivery.setText(texteDelivery.getText() + "<font color=\"B84039\"> &rarr; Adresse : " + tronconNouveauDelivery.getNomRue() + "</font><br><br>Duree au point de livraison :<br>");
 		panAjoutLivraison3.add(texteDelivery);
 	}
 	
