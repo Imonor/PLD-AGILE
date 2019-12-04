@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseWheelEvent;
@@ -13,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -50,8 +52,6 @@ public class AffichagePlan extends JScrollPane {
 		}
 	
 	private Etat etat;
-	// Endroit de placement du plan dans la page
-	private Point placementPlan;
 
 	// Plan charg� via le fichier XML
 	private Plan plan;
@@ -78,13 +78,17 @@ public class AffichagePlan extends JScrollPane {
 	private EcouteurSouris ecouteurSouris;
 	
 	//Zoom actuel
-	private float zoom;
+	private double zoom;
+	private double zoomPrecedent;
+    private double xOffset = 0;
+    private double yOffset = 0;
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
 		this.planClickable = false;
 		this.zoom = 1f;
+		this.zoomPrecedent = 1f;
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
@@ -139,7 +143,7 @@ public class AffichagePlan extends JScrollPane {
 		this.nouvelleLivraison = nouvelleLivraison;
 	}
 	
-	public float getZoom() {
+	public double getZoom() {
 		return zoom;
 	}
 
@@ -147,54 +151,14 @@ public class AffichagePlan extends JScrollPane {
 		this.zoom = zoom;
 	}
 	
-	public void ZoomIn(int x, int y){
-		this.zoom = this.zoom * 1.001f;
-		
-		Point pos = this.getViewport().getViewPosition();
-		
-		int newX = (int) (pos.x * 1.1f);
-	    int newY = (int) (pos.y * 1.1f);
-	    this.getViewport().setViewPosition(new Point(newX, newY));
-
-	    this.revalidate();
-		
-		for (Intersection  intersection : plan.getIntersections().values()) {
-			
-			double latitude = intersection.getLatitude();
-			double longitude = intersection.getLongitude();
-			
-			
-//			if( longitude <= x){
-//				intersection.setLongitude(longitude*zoom);
-//			}else{
-//				intersection.setLongitude(longitude/zoom);
-//			}
-//			
-//			if( latitude <= y){
-//				intersection.setLatitude(latitude*zoom);
-//			}else{
-//				intersection.setLatitude(latitude/zoom);
-//			}
-			
-//			if( longitude <= x){
-//				intersection.setLongitude(longitude+10);
-//			}else{
-//				intersection.setLongitude(longitude-10);
-//			}
-//			
-//			if( latitude <= y){
-//				intersection.setLatitude(latitude+10);
-//			}else{
-//				intersection.setLatitude(latitude-10);
-//			}
-				
-		}
-		
+	public void ZoomIn(){
+		this.zoom = this.zoom * 1.1f;	
 		this.repaint();
 	}
 	
 	public void ZoomOut(){
-		
+		this.zoom = this.zoom / 1.1f;	
+		this.repaint();
 	}
 	
 	public void chargementCouleurs() {
@@ -210,6 +174,25 @@ public class AffichagePlan extends JScrollPane {
 		super.paintComponent(g);
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
+//		g2d.translate(750/2, 750/2);
+//		g2d.scale(zoom, zoom);
+//		g2d.translate(-750/2, -750/2);
+		
+		AffineTransform at = new AffineTransform();
+		
+		double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
+        double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
+        
+        double zoomDiv = zoom/zoomPrecedent;
+        
+        xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
+        yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
+        
+        at.translate(xOffset, yOffset);
+        at.scale(zoom, zoom);
+        zoomPrecedent = zoom;
+        g2d.transform(at);
+        
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
 				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,

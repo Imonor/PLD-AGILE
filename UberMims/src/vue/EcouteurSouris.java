@@ -93,10 +93,13 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener {
 		if (rotationScroll < 0) {
 			// Zoom avant
 			message = "Mouse wheel moved UP " + -rotationScroll + " notch(es)";
-			affichagePlan.ZoomIn(375,375);
+			affichagePlan.ZoomIn();
 		} else {
 			// Zoom arrière
 			message = "Mouse wheel moved DOWN " + rotationScroll + " notch(es)";
+			if(affichagePlan.getZoom() > 1){
+				affichagePlan.ZoomOut();
+			}		
 		}
 		System.out.println(message);
 	}
