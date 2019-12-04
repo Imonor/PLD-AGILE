@@ -164,7 +164,7 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 			break;
 			
 			

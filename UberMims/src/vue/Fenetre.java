@@ -193,13 +193,13 @@ public class Fenetre extends JFrame {
 		panInformationAll.setVisible(false);
 		// panInformationAll.setLayout(null);
 		panInformationAll.setBounds(0, 100, 450, 500);
-		panInformationAll.setBackground(Color.green);// mettre couleur backgroundTurquoiseClair
+		panInformationAll.setBackground(backgroundTurquoiseClair);// mettre couleur backgroundTurquoiseClair
 		panDroite.add(panInformationAll);
 
 		panInformationDetail.setVisible(false);
 		panInformationDetail.setLayout(null);
 		panInformationDetail.setBounds(0, 600, 450, 200);
-		panInformationDetail.setBackground(Color.red); // mettre couleur backgroundTurquoiseClair
+		panInformationDetail.setBackground(backgroundTurquoiseClair); // mettre couleur backgroundTurquoiseClair
 		panDroite.add(panInformationDetail);
 
 		// Panel AJOUT LIVRAISON
@@ -402,10 +402,10 @@ public class Fenetre extends JFrame {
 		Intersection nouveauPickUp = affichagePlan.getNouveauPickUp();
 		String idTronconNouveauPickUp = nouveauPickUp.getTronconsSortants().keySet().iterator().next();
 		Troncon tronconNouveauPickUp = nouveauPickUp.getTronconsSortants().get(idTronconNouveauPickUp);
-		JLabel textePickUp = new JLabel("<html> <center> <b>Point d'enlevement : </b></center> <left><br> ");
+		JLabel textePickUp = new JLabel("<html><b>     Point d'enlevement : </b> <left><br> ");
 		textePickUp.setVisible(true);
 		textePickUp.setFont(new Font("Verdana", 0, 15));
-		textePickUp.setBounds(100, 150, 250, 250);
+		textePickUp.setBounds(75, 100, 350, 250);
 		//textePickUp.setForeground(new Color(69, 73, 74));
 		textePickUp.setText(textePickUp.getText() + "&rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "<br>");
 		panAjoutLivraison3.add(textePickUp);
@@ -413,10 +413,10 @@ public class Fenetre extends JFrame {
 		Intersection nouveauDelivery = affichagePlan.getNouvelleLivraison();
 		String idTronconNouveauDelivery = nouveauDelivery.getTronconsSortants().keySet().iterator().next();
 		Troncon tronconNouveauDelivery = nouveauDelivery.getTronconsSortants().get(idTronconNouveauDelivery);
-		JLabel texteDelivery = new JLabel("<html> <center> <b>Point d'enlevement : </b></center> <left><br> ");
+		JLabel texteDelivery = new JLabel("<html> <b>     Point de livraison : </b> <left><br> ");
 		texteDelivery.setVisible(true);
 		texteDelivery.setFont(new Font("Verdana", 0, 15));
-		texteDelivery.setBounds(100, 250, 250, 250);
+		texteDelivery.setBounds(75, 200, 350, 250);
 		//textePickUp.setForeground(new Color(69, 73, 74));
 		texteDelivery.setText(texteDelivery.getText() + "&rarr; Adresse : " + tronconNouveauDelivery.getNomRue() + "<br>");
 		panAjoutLivraison3.add(texteDelivery);
@@ -427,6 +427,9 @@ public class Fenetre extends JFrame {
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
+		
+		this.panInformationAll.removeAll();
+		this.panInformationDetail.removeAll();
 
 		/*------------------------------- Partie All --------------------------------*/
 		JLabel jlabel = new JLabel(
@@ -455,7 +458,6 @@ public class Fenetre extends JFrame {
 		
 		for(int i = 0; i < contraintestournee.getPointsEnlevement().size(); i++) {
 			idPointsEnlevement.add(contraintestournee.getPointsEnlevement().get(i).getId());
-			System.out.println(contraintestournee.getPointsEnlevement().get(i).getId());
 			ptEnlevement.put(contraintestournee.getPointsEnlevement().get(i).getId(), contraintestournee.getPointsEnlevement().get(i));
 		}
 
@@ -469,7 +471,6 @@ public class Fenetre extends JFrame {
 		int compteurDelivery = 1;
 		
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
-			System.out.println(k);
 			Chemin c = tournee.getPlusCourteTournee().get(k);
 
 			List<Intersection> inters =  c.getIntersections();
@@ -478,8 +479,7 @@ public class Fenetre extends JFrame {
 			Intersection interPrevious = inters.get(taille-2);
 
 			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
-			System.out.println(tronc.getNomRue());
-			System.out.println(inter.getId());
+
 
 				if (idPointsEnlevement.contains(inter.getId())) {
 					int duree = c.getDuree();
@@ -567,7 +567,7 @@ public class Fenetre extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(jlabel);
 		scrollPane.setPreferredSize(new Dimension(300, 350));
 		scrollPane.getViewport().setBackground(new Color(232, 246, 248));
-		panInformationAll.add(scrollPane, BorderLayout.CENTER);
+		panInformationAll.add(scrollPane);
 
 		/*------------------------------- Partie D�tail --------------------------------*/
 
