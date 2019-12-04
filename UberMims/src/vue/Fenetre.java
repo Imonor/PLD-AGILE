@@ -127,6 +127,7 @@ public class Fenetre extends JFrame {
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
+		JButton boutonModifierTournee = new JButton("Modifier l'ordre de la tournée");
 
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
@@ -168,6 +169,13 @@ public class Fenetre extends JFrame {
 		boutonAjouterLivraison.setBounds(75, 30, 300, 30);
 		panHautDroite.add(boutonAjouterLivraison);
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
+		panDroite.add(panHautDroite);
+		// bouton modifier ordre livraison
+		boutonModifierTournee.setVisible(true);
+		boutonModifierTournee.setBounds(75, 65, 300, 30);
+		panHautDroite.add(boutonModifierTournee);
+		boutonModifierTournee.addActionListener(ecouteurBoutons);
+		
 		panDroite.add(panHautDroite);
 
 		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
