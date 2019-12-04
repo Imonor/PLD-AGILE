@@ -85,11 +85,11 @@ public abstract class TemplateTSP implements TSP{
 		
 		Tournee tournee = new Tournee();
 		//Sequentiel et MinFirst
-//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
 		
 		//MinFirst + 2-Opt
-		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
-		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, couts);
+//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+//		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, couts);
 		
 		return tournee;
 	}
