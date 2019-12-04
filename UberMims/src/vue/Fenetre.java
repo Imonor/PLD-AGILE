@@ -104,6 +104,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
+	private JPanel panModificationTournee = new ModificationTournee();
 
 	public Fenetre() {
 
@@ -192,11 +193,6 @@ public class Fenetre extends JFrame {
 
 		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee,
 		// apparait quand bouton calul de tournee cliqué
-		panInformation.setVisible(false);
-		panInformation.setLayout(null);
-		panInformation.setBounds(0, 100, 450, 800);
-		panInformation.setBackground(Color.white);
-		panDroite.add(panInformation);
 
 		panInformationAll.setVisible(false);
 		// panInformationAll.setLayout(null);
@@ -216,7 +212,7 @@ public class Fenetre extends JFrame {
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
 		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
-
+		
 		// Panel Annuler livraison
 		panAnnulerAjoutLivraison.setVisible(true);
 		panAnnulerAjoutLivraison.setLayout(null);
@@ -268,6 +264,13 @@ public class Fenetre extends JFrame {
 		boutonValiderAjoutLivraison.setBounds(75, 450, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
+		
+		
+		//Panel modification de tourn�e
+		panModificationTournee.setVisible(false);
+		panModificationTournee.setBounds(0, 100, 450, 800);
+		panModificationTournee.setBackground(Color.white);
+		panDroite.add(panModificationTournee);
 
 //***************************************//
 
@@ -638,6 +641,15 @@ public class Fenetre extends JFrame {
 		});
 
 		// panInformationDetail.add(button);
+	}
+	
+	// ***** MODIFICATION TOURNEE *****
+	// Passage a la page principale apres le chargement d'un plan
+	
+	public void afficherModificationTournee() {
+		this.panInformationAll.setVisible(false);
+		this.panInformationDetail.setVisible(false);
+		this.panModificationTournee.setVisible(true);
 	}
 
 	public int[] traitementTempsLivraison(int livraison) {

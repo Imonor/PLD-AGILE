@@ -167,6 +167,10 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 			break;
 			
+			case "Modifier l'ordre de la tournée":
+				System.out.println("Modifier tournée");
+				fenetre.afficherModificationTournee();
+			break;			
 			
 			}
 		}
