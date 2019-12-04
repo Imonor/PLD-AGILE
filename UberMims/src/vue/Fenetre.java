@@ -82,7 +82,7 @@ public class Fenetre extends JFrame {
 	private Controleur controleur;
 	// Panels
 	private JPanel panAccueil = new JPanel();
-	private JComboBox c1; 
+	private JComboBox c1;
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
 	private JPanel panInformation = new JPanel();
@@ -103,7 +103,6 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
 
-	
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -127,31 +126,27 @@ public class Fenetre extends JFrame {
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 
-		
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
 		panAccueil.setBackground(backgroundBleuCiel);
 		panAccueil.setSize(1200, 800);
 		panAccueil.setVisible(true);
-		//Logo
-	
+		// Logo
 
-		//Bouton Chargement plan
+		// Bouton Chargement plan
 		boutonChargementPlan.setBounds(450, 500, 300, 50);
 		panAccueil.add(boutonChargementPlan);
 		boutonChargementPlan.addActionListener(ecouteurBoutons);
 		this.setContentPane(panAccueil);
-		
+
 //***************************************//
-		
-		
+
 		// Panel Presentation : affichage de la page globale apres chargement de plan
 		panPrincipal.setVisible(false);
 		panPrincipal.setLayout(null);
 		panPrincipal.setBackground(backgroundBleuCiel);
 		panPrincipal.setSize(1200, 800);
-
 
 //************** DROITE ****************//
 		// Panel de DROITE : partie principale de droite
@@ -160,7 +155,7 @@ public class Fenetre extends JFrame {
 		panDroite.setBounds(750, 0, 450, 800);
 		panDroite.setBackground(backgroundTurquoiseClair);
 		panPrincipal.add(panDroite);
-		
+
 		// Panel HAUT DROITE : haut tout a droite
 		panHautDroite.setVisible(false);
 		panHautDroite.setLayout(null);
@@ -172,7 +167,6 @@ public class Fenetre extends JFrame {
 		panHautDroite.add(boutonAjouterLivraison);
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		panDroite.add(panHautDroite);
-		
 
 		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
 		panCalculTournee.setVisible(false);
@@ -186,34 +180,34 @@ public class Fenetre extends JFrame {
 		boutonCalculTournee.addActionListener(ecouteurBoutons);
 		panDroite.add(panCalculTournee);
 
-		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee, apparait quand bouton calul de tournee cliqué
+		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee,
+		// apparait quand bouton calul de tournee cliqué
 		panInformation.setVisible(false);
 		panInformation.setLayout(null);
 		panInformation.setBounds(0, 100, 450, 800);
 		panInformation.setBackground(Color.white);
 		panDroite.add(panInformation);
-		
+
 		panInformationAll.setVisible(false);
-		//panInformationAll.setLayout(null);
+		// panInformationAll.setLayout(null);
 		panInformationAll.setBounds(0, 100, 450, 500);
-		panInformationAll.setBackground(Color.green);//mettre couleur backgroundTurquoiseClair
+		panInformationAll.setBackground(Color.green);// mettre couleur backgroundTurquoiseClair
 		panDroite.add(panInformationAll);
-		
+
 		panInformationDetail.setVisible(false);
 		panInformationDetail.setLayout(null);
 		panInformationDetail.setBounds(0, 600, 450, 200);
-		panInformationDetail.setBackground(Color.red); //mettre couleur backgroundTurquoiseClair
+		panInformationDetail.setBackground(Color.red); // mettre couleur backgroundTurquoiseClair
 		panDroite.add(panInformationDetail);
-		
-		
+
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
 		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
-		
-		//Panel Annuler livraison 
+
+		// Panel Annuler livraison
 		panAnnulerAjoutLivraison.setVisible(true);
 		panAnnulerAjoutLivraison.setLayout(null);
 		panAnnulerAjoutLivraison.setBackground(backgroundRougeClair);
@@ -224,66 +218,65 @@ public class Fenetre extends JFrame {
 		boutonAnnulerAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAnnulerAjoutLivraison.add(boutonAnnulerAjoutLivraison);
 		panAjoutLivraisonGlobal.add(panAnnulerAjoutLivraison);
-		
-		
-		//Panel DETAILS AJOUT LIVRAISON 1
+
+		// Panel DETAILS AJOUT LIVRAISON 1
 		panAjoutLivraison1.setVisible(true);
 		panAjoutLivraison1.setLayout(null);
 		panAjoutLivraison1.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison1.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
-		//Texte Ajout Livraison Debut
-		JLabel CliquezSurCarte1 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point d'<b>enlevement </b> de la nouvelle livraison<br>");
+		// Texte Ajout Livraison Debut
+		JLabel CliquezSurCarte1 = new JLabel(
+				"<html> <center> Cliquez sur la carte pour selectionner le point d'<b>enlevement </b> de la nouvelle livraison<br>");
 		CliquezSurCarte1.setFont(new Font("Verdana", 0, 15));
 		CliquezSurCarte1.setBounds(75, 200, 300, 200);
 		panAjoutLivraison1.add(CliquezSurCarte1);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 
-		//Panel DETAILS AJOUT LIVRAISON 2
+		// Panel DETAILS AJOUT LIVRAISON 2
 		panAjoutLivraison2.setVisible(false);
 		panAjoutLivraison2.setLayout(null);
 		panAjoutLivraison2.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison2.setBounds(0, 100, 450, 700);
-		//Texte Ajout Livraison 2
-		JLabel CliquezSurCarte2 = new JLabel("<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
+		// Texte Ajout Livraison 2
+		JLabel CliquezSurCarte2 = new JLabel(
+				"<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
 		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
 		CliquezSurCarte2.setBounds(75, 400, 250, 200);
 		panAjoutLivraison2.add(CliquezSurCarte2);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
-		//Infos pick-up
-		//Intersection inter = inters.get(0);
-		//Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
-		JLabel textePickUp = new JLabel("<html> <center> Pick up : </center> <left>  <br><br> Adresse de depart : ");
-		//caminos.put("Pick up n�" + compteurPickUp, c);
-		//textePickUp.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
-		
-		
-		//Panel DETAILS AJOUT LIVRAISON 3
+
+		// Panel DETAILS AJOUT LIVRAISON 3
 		panAjoutLivraison3.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
 		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
 		panAjoutLivraison3.setBounds(0, 100, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
-		//Infos pick-up
-		//Infos delivery
-		//bouton Valider
+		// Infos pick-up
+		Intersection nouveauPickUp = affichagePlan.getNouveauPickUp();
+		//Troncon tronconNouveauPickUp = nouveauPickUp.getTronconsSortants().get(nouveauPickUp.getId());
+		JLabel textePickUp = new JLabel("<html> <center> Pick up : </center> <left>  <br><br> ");
+		textePickUp.setBounds(75, 150, 250, 250);
+		textePickUp.setForeground(new Color(69, 73, 74));
+		//textePickUp.setText(textePickUp.getText() + "&rarr; Adresse : " + tronconNouveauPickUp.getNomRue() + "<br>");
+
+		// Infos delivery
+		// bouton Valider
 		boutonValiderAjoutLivraison.setVisible(true);
-		boutonValiderAjoutLivraison.setBounds(75, 30, 300, 30);
+		boutonValiderAjoutLivraison.setBounds(450, 30, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
-	
-		
+
 //***************************************//
-		
 
 //************** GAUCHE ****************//
-		// Panel de GAUCHE : partie qui contiendra le plan et le bouton chargement tournee + bouton
+		// Panel de GAUCHE : partie qui contiendra le plan et le bouton chargement
+		// tournee + bouton
 		// chargement d'un autre plan
 		panGauche.setVisible(true);
 		panGauche.setLayout(null);
 		panGauche.setBounds(0, 0, 800, 800);
 		panPrincipal.add(panGauche);
-
 
 		// Panel CHARGEMENT PLAN : haut dessus du plan : partie qui contiendra le plan
 		// et le nom du plan+ bouton chargement d'un autre plan
@@ -310,7 +303,6 @@ public class Fenetre extends JFrame {
 		panChargeTournee.add(boutonChargementTournee);
 		boutonChargementTournee.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargeTournee);
-		
 
 		// Panel PLAN
 		affichagePlan.setVisible(true);
@@ -319,8 +311,7 @@ public class Fenetre extends JFrame {
 		affichagePlan.setBounds(0, 50, LARGEUR_PLAN, HAUTEUR_PLAN);
 		panGauche.add(affichagePlan);
 //***************************************//
-		
-		
+
 	}
 
 	public JPanel getPanAccueil() {
@@ -351,292 +342,287 @@ public class Fenetre extends JFrame {
 
 		this.repaint();
 	}
-	
-	// Affichage du bouton calculer tournee apres le chargement d'une tournee
-		public void afficherBoutonCalcul() {
-			panAjoutLivraisonGlobal.setVisible(false);
-			panInformation.setVisible(false);
-			panInformation.removeAll();
-			panCalculTournee.setVisible(true);
-			this.setContentPane(panPrincipal);
-			this.repaint();
-		}
 
-		// Affichage des informations apres avoir clique sur bouton calculer tournee
-		public void afficherInfos() {
-			panAjoutLivraison1.setVisible(false);
-			panAjoutLivraison2.setVisible(false);
-			panAjoutLivraison3.setVisible(false);
-			panAjoutLivraisonGlobal.setVisible(false);
-			panCalculTournee.setVisible(false);
-			panHautDroite.setVisible(true);
-			//panInformation.setVisible(true);
-			panInformationAll.setVisible(true);
-			panInformationDetail.setVisible(true);
-			this.setContentPane(panPrincipal);
-			// this.repaint();
-		}
-		
-		// Affichage des champs d'ajout de livraison
-		public void afficherAjoutLivraison() {
-			panInformationAll.setVisible(false);
-			panInformationDetail.setVisible(false);
-			panHautDroite.setVisible(false);
-			panAjoutLivraisonGlobal.setVisible(true);
-			panAjoutLivraison1.setVisible(true);
-			affichagePlan.setEtat(Etat.ENLEVEMENT);
-			this.setContentPane(panPrincipal);
-			// this.repaint();
-		}
-		
-		// Passage aux details d'ajout de livraison 2
-		public void afficherAjoutLivraison2() {
-			panAjoutLivraison1.setVisible(false);
-			panAjoutLivraison2.setVisible(true);
-			affichagePlan.setEtat(Etat.LIVRAISON);
-			this.setContentPane(panPrincipal);
-		}
-		
-		// Passage aux details d'ajout de livraison 3
-				public void afficherAjoutLivraison3() {
-					panAjoutLivraison2.setVisible(false);
-					panAjoutLivraison3.setVisible(true);
-					affichagePlan.setPlanClickable(false);
-					this.setContentPane(panPrincipal);
-				}
-				
-				public void apresAjoutLivraison() {
-					panAjoutLivraison3.setVisible(false);
-					this.setContentPane(panPrincipal);
-				}
-				
+	// Affichage du bouton calculer tournee apres le chargement d'une tournee
+	public void afficherBoutonCalcul() {
+		panAjoutLivraisonGlobal.setVisible(false);
+		panInformation.setVisible(false);
+		panInformation.removeAll();
+		panCalculTournee.setVisible(true);
+		this.setContentPane(panPrincipal);
+		this.repaint();
+	}
+
+	// Affichage des informations apres avoir clique sur bouton calculer tournee
+	public void afficherInfos() {
+		panAjoutLivraison1.setVisible(false);
+		panAjoutLivraison2.setVisible(false);
+		panAjoutLivraison3.setVisible(false);
+		panAjoutLivraisonGlobal.setVisible(false);
+		panCalculTournee.setVisible(false);
+		panHautDroite.setVisible(true);
+		// panInformation.setVisible(true);
+		panInformationAll.setVisible(true);
+		panInformationDetail.setVisible(true);
+		this.setContentPane(panPrincipal);
+		// this.repaint();
+	}
+
+	// Affichage des champs d'ajout de livraison
+	public void afficherAjoutLivraison() {
+		panInformationAll.setVisible(false);
+		panInformationDetail.setVisible(false);
+		panHautDroite.setVisible(false);
+		panAjoutLivraisonGlobal.setVisible(true);
+		panAjoutLivraison1.setVisible(true);
+		affichagePlan.setEtat(Etat.ENLEVEMENT);
+		this.setContentPane(panPrincipal);
+		// this.repaint();
+	}
+
+	// Passage aux details d'ajout de livraison 2
+	public void afficherAjoutLivraison2() {
+		panAjoutLivraison1.setVisible(false);
+		panAjoutLivraison2.setVisible(true);
+		affichagePlan.setEtat(Etat.LIVRAISON);
+		this.setContentPane(panPrincipal);
+	}
+
+	// Passage aux details d'ajout de livraison 3
+	public void afficherAjoutLivraison3() {
+		panAjoutLivraison2.setVisible(false);
+		panAjoutLivraison3.setVisible(true);
+		affichagePlan.setPlanClickable(false);
+		this.setContentPane(panPrincipal);
+	}
+
+	public void apresAjoutLivraison() {
+		panAjoutLivraison3.setVisible(false);
+		this.setContentPane(panPrincipal);
+	}
 
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
 
 		/*------------------------------- Partie All --------------------------------*/
-		JLabel jlabel = new JLabel("<html> <center> Itineraire propose : </center> <left>  <br><br> Adresse de d�part : ");
-		jlabel.setFont(new Font("Arial",1,12));
-		jlabel.setForeground(new Color(69,73,74));
-		
-		String adresseDepart = tournee.getPlusCourteTournee().get(0).getIntersections().get(0).getTronconsSortants().get(tournee.getPlusCourteTournee().get(0).getIntersections().get(1).getId()).getNomRue();
+		JLabel jlabel = new JLabel(
+				"<html> <center> Itineraire propose : </center> <left>  <br><br> Adresse de d�part : ");
+		jlabel.setFont(new Font("Arial", 1, 12));
+		jlabel.setForeground(new Color(69, 73, 74));
+
+		String adresseDepart = tournee.getPlusCourteTournee().get(0).getIntersections().get(0).getTronconsSortants()
+				.get(tournee.getPlusCourteTournee().get(0).getIntersections().get(1).getId()).getNomRue();
 		jlabel.setText(jlabel.getText() + adresseDepart + ". <br>");
-		
+
 		int heure = contraintestournee.getHeureDepart().getHour();
 		int minute = contraintestournee.getHeureDepart().getMinute();
 		int seconde = contraintestournee.getHeureDepart().getSecond();
-		
+
 		String tempsDepart = heure + ":" + minute + ":" + seconde;
 		jlabel.setText(jlabel.getText() + "Heure de d�part : " + tempsDepart + "<br> <br>");
-		
+
 		List<String> idPointsEnlevement = new ArrayList<>();
 		List<String> idPointsLivraison = new ArrayList<>();
-		
 
-		Map<String, Chemin> caminos =  new HashMap<>();
-		
-		Map<String, PointEnlevement> ptEnlevement =  new HashMap<>();
-		Map<String, PointLivraison> ptLivraison =  new HashMap<>();
-		
-		for(int i = 0; i < contraintestournee.getPointsEnlevement().size(); i++) {
+		Map<String, Chemin> caminos = new HashMap<>();
+
+		Map<String, PointEnlevement> ptEnlevement = new HashMap<>();
+		Map<String, PointLivraison> ptLivraison = new HashMap<>();
+
+		for (int i = 0; i < contraintestournee.getPointsEnlevement().size(); i++) {
 			idPointsEnlevement.add(contraintestournee.getPointsEnlevement().get(i).getId());
-			ptEnlevement.put(contraintestournee.getPointsEnlevement().get(i).getId(), contraintestournee.getPointsEnlevement().get(i));
+			ptEnlevement.put(contraintestournee.getPointsEnlevement().get(i).getId(),
+					contraintestournee.getPointsEnlevement().get(i));
 		}
-		
-		for(int j = 0; j < contraintestournee.getPointsEnlevement().size(); j++) {
+
+		for (int j = 0; j < contraintestournee.getPointsEnlevement().size(); j++) {
 			idPointsLivraison.add(contraintestournee.getPointsLivraison().get(j).getId());
-			ptLivraison.put(contraintestournee.getPointsLivraison().get(j).getId(), contraintestournee.getPointsLivraison().get(j));
+			ptLivraison.put(contraintestournee.getPointsLivraison().get(j).getId(),
+					contraintestournee.getPointsLivraison().get(j));
 		}
-		
+
 		int compteurPickUp = 1;
 		int compteurDelivery = 1;
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
 			Chemin c = tournee.getPlusCourteTournee().get(k);
-			List<Intersection> inters =  c.getIntersections();
+			List<Intersection> inters = c.getIntersections();
 			Intersection inter = inters.get(0);
 			Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
-			
-			if (k!=0) {
+
+			if (k != 0) {
 				if (idPointsEnlevement.contains(inter.getId())) {
 					int duree = c.getDuree();
 					int livraison = ptEnlevement.get(inter.getId()).getTempsEnlevement();
-					
+
 					int tempsChemin[] = traitementTempsChemin(duree);
 					int tempsLivraison[] = traitementTempsLivraison(livraison);
 
 					heure = heure + tempsChemin[0];
-				    minute = minute + tempsChemin[1];
-				    seconde = seconde + tempsChemin[2];
-				    if (seconde >= 60) {
-				    	minute ++;
-				      seconde = seconde % 60;
-				    }
-				    if (minute >= 60) {
-				    	minute ++;
-				    	minute = minute % 60;
-				    }
-							
-					jlabel.setText(jlabel.getText() + "Pick Up n� " + compteurPickUp + " :   <br>");	
+					minute = minute + tempsChemin[1];
+					seconde = seconde + tempsChemin[2];
+					if (seconde >= 60) {
+						minute++;
+						seconde = seconde % 60;
+					}
+					if (minute >= 60) {
+						minute++;
+						minute = minute % 60;
+					}
+
+					jlabel.setText(jlabel.getText() + "Pick Up n� " + compteurPickUp + " :   <br>");
 					caminos.put("Pick up n�" + compteurPickUp, c);
-					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
-					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
-					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
-					
+					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() + "<br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":"
+							+ seconde + "<br>");
+					jlabel.setText(
+							jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
+
 					compteurPickUp++;
-					
+
 					heure = heure + tempsLivraison[0];
-				    minute = minute + tempsLivraison[1];
-				    seconde = seconde + tempsLivraison[2];
-				    if (seconde >= 60) {
-				    	minute ++;
-				      seconde = seconde % 60;
-				    }
-				    if (minute >= 60) {
-				    	minute ++;
-				    	minute = minute % 60;
-				    }
-				}else {
+					minute = minute + tempsLivraison[1];
+					seconde = seconde + tempsLivraison[2];
+					if (seconde >= 60) {
+						minute++;
+						seconde = seconde % 60;
+					}
+					if (minute >= 60) {
+						minute++;
+						minute = minute % 60;
+					}
+				} else {
 					int duree = c.getDuree();
 					int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
-					
+
 					int tempsChemin[] = traitementTempsChemin(duree);
 					int tempsLivraison[] = traitementTempsLivraison(livraison);
 
 					heure = heure + tempsChemin[0];
-				    minute = minute + tempsChemin[1];
-				    seconde = seconde + tempsChemin[2];
-				    if (seconde >= 60) {
-				    	minute ++;
-				      seconde = seconde % 60;
-				    }
-				    if (minute >= 60) {
-				    	minute ++;
-				    	minute = minute % 60;
-				    }
-							
-					jlabel.setText(jlabel.getText() + "Delivery n� " + compteurDelivery + " :   <br>");	
+					minute = minute + tempsChemin[1];
+					seconde = seconde + tempsChemin[2];
+					if (seconde >= 60) {
+						minute++;
+						seconde = seconde % 60;
+					}
+					if (minute >= 60) {
+						minute++;
+						minute = minute % 60;
+					}
+
+					jlabel.setText(jlabel.getText() + "Delivery n� " + compteurDelivery + " :   <br>");
 					caminos.put("Delivery n�" + compteurPickUp, c);
-					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
-					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
-					jlabel.setText(jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
-					
+					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() + "<br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":"
+							+ seconde + "<br>");
+					jlabel.setText(
+							jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
+
 					compteurDelivery++;
-					
+
 					heure = heure + tempsLivraison[0];
-				    minute = minute + tempsLivraison[1];
-				    seconde = seconde + tempsLivraison[2];
-				    if (seconde >= 60) {
-				    	minute ++;
-				      seconde = seconde % 60;
-				    }
-				    if (minute >= 60) {
-				    	minute ++;
-				    	minute = minute % 60;
-				    }
+					minute = minute + tempsLivraison[1];
+					seconde = seconde + tempsLivraison[2];
+					if (seconde >= 60) {
+						minute++;
+						seconde = seconde % 60;
+					}
+					if (minute >= 60) {
+						minute++;
+						minute = minute % 60;
+					}
 				}
 			}
-			
+
 		}
 
-		int duree = tournee.getDuree() ;
-		jlabel.setText(jlabel.getText()+" <br> Dur�e totale : " + duree + " minutes. </center> </html>");
-		
+		int duree = tournee.getDuree();
+		jlabel.setText(jlabel.getText() + " <br> Dur�e totale : " + duree + " minutes. </center> </html>");
+
 		JScrollPane scrollPane = new JScrollPane(jlabel);
 		scrollPane.setPreferredSize(new Dimension(300, 350));
-		scrollPane.getViewport().setBackground(new Color(232,246,248));
+		scrollPane.getViewport().setBackground(new Color(232, 246, 248));
 		panInformationAll.add(scrollPane, BorderLayout.CENTER);
-		
+
 		/*------------------------------- Partie D�tail --------------------------------*/
-		
-		
+
 		c1 = new JComboBox();
-		/*for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
-			Chemin c = tournee.getPlusCourteTournee().get(k);
-			List<Intersection> inters =  c.getIntersections();
-			Intersection inter = inters.get(0);
-			Troncon tronc = inter.getTronconsSortants().get(inters.get(1).getId());
-			
-			if (k!=0) {
-				Chemin cprecedent = tournee.getPlusCourteTournee().get(k-1);
-				List<Intersection> listeInter =  cprecedent.getIntersections();
-				for (int i = 0; i< listeInter.size()-1; i++) {
-					Intersection crntInter = listeInter.get(i);
-					Troncon crntTronc = crntInter.getTronconsSortants().get(listeInter.get(i+1).getId());
-					text = text + " - " + crntTronc.getNomRue();
-				}
-				
-				
-				
-				
-				if (idPointsEnlevement.contains(inter.getId())) {
-					c1.addItem("Pick Up - " + tronc.getNomRue() );
-					
-				}else {
-					c1.addItem("Delivery - " + tronc.getNomRue() );
-				}
-			}
-		}*/
-	
-		
-		for ( String key : caminos.keySet() ) {
-			c1.addItem( key );
+		/*
+		 * for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) { Chemin c =
+		 * tournee.getPlusCourteTournee().get(k); List<Intersection> inters =
+		 * c.getIntersections(); Intersection inter = inters.get(0); Troncon tronc =
+		 * inter.getTronconsSortants().get(inters.get(1).getId());
+		 * 
+		 * if (k!=0) { Chemin cprecedent = tournee.getPlusCourteTournee().get(k-1);
+		 * List<Intersection> listeInter = cprecedent.getIntersections(); for (int i =
+		 * 0; i< listeInter.size()-1; i++) { Intersection crntInter = listeInter.get(i);
+		 * Troncon crntTronc =
+		 * crntInter.getTronconsSortants().get(listeInter.get(i+1).getId()); text = text
+		 * + " - " + crntTronc.getNomRue(); }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * if (idPointsEnlevement.contains(inter.getId())) { c1.addItem("Pick Up - " +
+		 * tronc.getNomRue() );
+		 * 
+		 * }else { c1.addItem("Delivery - " + tronc.getNomRue() ); } } }
+		 */
+
+		for (String key : caminos.keySet()) {
+			c1.addItem(key);
 		}
 
 		c1.setBounds(20, 20, 250, 20);
 		panInformationDetail.add(c1);
 
-		
-		
 		textInfo = new JLabel("Afficher le details");
 		textInfo.setBounds(20, -30, 350, 200);
 		textInfo.setForeground(Color.LIGHT_GRAY);
 		panInformationDetail.add(textInfo);
-		
+
 		c1.addActionListener(new ActionListener() {
-			 
-		    @Override
-		    public void actionPerformed(ActionEvent event) {
-		        JComboBox<String> combo = (JComboBox<String>) event.getSource();
-		        String selected = (String) combo.getSelectedItem();
-		 
-		        if (selected.equals("Effective Java")) {
-		            textInfo.setText("hihi mdr c bien");
-		        } else  {
-		        	textInfo.setText("Nice pick, too!");
-		        }
-		    }
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JComboBox<String> combo = (JComboBox<String>) event.getSource();
+				String selected = (String) combo.getSelectedItem();
+
+				if (selected.equals("Effective Java")) {
+					textInfo.setText("hihi mdr c bien");
+				} else {
+					textInfo.setText("Nice pick, too!");
+				}
+			}
 		});
-		
-		//panInformationDetail.add(button);
-	}
-	
-	
-	public int[] traitementTempsLivraison(int livraison) {
-		int livraisonHeure = (int) livraison / 3600;
-	    int remainder1 = (int) livraison - livraisonHeure * 3600;
-	    int livraisonMinute = remainder1 / 60;
-	    remainder1 = remainder1 - livraisonMinute * 60;
-	    int livraisonSecond = remainder1;
-	    
-	    int ret[] = {livraisonHeure, livraisonMinute, livraisonSecond};
-	    
-	    return ret;
-	}
-	
-	public int[] traitementTempsChemin(int duree) {
-		int trajetHeure = (int) duree / 3600;
-	    int remainder = (int) duree - trajetHeure * 3600;
-	    int trajetMinute = remainder / 60;
-	    remainder = remainder - trajetMinute * 60;
-	    int trajetSecond = remainder;
-	    
-	    int ret[] = {trajetHeure, trajetMinute, trajetSecond};
-	    
-	    return ret;
+
+		// panInformationDetail.add(button);
 	}
 
-	
+	public int[] traitementTempsLivraison(int livraison) {
+		int livraisonHeure = (int) livraison / 3600;
+		int remainder1 = (int) livraison - livraisonHeure * 3600;
+		int livraisonMinute = remainder1 / 60;
+		remainder1 = remainder1 - livraisonMinute * 60;
+		int livraisonSecond = remainder1;
+
+		int ret[] = { livraisonHeure, livraisonMinute, livraisonSecond };
+
+		return ret;
+	}
+
+	public int[] traitementTempsChemin(int duree) {
+		int trajetHeure = (int) duree / 3600;
+		int remainder = (int) duree - trajetHeure * 3600;
+		int trajetMinute = remainder / 60;
+		remainder = remainder - trajetMinute * 60;
+		int trajetSecond = remainder;
+
+		int ret[] = { trajetHeure, trajetMinute, trajetSecond };
+
+		return ret;
+	}
+
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
 	}
@@ -654,7 +640,7 @@ public class Fenetre extends JFrame {
 	public Tournee getTournee() {
 		return tournee;
 	}
-	
+
 	public AffichagePlan getAffichagePlan() {
 		return this.affichagePlan;
 	}

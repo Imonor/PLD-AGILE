@@ -17,7 +17,10 @@ import algo.TemplateTSP;
 import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
+import model.Intersection;
 import model.Plan;
+import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
 import util.XMLParser;
 
@@ -144,7 +147,13 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Valider ajout d'une livraison");
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
-				controleur.ajouterLivraison();
+				Intersection nouveauPointPickUp = fenetre.getAffichagePlan().getNouveauPickUp();
+				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
+				
+				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), 0);
+				PointLivraison pointLivraison = new PointLivraison(nouveauPointPickUp, nouveauPointPickUp.getId(), 0);
+				
+				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();

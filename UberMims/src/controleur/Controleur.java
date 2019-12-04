@@ -82,11 +82,12 @@ public class Controleur {
 			System.out.println("; duree= " + c.getDuree());
 		}
 	}
-
-	public void ajouterLivraison() {
-	//public void ajouterLivraison (Livraison livraison) {
-	// CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
-	// cmdListe.addCommande(cmd);
+	
+	
+	
+	public void ajouterLivraison(PointEnlevement nouveauPickUp, PointLivraison nouvelleLivraison) {
+		CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, nouveauPickUp, nouvelleLivraison);
+		cmdListe.addCommande(cmd);
 	}
 	//
 	// public void supprimerLivraison (Livraison livraison) {

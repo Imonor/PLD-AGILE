@@ -65,10 +65,10 @@ public class AffichagePlan extends JPanel {
 
 	private boolean planClickable;
 
-	//Point de pickUp ajout�
+	//Point de pickUp ajoute
 	private Intersection nouveauPickUp;
 	
-	//Point de livraison ajout�
+	//Point de livraison ajoute
 	private Intersection nouvelleLivraison;
 
 	
