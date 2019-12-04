@@ -16,8 +16,10 @@ public class CmdModifOrdre implements Commande {
 
 	private Tournee tournee;
 	private Intersection pointModif;
-	private Intersection newSuiv;
 	private Intersection newPrec;
+	private Intersection newSuiv;
+	private Intersection actuelPrec;
+	private Intersection actuelSuiv;
 	private Map<String, Map<String, Chemin>> plusCourtsChemins;
 
 	public CmdModifOrdre(Tournee tournee, Intersection pointModif, Intersection prec, Intersection suiv,
@@ -28,57 +30,28 @@ public class CmdModifOrdre implements Commande {
 		this.newSuiv = suiv;
 		this.newPrec = prec;
 		this.plusCourtsChemins = plusCourtsChemins;
+		for (Chemin c : tournee.getPlusCourteTournee()) {
+			if (c.getDerniere() == pointModif) {
+				this.actuelPrec = c.getPremiere();
+			}
+			if (c.getPremiere() == pointModif) {
+				this.actuelSuiv = c.getDerniere();
+			}
+		}
 	}
 
 	@Override
 	public void doCode() {
-		Chemin newCheminPrec, newCheminModif, newCheminSuiv;
-		Intersection actuelPrec = null, actuelSuiv = null;
-		Intersection depot = tournee.getPlusCourteTournee().get(0).getPremiere();
-		int indexPrec = 0, indexModif = indexPrec= 0, indexSuiv = 0;
-		for (int i = 0; i < tournee.getPlusCourteTournee().size(); ++i) {
-			Chemin c = tournee.getPlusCourteTournee().get(i);
-			if (c.getDerniere() == pointModif) {
-				actuelPrec = c.getPremiere();
-			}
-			if (c.getPremiere() == pointModif) {
-				actuelSuiv = c.getDerniere();
-			}
-		}
-		
-		newCheminModif = plusCourtsChemins.get(actuelPrec.getId()).get(actuelSuiv.getId());
-
-		if(newPrec == null) newPrec = depot;
-		newCheminPrec = plusCourtsChemins.get(newPrec.getId()).get(pointModif.getId());
-		
-		if(newSuiv == null) newSuiv = depot;
-		newCheminSuiv = plusCourtsChemins.get(pointModif.getId()).get(newSuiv.getId());
-		
-		List<Chemin> newChemins = new LinkedList<>();
-		
-
-		for (int i = 0; i < tournee.getPlusCourteTournee().size(); ++i) {
-			Chemin c = tournee.getPlusCourteTournee().get(i);
-			
-			if (c.getPremiere() == newPrec && c.getDerniere() == newSuiv) {
-				newChemins.add(newCheminPrec);
-				newChemins.add(newCheminSuiv);
-			}
-			else if (c.getPremiere() == actuelPrec && c.getDerniere() == pointModif) {
-				newChemins.add(newCheminModif);
-			}
-			else if (c.getPremiere() == pointModif && c.getDerniere() == actuelSuiv) {
-				continue;
-			} else {
-				newChemins.add(c);
-			}
-		}
-		
-		tournee.setPlusCourteTournee(newChemins);
+		modifOrdre(pointModif, newPrec, newSuiv, actuelPrec, actuelSuiv);
+	}	
+	
+	@Override
+	public void undoCode() {
+		modifOrdre(pointModif, actuelPrec, actuelSuiv, newPrec, newSuiv);
 	}
 	
 	public static void main(String[] args) {
-		Controleur c = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit2.xml", 600,
+		Controleur c = new Controleur("fichiersXML2019/moyenPlan.xml", "fichiersXML2019/demandeMoyen3.xml", 600,
 				800);
 		c.calculerTournee();
 		System.out.println("\n\n\n\n\n\n");
@@ -86,21 +59,115 @@ public class CmdModifOrdre implements Commande {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
 		
 		System.out.println();
-		Intersection modif = Controleur.plan.getIntersections().get("208769457");
-		Intersection suiv = Controleur.plan.getIntersections().get("208769120");
+		Intersection prec = Controleur.plan.getIntersections().get("26470086");
+		Intersection modif = Controleur.plan.getIntersections().get("505061101");
+		Intersection suiv = Controleur.plan.getIntersections().get("27362899");
 		
-		CmdModifOrdre cmd = new CmdModifOrdre(c.getTournee(), modif, null, suiv, c.getPlusCourtsChemins());
+		CmdModifOrdre cmd = new CmdModifOrdre(c.getTournee(), modif, prec, suiv, c.getPlusCourtsChemins());
 		cmd.doCode();
 
-		for(Chemin ch : c.getTournee().getPlusCourteTournee())
+		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
+		}
+		System.out.println();
+		cmd.undoCode();
 		
+		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
+			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
+		}
 	}	
 
-	@Override
-	public void undoCode() {
+
+	
+	private void modifOrdre(Intersection pointModif, Intersection newPrec, Intersection newSuiv, Intersection actuelPrec, Intersection actuelSuiv) {
+		Chemin newCheminPrec, newCheminModif, newCheminSuiv;
+		Intersection depot = tournee.getPlusCourteTournee().get(0).getPremiere();
+		boolean newPrecApres = false;		
+		for (Chemin c : tournee.getPlusCourteTournee()) {
+			if(c.getDerniere() == pointModif) {
+				newPrecApres = true;
+				break;
+			}
+			if(c.getDerniere() == newPrec) {
+				break;
+			}
+		}
+		
+		newCheminModif = plusCourtsChemins.get(actuelPrec.getId()).get(actuelSuiv.getId());
+		List<Chemin> newChemins = new LinkedList<>();
+		
+		if(newSuiv == null) {
+			newCheminSuiv = plusCourtsChemins.get(pointModif.getId()).get(depot.getId());
+		} else {
+			newCheminSuiv = plusCourtsChemins.get(pointModif.getId()).get(newSuiv.getId());
+		}
+
+		if(newPrec == null) {
+			newCheminPrec = plusCourtsChemins.get(depot.getId()).get(pointModif.getId());
+		} else {
+			newCheminPrec = plusCourtsChemins.get(newPrec.getId()).get(pointModif.getId());
+		}
+		
+		if(newPrec == null) {
+			newChemins.add(newCheminPrec);
+			newChemins.add(newCheminSuiv);
+			for(int i = 1; i< tournee.getPlusCourteTournee().size(); i++) {
+				Chemin c = tournee.getPlusCourteTournee().get(i);
+				if(c.getDerniere() == pointModif) {
+					newChemins.add(newCheminModif);
+				} else if(c.getPremiere() == pointModif) {
+					continue;
+				} else {
+					newChemins.add(c);
+				}
+			}
+		} else if(newSuiv == null) {
+			for(int i = 0; i< tournee.getPlusCourteTournee().size() - 1; i++) {
+				Chemin c = tournee.getPlusCourteTournee().get(i);
+				if(c.getDerniere() == pointModif) {
+					continue;
+				} else if(c.getPremiere() == pointModif) {
+					newChemins.add(newCheminModif);
+				} else {
+					newChemins.add(c);
+				}
+			}
+			newChemins.add(newCheminPrec);
+			newChemins.add(newCheminSuiv);
+		} else if(newPrecApres){
+			for(int i = 0; i< tournee.getPlusCourteTournee().size(); i++) {
+				Chemin c = tournee.getPlusCourteTournee().get(i);
+				if(c.getDerniere() == pointModif) {
+					newChemins.add(newCheminModif);
+				} else if(c.getPremiere() == pointModif) {
+					if(c.getDerniere() == newPrec) {
+						newChemins.add(newCheminPrec);
+						newChemins.add(newCheminSuiv);
+						i++;
+					} else continue;
+				} else if(c.getPremiere() == newPrec && c.getDerniere() == newSuiv) {
+					newChemins.add(newCheminPrec);
+					newChemins.add(newCheminSuiv);
+				} else {
+					newChemins.add(c);
+				}
+			}
+		} else {
+			for(int i = 0; i< tournee.getPlusCourteTournee().size(); i++) {
+				Chemin c = tournee.getPlusCourteTournee().get(i);
+				if(c.getPremiere() == newPrec && c.getDerniere() == newSuiv) {
+					newChemins.add(newCheminPrec);
+					newChemins.add(newCheminSuiv);
+				} else if(c.getDerniere() == pointModif) {
+					newChemins.add(newCheminModif);
+				} else if(c.getPremiere() == pointModif) {
+					continue;
+				} else {
+					newChemins.add(c);
+				}
+			}
+			
+		}		
+		tournee.setPlusCourteTournee(newChemins);
 	}
-
-
-
 }
