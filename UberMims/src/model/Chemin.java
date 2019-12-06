@@ -26,8 +26,12 @@ public class Chemin {
 		return intersections;
 	}
 	
-	public void addIntersection(Intersection intersection) {
-		intersections.add(intersection);
+	public boolean addIntersection(Intersection intersection) {
+		if(!getDerniere().getId().equals(intersection.getId())) {
+			intersections.add(intersection);
+			return true;
+		}
+		return false;
 	}
 	
 	public Intersection getPremiere() {
