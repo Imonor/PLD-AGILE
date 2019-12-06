@@ -52,22 +52,68 @@ public class ContraintesTournee {
 		this.pointsLivraison = pointsLivraison;
 	}
 	
-	public void addLivraison(PointEnlevement e, PointLivraison l) {
+	public boolean addLivraison(PointEnlevement e, PointLivraison l) {
 		if(e.getIdLivraison() == l.getId() && l.getIdEnlevement() == e.getId()) {
-			pointsEnlevement.add(e);
-			pointsLivraison.add(l);
+			boolean livraisonExists = false;
+			for (PointEnlevement elv : pointsEnlevement) {
+				if (elv.getId().equals(e.getId())) {
+					if(elv.getIdLivraison().equals(l.getId())) livraisonExists = true;
+					break;
+				}
+			}
+			if(!livraisonExists) {
+				pointsEnlevement.add(e);
+				pointsLivraison.add(l);				
+				return true;
+			} else {
+				System.err.println("ERROR: PICKUP/DELIVERY ALEREADY EXISTS");
+				return false;
+			}
 		} else {
 			System.err.println("ERROR: PICKUP AND DELIVERY ARE NOT RELATED");
+			return false;
 		}
 	}
 	
-	public void removeLivraison(PointEnlevement e, PointLivraison l) {
+	public boolean removeLivraison(PointEnlevement e, PointLivraison l) {
 		if(e.getIdLivraison() == l.getId() && l.getIdEnlevement() == e.getId()) {
-			pointsEnlevement.remove(e);
-			pointsLivraison.remove(l);
+			boolean livraisonExists = false;
+			for (PointEnlevement elv : pointsEnlevement) {
+				if (elv.getId().equals(e.getId())) {
+					if(elv.getIdLivraison().equals(l.getId())) livraisonExists = true;
+					break;
+				}
+			}
+			if(livraisonExists) {
+				pointsEnlevement.remove(e);
+				pointsLivraison.remove(l);				
+				return true;
+			} else {
+				System.err.println("ERROR: PICKUP/DELIVERY DOESN'T EXIST");
+				return false;
+			}
 		} else {
 			System.err.println("ERROR: PICKUP AND DELIVERY ARE NOT RELATED");
+			return false;
 		}
 	}
 
+	public boolean equals(ContraintesTournee toTest) {
+		if(heureDepart != toTest.getHeureDepart()) return false;
+		if(!depot.getId().equals(toTest.getDepot().getId())) return false;
+		if(pointsEnlevement.size()!=toTest.getPointsEnlevement().size()) return false;
+		for(PointEnlevement pe : toTest.getPointsEnlevement()) {
+			if(!containsPE(pe)) return false;
+		}
+		return true;
+	}
+	
+	private boolean containsPE(PointEnlevement toFind) {
+		for(PointEnlevement pe : pointsEnlevement) {
+			if(pe.getId().equals(toFind.getId())) {
+				if(pe.getIdLivraison().equals(toFind.getIdLivraison())) return true;
+			}
+		}
+		return false;
+	}
 }
