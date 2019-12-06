@@ -98,4 +98,22 @@ public class ContraintesTournee {
 		}
 	}
 
+	public boolean equals(ContraintesTournee toTest) {
+		if(heureDepart != toTest.getHeureDepart()) return false;
+		if(!depot.getId().equals(toTest.getDepot().getId())) return false;
+		if(pointsEnlevement.size()!=toTest.getPointsEnlevement().size()) return false;
+		for(PointEnlevement pe : toTest.getPointsEnlevement()) {
+			if(!containsPE(pe)) return false;
+		}
+		return true;
+	}
+	
+	private boolean containsPE(PointEnlevement toFind) {
+		for(PointEnlevement pe : pointsEnlevement) {
+			if(pe.getId().equals(toFind.getId())) {
+				if(pe.getIdLivraison().equals(toFind.getIdLivraison())) return true;
+			}
+		}
+		return false;
+	}
 }
