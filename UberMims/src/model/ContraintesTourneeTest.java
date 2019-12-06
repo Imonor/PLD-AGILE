@@ -161,18 +161,25 @@ public class ContraintesTourneeTest {
 		PointEnlevement e2 = new PointEnlevement(i3, i4.getId(), 10);
 		PointLivraison l2 = new PointLivraison (i4, i3.getId(), 10);
 		
+		List<PointEnlevement> es0 = new ArrayList<PointEnlevement>();
+		List<PointLivraison> ls0 = new ArrayList<PointLivraison>();
 		List<PointEnlevement> es1 = new ArrayList<PointEnlevement>();
 		List<PointLivraison> ls1 = new ArrayList<PointLivraison>();
+		
+		es0.add(e2);
+		es0.add(e1);
+		ls0.add(l2);
+		ls0.add(l1);
 		
 		es1.add(e1);
 		es1.add(e2);
 		ls1.add(l1);
 		ls1.add(l2);
 		
-		ContraintesTournee ct1 = new ContraintesTournee(LocalTime.MIN, depot1, es1, ls1);
+		ContraintesTournee ct1 = new ContraintesTournee(LocalTime.MIN, depot1, es0, ls1);
 		ContraintesTournee ct2 = new ContraintesTournee(LocalTime.MIN, depot1, es1, ls1);
 		
-		//Test de deux objets egaux
+		//Test de deux objets egaux, avec points dans un ordre different
 		assertTrue(ct1.equals(ct2));
 		assertTrue(ct2.equals(ct1));
 		
@@ -196,10 +203,27 @@ public class ContraintesTourneeTest {
 		
 		ContraintesTournee ct5 = new ContraintesTournee(LocalTime.MIN, depot1, es2, ls2);
 		
-		//Test de deux tournees avec une liste de points d'enlevement (donc des points de livraion) plus courte
+		//Test de deux tournees avec une liste de points d'enlevement (donc une liste de points de livraion) plus courte
 		assertFalse(ct1.equals(ct5));
 		assertFalse(ct5.equals(ct1));
 		
+		
+		PointEnlevement e3 = new PointEnlevement (i2, i1.getId(), 10);
+		PointLivraison l3 = new PointLivraison(i1, i2.getId(), 10);
+		
+		List<PointEnlevement> es3 = new ArrayList<PointEnlevement>();
+		List<PointLivraison> ls3 = new ArrayList<PointLivraison>();
+		
+		es3.add(e1);
+		es3.add(e3);
+		ls3.add(l1);
+		ls3.add(l3);
+		
+		ContraintesTournee ct6 = new ContraintesTournee (LocalTime.MIN, depot1, es3,ls3);
+		
+		//Test avec même liste de points d'enlèvemente, mais points de livraison différents
+		assertFalse(ct1.equals(ct6));
+		assertFalse(ct6.equals(ct1));
 		
 		
 	}
