@@ -153,7 +153,9 @@ public abstract class TemplateTSP implements TSP{
 			while(it2.hasNext() && j<nbChemins) {
 				Chemin chemin2 = it2.next();
 				ordreNoeuds.replace(chemin2.getPremiere().getId(), j);
-				noeudsUpdate.add(chemin2.getPremiere().getId());
+				if(j>=i) {
+					noeudsUpdate.add(chemin2.getPremiere().getId());	
+				}
 				
 				//Pour ne pas depasser le temps limite
 				if (System.currentTimeMillis() - tpsDebut > tpsLimite){
@@ -175,7 +177,7 @@ public abstract class TemplateTSP implements TSP{
 					//que pour tous les points de livraison, leur pt d'enlevement est vu avant
 					//ou au noeds de depart du premier chemin du swap
 					boolean possible = true;
-					for(int count = noeudsUpdate.size()-1; count>0; --count) {
+					for(int count = noeudsUpdate.size()-1; count>1; --count) {
 						if( intersections.get(noeudsUpdate.get(count)) instanceof PointLivraison ) {
 							String sonPtEnlev = ((PointLivraison)intersections.get(noeudsUpdate.get(count))).getIdEnlevement();
 							if( ordreNoeuds.get(sonPtEnlev) < ordreNoeuds.get(noeudsUpdate.get(count)) ) {
@@ -184,25 +186,26 @@ public abstract class TemplateTSP implements TSP{
 						}
 					}
 					
-					//Calculer la duree du nouvel ensemble de chemins inverses
+					int duree = 0;
 					int newDuree = 0;
-					for(int count = noeudsUpdate.size(); count>1; ++count) {
-						newDuree += couts.get(noeudsUpdate.get(count)+noeudsUpdate.get(count-1));
+					if(possible) {
+						//Calculer la duree standarde
+						for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
+							duree += couts.get(noeudsUpdate.get(count)+noeudsUpdate.get(count+1));
+						}
+						duree += couts.get(noeudsUpdate.get(noeudsUpdate.size())+chemin2.getDerniere().getId());
+						
+						//Calculer la duree du nouvel ensemble de chemins inverses
+						for(int count = noeudsUpdate.size()-1; count>1; --count) {
+							newDuree += couts.get(noeudsUpdate.get(count)+noeudsUpdate.get(count-1));
+						}
+						newDuree += couts.get(chemin.getPremiere().getId()+noeudsUpdate.get(noeudsUpdate.size()-1));
+						newDuree += couts.get(noeudsUpdate.get(2)+chemin2.getDerniere().getId());
 					}
-					newDuree = couts.get(noeudsUpdate.get(i)+noeudsUpdate.get(0));
-					newDuree = couts.get(noeudsUpdate.get(noeudsUpdate.size())+noeudsUpdate.get(chemin2.getDerniere().getId()));
 					
-					
-					//Il faut calculer le couts de l'ensemble de chemins recalcules et le comparer a celui existant
-//					if( (couts.get(depart1+depart2) + couts.get(fin1+fin2)) < dureeIni && enlevVu) {
-//						//Trouver les chemins extremes + on met les 2 chemins extremes dans la tournee dans l'ordre change
-//						Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId());
-//						Chemin newChemin2 = plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId());
-//						tournee.getPlusCourteTournee().set(index1, newChemin1);
-//						tournee.getPlusCourteTournee().set(index2, newChemin2);
-//						
-//						tournee = twoOptSwap(index1, index2, tournee, plusCourtsChemins);
-//					}
+					if( possible && newDuree < duree ) {
+						twoOptSwap(i, j, chemin, chemin2, noeudsUpdate, tournee, plusCourtsChemins);
+					}
 				}
 				++j;
 			}
@@ -211,24 +214,24 @@ public abstract class TemplateTSP implements TSP{
 			for(int count = 0; count<noeudsUpdate.size(); ++count) {
 				ordreNoeuds.replace( noeudsUpdate.get(count), -1 );
 			}
-			
 			++i;
 		}
 	}
 	
-	private Tournee twoOptSwap(int index1, int index2, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
+	private void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
 		
-		//On mets les chemins compris entre index1 et index2 dans l'ordre inverse de parcours pour connecter la tournee
-		Tournee reponse = new Tournee(tournee.getPlusCourteTournee(), tournee.getContraintes());
-		int j = index1+1;
-		for(int i = index2-1; i>index1; --i) {
-			Chemin cheminTmp = tournee.getPlusCourteTournee().get(i);
-			Chemin newChemin = plusCourtsChemins.get(cheminTmp.getDerniere().getId()).get(cheminTmp.getPremiere().getId());
-			reponse.getPlusCourteTournee().set(j, newChemin);
-			++j;
+		//On mets les chemins compris entre i et j dans l'ordre inverse de parcours pour connecter la tournee
+		//On met aussi les 2 chemins avec les noeuds extremes inter-changes
+		for(int count = noeudsUpdate.size()-2; count>1; --count) {
+			int index = noeudsUpdate.size()-count-1+i;
+			Chemin newChemin = plusCourtsChemins.get(noeudsUpdate.get(count)).get(noeudsUpdate.get(count+1));
+			tournee.getPlusCourteTournee().set(index, newChemin);
 		}
+		Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere()).get(chemin2.getPremiere());
+		Chemin newChemin2 = plusCourtsChemins.get(chemin2.getDerniere()).get(chemin2.getDerniere());
+		tournee.getPlusCourteTournee().set(i, newChemin1);
+		tournee.getPlusCourteTournee().set(j, newChemin2);
 		
-		return reponse;
 	}
 	
 	private HashMap<String, Paire> initVuDispo(ContraintesTournee contraintes, HashMap<String, Intersection> intersections){

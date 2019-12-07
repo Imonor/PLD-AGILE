@@ -106,8 +106,4 @@ public class Tournee {
 	public void setPlusCourteTournee(List<Chemin> plusCourteTournee) {
 		this.plusCourteTournee = plusCourteTournee;
 	}
-	
-	public ContraintesTournee getContraintes() {
-		return contraintes;
-	}
 }
