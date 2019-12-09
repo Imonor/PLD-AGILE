@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class XMLParser {
 
-	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
+	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement {
 		Map<String, Intersection> intersections = new HashMap<>();
 		Plan plan = new Plan();
 		try {
@@ -36,9 +36,10 @@ public class XMLParser {
 			doc.getDocumentElement().normalize();
 			NodeList nInter = doc.getElementsByTagName("noeud");
 			NodeList nTronc = doc.getElementsByTagName("troncon");
-			
-			
+
 			double latMax = 0, longMax = 0, latMin = Double.MAX_VALUE, longMin = Double.MAX_VALUE;
+			
+			//Calcul des dimensions du plan
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
@@ -51,21 +52,23 @@ public class XMLParser {
 			}
 			double ratioHauteur = screenHeight / (latMax - latMin);
 			double ratioLargeur = screenWidth / (longMax - longMin);
-			double ratio = (ratioLargeur < ratioHauteur) ? ratioLargeur : ratioHauteur; 
+			double ratio = (ratioLargeur < ratioHauteur) ? ratioLargeur : ratioHauteur;
 
+			//Chargement des intersections
 			for (int i = 0; i < nInter.getLength(); ++i) {
 				Element elem = (Element) nInter.item(i);
 				String id = elem.getAttribute("id");
 				double latitude = Double.parseDouble(elem.getAttribute("latitude"));
 				double longitude = Double.parseDouble(elem.getAttribute("longitude"));
-				
+
 				int longitudeEcran = (int) ((longitude - longMin) * ratioLargeur);
 				int latitudeEcran = (int) (screenHeight - (latitude - latMin) * ratioHauteur);
 
 				Intersection inter = new Intersection(id, latitudeEcran, longitudeEcran);
 				intersections.put(id, inter);
 			}
-
+			
+			//Chargement des troncons 
 			for (int i = 0; i < nTronc.getLength(); ++i) {
 				Element elem = (Element) nTronc.item(i);
 				String idOrig = elem.getAttribute("origine");
@@ -76,28 +79,30 @@ public class XMLParser {
 				intersections.get(idOrig).addTroncon(idDest, tronc);
 			}
 
-			for(Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator.hasNext();) {
+			//Suppression des intersections sans troncon sortant
+			for (Iterator<Map.Entry<String, Intersection>> iterator = intersections.entrySet().iterator(); iterator
+					.hasNext();) {
 				Intersection inter = iterator.next().getValue();
-				if(inter.getTronconsSortants().isEmpty()) {
+				if (inter.getTronconsSortants().isEmpty()) {
 					iterator.remove();
 				}
 			}
-			
-			List<String> idInters = new ArrayList<String>(intersections.keySet());
-			
+
+			//Suppression des intersections sans troncon entrant
+			List<String> idInters = new ArrayList<String>(intersections.keySet()); // on copie les ID de tous les troncons
 			for (int i = 0; i < nTronc.getLength(); ++i) {
 				Element elem = (Element) nTronc.item(i);
 				String idDest = elem.getAttribute("destination");
-				if(idInters.contains(idDest))
+				if (idInters.contains(idDest)) //Pour chaque troncon on supprime son intersection de destination dans la copie des ID
 					idInters.remove(idDest);
 			}
-			
-			for(String id : idInters) {
-				intersections.remove(id);
+			for (String id : idInters) { 
+				intersections.remove(id); //On supprime les intersections dont l'ID apparait dans la liste des copies d'ID
 			}
-			
 
+			
 			plan.setIntersections(intersections);
+			if (intersections.isEmpty()) throw new Exception("Aucun plan Charge");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -148,7 +153,7 @@ public class XMLParser {
 
 		return tournee;
 	}
-	
+
 //	public static void main(String[] args) {
 //		
 //	}

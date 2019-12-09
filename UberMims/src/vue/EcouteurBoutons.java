@@ -19,6 +19,7 @@ import model.Chemin;
 import model.ContraintesTournee;
 import model.Plan;
 import model.Tournee;
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -63,7 +64,13 @@ public class EcouteurBoutons implements ActionListener{
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
-					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
+					try {
+						controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);						
+					} catch (ExceptionChargement exception) {
+						exception.printStackTrace();
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 					fenetre.setPlan(Controleur.plan);
 					fenetre.afficherPanPrincipal();
 				}
@@ -83,7 +90,13 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 
+					try {
 					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
+					} catch (ExceptionChargement exception) {
+						exception.printStackTrace();
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
 					fenetre.setTournee(null);

@@ -1,5 +1,6 @@
 package controleur;
 
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -24,26 +25,19 @@ public class Controleur {
 	private CmdListe cmdListe;
 	private Dijkstra uniteCalculChemins;
 
-	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
-		tournee = new Tournee();
-		uniteCalculChemins = new Dijkstra();
-		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		chargerTournee(filePathTournee);
-		cmdListe = new CmdListe();
-	}
-
 	public Controleur() {
 		tournee = new Tournee();
 		uniteCalculChemins = new Dijkstra();
 		cmdListe = new CmdListe();
 	}
 
-	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
-		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
+	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement {
+		plan = new Plan();
+		plan = XMLParser.chargerPlan(filePathPlan, 1600, 1900);
 	}
 
 	public void chargerTournee(String filePathTournee) {
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // v�rifier que le plan nest pas incoh�rent
+		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // verifier que le plan nest pas incoherent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
 		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
