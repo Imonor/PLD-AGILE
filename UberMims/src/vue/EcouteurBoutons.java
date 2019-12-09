@@ -163,7 +163,6 @@ public class EcouteurBoutons implements ActionListener{
 				//System.out.println(pointLivraison.getId());
 
 				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
-				controleur.calculerTournee();
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();

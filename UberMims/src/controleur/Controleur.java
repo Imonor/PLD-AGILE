@@ -86,13 +86,18 @@ public class Controleur {
 
 	public void ajouterLivraison (PointEnlevement e, PointLivraison l) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
-		Map<String, Map<String, Chemin>> newChemins = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
 		intersectionsAVisiter.put(e.getId(), e);
 		intersectionsAVisiter.put(l.getId(), l);
-		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);
-		plusCourtsChemins.put(e.getId(), newChemins.get(e.getId()));
-		plusCourtsChemins.put(l.getId(), newChemins.get(l.getId()));
-		CmdAjoutLivraison cmd = new CmdAjoutLivraison(tournee, e, l, plusCourtsChemins);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
+		CmdAjoutLivraison cmd = new CmdAjoutLivraison(tournee, contraintes, e, l, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}
 
