@@ -9,15 +9,21 @@ import model.Intersection;
 public class EcouteurSouris implements MouseListener {
 
 	private AffichagePlan affichagePlan;
+	private AffichageTournee affichageTournee;
 	private Fenetre fenetre;
 
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
 	}
+	
+	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
+		this.affichageTournee = affichageTournee;
+		this.fenetre = fenetre;
+	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {/*
 		if (affichagePlan.getPlanClickable()) {
 		    int xClic=e.getX();
 		    int yClic=e.getY();
@@ -49,7 +55,7 @@ public class EcouteurSouris implements MouseListener {
 		    affichagePlan.repaint();
 		    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
 		    
-		}
+		}*/
 
 
 	}
