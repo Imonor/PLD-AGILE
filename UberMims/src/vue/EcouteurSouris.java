@@ -19,57 +19,16 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
-	private int cumulXDiff;
-	private int cumulYDiff;
-	
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
 		cptZoom = 0;
 		pointDepart = new Point();
-		cumulXDiff = 0;
-		cumulYDiff = 0;
-	}
-	
-	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
-		this.affichageTournee = affichageTournee;
-		this.fenetre = fenetre;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (affichagePlan.getPlanClickable()) {
-		    int xClic=e.getX();
-		    int yClic=e.getY();
-		    System.out.println("posX:" + xClic + " posY:" + yClic);
-		    
-		    Intersection interLaPlusProche = new Intersection();
-		    double distanceMin = Double.MAX_VALUE;
-		    for(String intersectionId: affichagePlan.getPlan().getIntersections().keySet()) {
-		    	Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
-		    	double distance = (xClic-i.getLongitude())*(xClic-i.getLongitude()) + (yClic-i.getLatitude())*(yClic-i.getLatitude());
-		    	if(distance < distanceMin) {
-		    		distanceMin = distance;
-		    		interLaPlusProche = i;
-		    	}
-		    }
-		  
-		    switch(affichagePlan.getEtat()) {
-		    case LIVRAISON  :
-		    	affichagePlan.setNouvelleLivraison(interLaPlusProche);
-		    	fenetre.afficherAjoutLivraison3();
-
-		    	break;
-		    case ENLEVEMENT :
-		    	affichagePlan.setNouveauPickUp(interLaPlusProche);
-		    	fenetre.afficherAjoutLivraison2();
-		    	break;
-		    }
-		        
-		    affichagePlan.repaint();
-		    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
-		    
-		}
 			
 			double zoom = affichagePlan.getZoom();
 			

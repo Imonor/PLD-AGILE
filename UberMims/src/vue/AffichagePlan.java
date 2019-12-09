@@ -110,8 +110,7 @@ public class AffichagePlan extends JScrollPane {
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
-		this.addMouseMotionListener(ecouteurSouris);
-		
+		this.addMouseMotionListener(ecouteurSouris);		
 		//Initialisation des variables liées au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
@@ -137,7 +136,7 @@ public class AffichagePlan extends JScrollPane {
 	public double getyOffset() {
 		return yOffset;
 	}
-
+	
 	public void setPlanClickable(boolean planClickable) {
 		this.planClickable = planClickable;
 	}
@@ -225,12 +224,12 @@ public class AffichagePlan extends JScrollPane {
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
 	}
-
+	
 	public double getZoomPrecedent() {
 		return zoomPrecedent;
 	}
-
-	public void ZoomIn() {
+	
+	public void ZoomIn(){
 		this.zoom = this.zoom * 1.1f;
 		zoomIn = true;
 		zoomOut = false;
