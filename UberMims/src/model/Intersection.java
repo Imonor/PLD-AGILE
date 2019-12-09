@@ -13,6 +13,16 @@ public class Intersection {
 	private Map<String, Troncon> tronconsSortants;
 	
 	public Intersection() {}
+	
+	public Intersection(Intersection i) {
+		this.id = i.id;
+		this.latitude = i.latitude;
+		this.longitude = i.longitude;
+		this.tronconsSortants = new HashMap<>();
+		for(Map.Entry<String, Troncon> e : tronconsSortants.entrySet()) {
+			this.tronconsSortants.put(e.getKey(), e.getValue());
+		}
+	}
 
 	public Intersection(String id, double latitude, double longitude) {
 		this.id = id;
@@ -62,8 +72,6 @@ public class Intersection {
 		if (this == obj)
 			return true;
 		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
 			return false;
 		Intersection other = (Intersection) obj;
 		if (id == null) {
