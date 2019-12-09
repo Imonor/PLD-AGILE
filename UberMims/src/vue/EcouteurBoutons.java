@@ -61,10 +61,12 @@ public class EcouteurBoutons implements ActionListener{
 				
 				
 				JFileChooser choixPlan = new JFileChooser();
-				int boiteDialogue = choixPlan.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				choixPlan.setDialogTitle("Fichier plan");
 				
+				int boiteDialogue = choixPlan.showOpenDialog(bouton);
+
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
@@ -85,9 +87,11 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Chargement d'un autre plan de la ville");
 				
 				JFileChooser choixPlan2 = new JFileChooser();
-				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				choixPlan2.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				choixPlan2.setDialogTitle("Fichier plan");
+				
+				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				
 				if (boiteDialogue3 == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan2 = choixPlan2.getSelectedFile().getName();
@@ -113,10 +117,13 @@ public class EcouteurBoutons implements ActionListener{
 			case "Charger une demande de tournee":
 				System.out.println("Chargement d'une demande de tournee");
 				JFileChooser choixTournee = new JFileChooser();
-				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
 				
+				choixTournee.setDialogTitle("Fichier tournee");
+				choixTournee.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
+				
+				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
+
 				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
