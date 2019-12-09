@@ -144,20 +144,23 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
-				
+				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue();
+				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue();
+				System.out.println(nouveauTempsPickUp);
+				System.out.println(nouveauTempsDelivery);
+
 				Intersection nouveauPointPickUp = fenetre.getAffichagePlan().getNouveauPickUp();
 				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
-				
-				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), 0);
-				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), 0);
+				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), nouveauTempsPickUp);
+				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), nouveauTempsDelivery);
 				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associé: " + pointEnlevement.getIdLivraison());
 				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associé: " + pointLivraison.getIdEnlevement());
 
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				
-				System.out.println(pointEnlevement.getId());
-				System.out.println(pointLivraison.getId());
+				//System.out.println(pointEnlevement.getId());
+				//System.out.println(pointLivraison.getId());
 
 				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
 				controleur.calculerTournee();
@@ -165,6 +168,7 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
 				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
+				
 			break;
 			
 			
