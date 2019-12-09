@@ -292,9 +292,10 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
 		
 		
-		//Panel modification de tournée
+		//PANEL MODIFICATION DE TOURNEE
 		panModificationTournee.setVisible(false);
-		panModificationTournee.setBounds(0, 100, 450, 800);
+		panAjoutLivraison3.setLayout(null);
+		panModificationTournee.setBounds(20, 20, 200, 400);
 		panModificationTournee.setBackground(Color.white);
 		panDroite.add(panModificationTournee);
 

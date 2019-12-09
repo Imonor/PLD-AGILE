@@ -19,7 +19,6 @@ public class ModificationTournee extends JPanel{
 	private JPanel mainList;
 
     public ModificationTournee() {
-        setLayout(new BorderLayout());
         
         //List<Chemin> listeChemins = tournee.getPlusCourteTournee();
         
@@ -33,7 +32,7 @@ public class ModificationTournee extends JPanel{
 
         add(new JScrollPane(mainList));
         
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 30; i++) {
         	JPanel panel = new JPanel();
             panel.add(new JLabel("Hello"+i));
             panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
