@@ -111,6 +111,7 @@ public class Fenetre extends JFrame {
 	private Font police = new Font("Verdana", 0, 15);
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
+	private JLabel texteBienvenue = new JLabel ();
 
 	public Fenetre() {
 
@@ -137,7 +138,9 @@ public class Fenetre extends JFrame {
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
-
+		JButton boutonAnnulerModification = new JButton("Annuler la dernière modification");
+		
+		
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -166,6 +169,12 @@ public class Fenetre extends JFrame {
 		panDroite.setLayout(null);
 		panDroite.setBounds(750, 0, 450, 800);
 		panDroite.setBackground(backgroundTurquoiseClair);
+		texteBienvenue.setText("BIENVENUE !");
+		texteBienvenue.setVisible(true);
+		texteBienvenue.setFont(new Font("Avenir", 1, 30));
+		texteBienvenue.setForeground(backgroundTurquoise);
+		texteBienvenue.setBounds(120,300,200,200);
+		panDroite.add(texteBienvenue);
 		panPrincipal.add(panDroite);
 
 		// Panel HAUT DROITE : haut tout a droite
@@ -175,11 +184,18 @@ public class Fenetre extends JFrame {
 		panHautDroite.setBounds(0, 0, 450, 100);
 		// bouton ajouter livraison
 		boutonAjouterLivraison.setVisible(true);
-		boutonAjouterLivraison.setBounds(75, 30, 300, 30);
+		boutonAjouterLivraison.setBounds(95, 15, 260, 30);
 		panHautDroite.add(boutonAjouterLivraison);
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
+		//bouton annuler la derniere modification
+		boutonAnnulerModification.setVisible(true);
+		boutonAnnulerModification.setEnabled(false);
+		boutonAnnulerModification.setBounds(95, 55, 260, 30);
+		panHautDroite.add(boutonAnnulerModification);
+		boutonAnnulerModification.addActionListener(ecouteurBoutons);
 		panDroite.add(panHautDroite);
-
+		
+		
 		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
 		panCalculTournee.setVisible(false);
 		panCalculTournee.setLayout(null);
@@ -226,7 +242,7 @@ public class Fenetre extends JFrame {
 		panAnnulerAjoutLivraison.setBounds(0, 0, 450, 100);
 		// bouton annuler ajout de livraison
 		boutonAnnulerAjoutLivraison.setVisible(true);
-		boutonAnnulerAjoutLivraison.setBounds(75, 30, 300, 30);
+		boutonAnnulerAjoutLivraison.setBounds(95, 10, 260, 30);
 		boutonAnnulerAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAnnulerAjoutLivraison.add(boutonAnnulerAjoutLivraison);
 		panAjoutLivraisonGlobal.add(panAnnulerAjoutLivraison);
@@ -302,7 +318,7 @@ public class Fenetre extends JFrame {
 		panChargePlan.setBounds(375, 0, 375, 50);
 		// bouton chargement autre plan
 		boutonChargementPlan2.setVisible(true);
-		boutonChargementPlan2.setBounds(50, 10, 300, 30);
+		boutonChargementPlan2.setBounds(60, 10, 255, 30);
 		panChargePlan.add(boutonChargementPlan2);
 		boutonChargementPlan2.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargePlan);
@@ -315,7 +331,7 @@ public class Fenetre extends JFrame {
 		panChargeTournee.setBackground(backgroundJaune);
 		// bouton chargement tournee
 		boutonChargementTournee.setVisible(true);
-		boutonChargementTournee.setBounds(50, 10, 300, 30);
+		boutonChargementTournee.setBounds(60, 10, 255, 30);
 		panChargeTournee.add(boutonChargementTournee);
 		boutonChargementTournee.addActionListener(ecouteurBoutons);
 		panGauche.add(panChargeTournee);
@@ -361,6 +377,7 @@ public class Fenetre extends JFrame {
 
 	// Affichage du bouton calculer tournee apres le chargement d'une tournee
 	public void afficherBoutonCalcul() {
+		texteBienvenue.setVisible(false);
 		panAjoutLivraisonGlobal.setVisible(false);
 		panInformation.setVisible(false);
 		panInformation.removeAll();

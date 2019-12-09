@@ -191,8 +191,9 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 				
 			break;
-			
-			
+			case "Annuler la dernière modification":
+				System.out.println("CA MARCHE");
+			break;
 			}
 		}
 	}
