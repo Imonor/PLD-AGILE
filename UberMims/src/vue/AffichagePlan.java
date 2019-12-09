@@ -82,7 +82,7 @@ public class AffichagePlan extends JScrollPane {
 	// Ecouteur de la souris
 	private EcouteurSouris ecouteurSouris;
 	
-	//Zoom actuel
+	//Zoom 
 	private double zoom;
 	private double zoomPrecedent;
     private double xOffset = 0;
@@ -93,6 +93,10 @@ public class AffichagePlan extends JScrollPane {
     private Stack<Double> yOldMouseY;
     private double mouseX;
     private double mouseY;
+    
+    // Drag and drop
+    private int xDiff;
+    private int yDiff;
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
@@ -103,13 +107,24 @@ public class AffichagePlan extends JScrollPane {
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
+		this.addMouseMotionListener(ecouteurSouris);
 		this.etat = etat.LIVRAISON;	
 		zoomIn = false;
 		zoomOut = false;
 		xOldMouseX = new Stack<Double>();
 		yOldMouseY = new Stack<Double>();	
+		xDiff = 0;
+		yDiff = 0;
 		nouveauTempsPickUp=0;
 		nouveauTempsDelivery=0;
+	}
+	
+	public double getxOffset() {
+		return xOffset;
+	}
+
+	public double getyOffset() {
+		return yOffset;
 	}
 	
 	public void setPlanClickable(boolean planClickable) {
@@ -176,12 +191,32 @@ public class AffichagePlan extends JScrollPane {
 		this.nouveauTempsDelivery = nouveauTempsDelivery;
 	}
 	
+	public int getxDiff() {
+		return xDiff;
+	}
+
+	public void setxDiff(int xDiff) {
+		this.xDiff = xDiff;
+	}
+
+	public int getyDiff() {
+		return yDiff;
+	}
+
+	public void setyDiff(int yDiff) {
+		this.yDiff = yDiff;
+	}
+	
 	public double getZoom() {
 		return zoom;
 	}
 
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
+	}
+	
+	public double getZoomPrecedent() {
+		return zoomPrecedent;
 	}
 	
 	public void ZoomIn(){
@@ -232,17 +267,13 @@ public class AffichagePlan extends JScrollPane {
         }else if(zoomOut){
         	xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xOldMouseX.pop();
         	yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yOldMouseY.pop();
-        	//xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xRel;
-        	//yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yRel;
-
         }
         if(zoom == 1f){
         	xOffset = 0;
         	yOffset = 0;
         }
-
         
-        at.translate(xOffset, yOffset);
+        at.translate(xOffset + xDiff, yOffset + yDiff);
         at.scale(zoom, zoom);
         zoomPrecedent = zoom;
         g2d.transform(at);
@@ -405,5 +436,4 @@ public class AffichagePlan extends JScrollPane {
 			g2.setTransform(tx1);
 		}
 	}
-
 }
