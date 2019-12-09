@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 
 import algo.Dijkstra;
 import algo.TSP1;
@@ -66,13 +67,14 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
 					try {
 						controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);						
+						fenetre.setPlan(Controleur.plan);
+						fenetre.afficherPanPrincipal();
 					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'a pas permis le chargement d'un plan");
 						exception.printStackTrace();
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}
-					fenetre.setPlan(Controleur.plan);
-					fenetre.afficherPanPrincipal();
 				}
 			break;
 			
@@ -92,15 +94,16 @@ public class EcouteurBoutons implements ActionListener{
 
 					try {
 					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
-					} catch (ExceptionChargement exception) {
-						exception.printStackTrace();
-					} catch (Exception exception) {
-						exception.printStackTrace();
-					}
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
 					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
+					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'a pas permis le chargement d'un plan");
+						exception.printStackTrace();
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 				}
 			break;
 			
@@ -118,15 +121,16 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan);
 					try {
 					controleur.chargerTournee(cheminFichierTournee);
+					fenetre.setTournee(null);
+					fenetre.setContraintes(controleur.getContraintes());
+					fenetre.afficherBoutonCalcul();
 					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'est pas conforme");
 						exception.printStackTrace();
 					} catch (Exception exception)
 					{
 						exception.printStackTrace();
 					}
-					fenetre.setTournee(null);
-					fenetre.setContraintes(controleur.getContraintes());
-					fenetre.afficherBoutonCalcul();
 					
 				}
 			break;
@@ -164,7 +168,7 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Valider ajout d'une livraison");
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
-				controleur.ajouterLivraison();
+				//controleur.ajouterLivraison();
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
