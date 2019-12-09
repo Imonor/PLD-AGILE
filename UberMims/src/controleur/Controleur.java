@@ -83,22 +83,61 @@ public class Controleur {
 		}
 	}
 
-	public void ajouterLivraison() {
-	//public void ajouterLivraison (Livraison livraison) {
-	// CmdAjoutLivraison cmd = new CmdAjoutLivraison(contraintes, livraison);
-	// cmdListe.addCommande(cmd);
+
+	public void ajouterLivraison (PointEnlevement e, PointLivraison l) {
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		intersectionsAVisiter.put(e.getId(), e);
+		intersectionsAVisiter.put(l.getId(), l);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
+		CmdAjoutLivraison cmd = new CmdAjoutLivraison(tournee, contraintes, e, l, plusCourtsChemins);
+		cmdListe.addCommande(cmd);
 	}
-	//
+
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
 	// livraison);
 	// cmdListe.addCommande(cmd);
 	// }
 	//
-	// public void modifierOrdrePassage (Precedence precedence) {
-	// CmdModifOrdre cmd = new CmdModifOrdre(contraintes, precedence);
-	// cmdListe.addCommande(cmd);
-	// }
+
+	/**
+	 * 
+	 * @param pointModif
+	 * @param newPrec Si le pr�c�dent est le d�p�t, mettre 'null'
+	 * @param newSuiv Si le suivant est le d�p�t, mettre 'null'
+	 */
+	 public void modifierOrdrePassage (Intersection pointModif, Intersection newPrec, Intersection newSuiv) {
+		 CmdModifOrdre cmd = new CmdModifOrdre(tournee, pointModif, newPrec, newSuiv, plusCourtsChemins);
+		 cmdListe.addCommande(cmd);
+	 }
+	
+	public void modifierAdresse(PointEnlevement e, Intersection newI) {
+		Map<String, Intersection> intersectionAVisiter = new HashMap<>();
+		Map<String, Chemin> newChemins = new HashMap<String, Chemin>();
+		intersectionAVisiter.put(newI.getId(), newI);
+		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionAVisiter).get(newI.getId());
+		plusCourtsChemins.put(newI.getId(), newChemins);
+		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, e, newI, plusCourtsChemins);
+		cmdListe.addCommande(cmd);
+	}
+	
+	public void modifierAdresse(PointLivraison l, Intersection newI) {
+		Map<String, Intersection> intersectionAVisiter = new HashMap<>();
+		Map<String, Chemin> newChemins = new HashMap<String, Chemin>();
+		intersectionAVisiter.put(newI.getId(), newI);
+		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionAVisiter).get(newI.getId());
+		plusCourtsChemins.put(newI.getId(), newChemins);
+		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, l, newI, plusCourtsChemins);
+		cmdListe.addCommande(cmd);
+	}
 
 	public void undo() {
 		cmdListe.undo();

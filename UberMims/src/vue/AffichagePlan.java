@@ -5,19 +5,25 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 import controleur.Controleur;
@@ -31,7 +37,7 @@ import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
 
-public class AffichagePlan extends JPanel {
+public class AffichagePlan extends JScrollPane {
 
 	/**
 	 * 
@@ -47,8 +53,6 @@ public class AffichagePlan extends JPanel {
 		}
 	
 	private Etat etat;
-	// Endroit de placement du plan dans la page
-	private Point placementPlan;
 
 	// Plan charg� via le fichier XML
 	private Plan plan;
@@ -62,22 +66,50 @@ public class AffichagePlan extends JPanel {
 	// Liste de couleurs pour les points
 	private List<Color> couleurs;
 	
-
+	// Determine s'il est possible de cliquer sur le plan
 	private boolean planClickable;
 
-	//Point de pickUp ajout�
+	//Point de pickUp ajoute
 	private Intersection nouveauPickUp;
 	
-	//Point de livraison ajout�
+	//Point de livraison ajoute
 	private Intersection nouvelleLivraison;
+	
+	private int nouveauTempsPickUp;
+	private int nouveauTempsDelivery;
 
+	
+	// Ecouteur de la souris
+	private EcouteurSouris ecouteurSouris;
+	
+	//Zoom actuel
+	private double zoom;
+	private double zoomPrecedent;
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private boolean zoomIn;
+    private boolean zoomOut;
+    private Stack<Double> xOldMouseX;
+    private Stack<Double> yOldMouseY;
+    private double mouseX;
+    private double mouseY;
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
 		this.planClickable = false;
-		this.addMouseListener(new EcouteurSouris(this, fenetre));
-		this.etat = etat.LIVRAISON;
+		this.zoom = 1f;
+		this.zoomPrecedent = 1f;
+		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
+		this.addMouseListener(ecouteurSouris);
+		this.addMouseWheelListener(ecouteurSouris);
+		this.etat = etat.LIVRAISON;	
+		zoomIn = false;
+		zoomOut = false;
+		xOldMouseX = new Stack<Double>();
+		yOldMouseY = new Stack<Double>();	
+		nouveauTempsPickUp=0;
+		nouveauTempsDelivery=0;
 	}
 	
 	public void setPlanClickable(boolean planClickable) {
@@ -95,8 +127,7 @@ public class AffichagePlan extends JPanel {
 	public void setEtat(Etat etat) {
 		this.etat = etat;
 	}
-	
-	
+		
 	public Plan getPlan() {
 		return this.plan;
 	}
@@ -128,7 +159,53 @@ public class AffichagePlan extends JPanel {
 	public void setNouvelleLivraison(Intersection nouvelleLivraison) {
 		this.nouvelleLivraison = nouvelleLivraison;
 	}
+	
+	public int getNouveauTempsPickUp() {
+		return nouveauTempsPickUp;
+	}
 
+	public void setNouveauTempsPickUp(int nouveauTempsPickUp) {
+		this.nouveauTempsPickUp = nouveauTempsPickUp;
+	}
+	
+	public int getNouveauTempsDelivery() {
+		return nouveauTempsDelivery;
+	}
+
+	public void setNouveauTempsDelivery(int nouveauTempsDelivery) {
+		this.nouveauTempsDelivery = nouveauTempsDelivery;
+	}
+	
+	public double getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+	}
+	
+	public void ZoomIn(){
+		this.zoom = this.zoom * 1.1f;	
+		zoomIn = true;
+		zoomOut = false;
+		this.repaint();
+	}
+	
+	public void ZoomOut(){
+		this.zoom = this.zoom / 1.1f;
+		zoomIn = false;
+		zoomOut = true;
+		this.repaint();
+	}
+	
+	public void setMouseX(double mouseX) {
+		this.mouseX = mouseX;
+	}
+
+	public void setMouseY(double mouseY) {
+		this.mouseY = mouseY;
+	}
+	
 	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
 		Random rand = new Random();
@@ -142,6 +219,34 @@ public class AffichagePlan extends JPanel {
 		super.paintComponent(g);
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
+
+		AffineTransform at = new AffineTransform();
+        
+        double zoomDiv = zoom/zoomPrecedent;
+        if(zoomIn){
+            xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * mouseX;
+            yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * mouseY;
+            xOldMouseX.push(mouseX);
+            yOldMouseY.push(mouseY);
+
+        }else if(zoomOut){
+        	xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xOldMouseX.pop();
+        	yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yOldMouseY.pop();
+        	//xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xRel;
+        	//yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yRel;
+
+        }
+        if(zoom == 1f){
+        	xOffset = 0;
+        	yOffset = 0;
+        }
+
+        
+        at.translate(xOffset, yOffset);
+        at.scale(zoom, zoom);
+        zoomPrecedent = zoom;
+        g2d.transform(at);
+        
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
 				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,
@@ -157,8 +262,11 @@ public class AffichagePlan extends JPanel {
 
 			if (tournee != null) {
 				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
+				int cptColor = 0;
+				Color couleurLigne; 
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
+					couleurLigne = getArrowColor(cptColor); 
 					int k = 0;
 					for (int i = 0; i < inters.size() - 1; ++i) {
 						Intersection inter = inters.get(i);
@@ -166,24 +274,26 @@ public class AffichagePlan extends JPanel {
 						if (inter.getTronconsSortants().size() > 3 || k == 3) {
 							LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude(),
-									Color.ORANGE, 2);
+									couleurLigne, 2);
 							line.draw(g2d);
 							k = 0;
 						} else {
 							g2d.setStroke(new BasicStroke(2));
-							g2d.setPaint(Color.ORANGE);
+							g2d.setPaint(couleurLigne);
 							g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude()));
 							k++;
 						}
 					}
+					
+					cptColor ++;
 				}
 			}
 
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
 				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,
-						10, 10);
+						15, 15);
 				g2d.setPaint(Color.black);
 				g2d.fill(depotg);
 
@@ -219,14 +329,19 @@ public class AffichagePlan extends JPanel {
 		}
 	}
 	
-
-	public void miseALEchelle() {
-		if (plan != null) {
-			// coefX = (double) (LARGEUR_PLAN) / (double)(plan.getLattitudeMax()
-			// - plan.getLattitudeMin());
-			// coefY = (double) (HAUTEUR_PLAN) / (double)(plan.getLongitudeMax()
-			// - plan.getLongitudeMin());
+	
+	public Color getArrowColor(int i){
+		int k = i%3;
+		if(k == 0) {
+			return new Color(226, 226, 72);
 		}
+		else if(k == 1){
+			return new Color(229, 138, 86);
+		}
+		else if(k == 2){
+			return new Color(150, 120, 57);
+		}
+		return new Color(0,0,0);
 	}
 
 	// The code snippet below was found on the forum
@@ -245,7 +360,7 @@ public class AffichagePlan extends JPanel {
 		private final int x;
 		private final int y;
 		private final int endX;
-		private final int endY;
+		private final int endY; 
 		private final Color color;
 		private final int thickness;
 
