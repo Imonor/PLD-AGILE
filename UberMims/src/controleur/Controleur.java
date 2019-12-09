@@ -1,5 +1,6 @@
 package controleur;
 
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -24,13 +25,13 @@ public class Controleur {
 	private CmdListe cmdListe;
 	private Dijkstra uniteCalculChemins;
 
-	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
-		tournee = new Tournee();
-		uniteCalculChemins = new Dijkstra();
-		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		chargerTournee(filePathTournee);
-		cmdListe = new CmdListe();
-	}
+//	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
+//		tournee = new Tournee();
+//		uniteCalculChemins = new Dijkstra();
+//		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
+//		chargerTournee(filePathTournee);
+//		cmdListe = new CmdListe();
+//	}
 
 	public Controleur() {
 		tournee = new Tournee();
@@ -38,11 +39,11 @@ public class Controleur {
 		cmdListe = new CmdListe();
 	}
 
-	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
+	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement{
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 	}
 
-	public void chargerTournee(String filePathTournee) {
+	public void chargerTournee(String filePathTournee) throws ExceptionChargement {
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // v�rifier que le plan nest pas incoh�rent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
