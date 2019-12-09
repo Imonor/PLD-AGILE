@@ -513,8 +513,11 @@ public class Fenetre extends JFrame {
 		int compteurDelivery = 1;
 
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
+			
+			System.out.println("k="+k);
 			Chemin c = tournee.getPlusCourteTournee().get(k);
-
+			System.out.println("k="+k+"; c.debut="+c.getPremiere().getId()+"; c.fin="+c.getDerniere().getId()+"; c.duree="+c.getDuree());
+			
 			List<Intersection> inters = c.getIntersections();
 			int taille = inters.size();
 			Intersection inter = inters.get(taille - 1);
