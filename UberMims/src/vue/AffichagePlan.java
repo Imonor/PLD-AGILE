@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -86,6 +87,12 @@ public class AffichagePlan extends JScrollPane {
 	private double zoomPrecedent;
     private double xOffset = 0;
     private double yOffset = 0;
+    private boolean zoomIn;
+    private boolean zoomOut;
+    private Stack<Double> xOldMouseX;
+    private Stack<Double> yOldMouseY;
+    private double mouseX;
+    private double mouseY;
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
@@ -97,6 +104,10 @@ public class AffichagePlan extends JScrollPane {
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
 		this.etat = etat.LIVRAISON;	
+		zoomIn = false;
+		zoomOut = false;
+		xOldMouseX = new Stack<Double>();
+		yOldMouseY = new Stack<Double>();	
 		nouveauTempsPickUp=0;
 		nouveauTempsDelivery=0;
 	}
@@ -175,12 +186,24 @@ public class AffichagePlan extends JScrollPane {
 	
 	public void ZoomIn(){
 		this.zoom = this.zoom * 1.1f;	
+		zoomIn = true;
+		zoomOut = false;
 		this.repaint();
 	}
 	
 	public void ZoomOut(){
-		this.zoom = this.zoom / 1.1f;	
+		this.zoom = this.zoom / 1.1f;
+		zoomIn = false;
+		zoomOut = true;
 		this.repaint();
+	}
+	
+	public void setMouseX(double mouseX) {
+		this.mouseX = mouseX;
+	}
+
+	public void setMouseY(double mouseY) {
+		this.mouseY = mouseY;
 	}
 	
 	public void chargementCouleurs() {
@@ -196,19 +219,28 @@ public class AffichagePlan extends JScrollPane {
 		super.paintComponent(g);
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
-//		g2d.translate(750/2, 750/2);
-//		g2d.scale(zoom, zoom);
-//		g2d.translate(-750/2, -750/2);
-		
+
 		AffineTransform at = new AffineTransform();
-		
-		double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
-        double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
         
         double zoomDiv = zoom/zoomPrecedent;
-        
-        xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
-        yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
+        if(zoomIn){
+            xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * mouseX;
+            yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * mouseY;
+            xOldMouseX.push(mouseX);
+            yOldMouseY.push(mouseY);
+
+        }else if(zoomOut){
+        	xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xOldMouseX.pop();
+        	yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yOldMouseY.pop();
+        	//xOffset = (zoomDiv) * xOffset+ (1 - zoomDiv) * xRel;
+        	//yOffset = (zoomDiv) *  yOffset +(1 - zoomDiv) * yRel;
+
+        }
+        if(zoom == 1f){
+        	xOffset = 0;
+        	yOffset = 0;
+        }
+
         
         at.translate(xOffset, yOffset);
         at.scale(zoom, zoom);
