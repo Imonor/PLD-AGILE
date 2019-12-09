@@ -48,8 +48,13 @@ public class CmdModifOrdre implements Commande {
 	}
 	
 	public static void main(String[] args) {
-		Controleur c = new Controleur("fichiersXML2019/moyenPlan.xml", "fichiersXML2019/demandeMoyen3.xml", 600,
-				800);
+		Controleur c = new Controleur();
+		try{
+			c.chargerPlan("fichiersXML2019/moyenPlan.xml", 600, 800);
+			c.chargerTournee("fichiersXML2019/demandeMoyen3.xml"); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		c.calculerTournee();
 		System.out.println("\n\n\n\n\n\n");
 		for(Chemin ch : c.getTournee().getPlusCourteTournee())
