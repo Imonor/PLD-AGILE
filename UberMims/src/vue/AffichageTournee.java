@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -89,7 +90,8 @@ public class AffichageTournee extends JPanel {
         gbc.weightx=0.0;
         panelAll.add(topMargin, gbc);
         
-        Container textArea = new Container();
+        JPanel textArea = new JPanel();
+        textArea.setLayout(new BorderLayout());
         textArea.setBackground(Color.cyan);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -110,15 +112,19 @@ public class AffichageTournee extends JPanel {
         gbc.weighty=0.0;
         gbc.weightx= 0.0;
         panelAll.add(bottomMargin, gbc);
+        
+        JPanel resultsPanel = new JPanel();
+        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollpane = new JScrollPane(resultsPanel);
 
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEtchedBorder());
-        panel.setBounds(0,0,415,420);
-        panel.setBackground(new Color(255,255,255));
-       
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.getViewport().add(panel);//<---Add the panel to the viewport of the scroll pane.
-        textArea.add(scrollPane);
+        for (int i = 0; i < 15 ; i++) {
+        	Button j = new Button("jjjjjjj");
+        	j.setPreferredSize(new Dimension(400, 100));
+            resultsPanel.add(j);
+        }
+        
+        textArea.add(scrollpane, BorderLayout.CENTER);
+
         
 	}
 

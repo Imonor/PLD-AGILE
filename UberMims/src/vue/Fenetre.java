@@ -190,7 +190,7 @@ public class Fenetre extends JFrame {
 		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee, apparait quand bouton calul de tournee cliqué
 		affichageTournee.setVisible(false);
 		affichageTournee.setLayout(null);
-		affichageTournee.setBounds(0, 100, 400, 660);
+		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
 		
