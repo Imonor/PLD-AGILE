@@ -18,7 +18,10 @@ import algo.TemplateTSP;
 import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
+import model.Intersection;
 import model.Plan;
+import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
 import util.ExceptionChargement;
 import util.XMLParser;
@@ -148,7 +151,6 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Ajouter une livraison a la tournee":
 				System.out.println("Ajouter une livraison");
-					//controleur.ajouterLivraison();					
 					fenetre.afficherAjoutLivraison();
 					fenetre.getAffichagePlan().setPlanClickable(true);
 					
@@ -166,13 +168,31 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
+				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue();
+				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue();
+				System.out.println(nouveauTempsPickUp);
+				System.out.println(nouveauTempsDelivery);
+
+				Intersection nouveauPointPickUp = fenetre.getAffichagePlan().getNouveauPickUp();
+				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
+				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), nouveauTempsPickUp);
+				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), nouveauTempsDelivery);
+				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associé: " + pointEnlevement.getIdLivraison());
+				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associé: " + pointLivraison.getIdEnlevement());
+
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
-				//controleur.ajouterLivraison();
+
+				
+				//System.out.println(pointEnlevement.getId());
+				//System.out.println(pointLivraison.getId());
+
+				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
+				
 			break;
 			
 			

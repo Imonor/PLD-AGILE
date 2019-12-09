@@ -77,18 +77,24 @@ public class Controleur {
 		}
 	}
 
+
 	public void ajouterLivraison (PointEnlevement e, PointLivraison l) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
-		Map<String, Map<String, Chemin>> newChemins = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
 		intersectionsAVisiter.put(e.getId(), e);
 		intersectionsAVisiter.put(l.getId(), l);
-		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);
-		plusCourtsChemins.put(e.getId(), newChemins.get(e.getId()));
-		plusCourtsChemins.put(l.getId(), newChemins.get(l.getId()));
-		CmdAjoutLivraison cmd = new CmdAjoutLivraison(tournee, e, l, plusCourtsChemins);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
+		CmdAjoutLivraison cmd = new CmdAjoutLivraison(tournee, contraintes, e, l, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}
-	//
+
 	// public void supprimerLivraison (Livraison livraison) {
 	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
 	// livraison);
@@ -99,8 +105,8 @@ public class Controleur {
 	/**
 	 * 
 	 * @param pointModif
-	 * @param newPrec Si le précédent est le dépôt, mettre 'null'
-	 * @param newSuiv Si le suivant est le dépôt, mettre 'null'
+	 * @param newPrec Si le prï¿½cï¿½dent est le dï¿½pï¿½t, mettre 'null'
+	 * @param newSuiv Si le suivant est le dï¿½pï¿½t, mettre 'null'
 	 */
 	 public void modifierOrdrePassage (Intersection pointModif, Intersection newPrec, Intersection newSuiv) {
 		 CmdModifOrdre cmd = new CmdModifOrdre(tournee, pointModif, newPrec, newSuiv, plusCourtsChemins);
