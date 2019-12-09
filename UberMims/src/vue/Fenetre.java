@@ -112,6 +112,7 @@ public class Fenetre extends JFrame {
 	private JLabel texteBienvenue = new JLabel ();
 	private JPanel panModificationTournee = new ModificationTournee();
 
+
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -220,6 +221,7 @@ public class Fenetre extends JFrame {
 		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
+
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
@@ -295,7 +297,7 @@ public class Fenetre extends JFrame {
 		//PANEL MODIFICATION DE TOURNEE
 		panModificationTournee.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
-		panModificationTournee.setBounds(20, 20, 200, 400);
+		panModificationTournee.setBounds(20, 120, 200, 400);
 		panModificationTournee.setBackground(Color.white);
 		panDroite.add(panModificationTournee);
 
@@ -477,6 +479,18 @@ public class Fenetre extends JFrame {
 				+ tronconNouveauDelivery.getNomRue() + "</font><br><br>Duree au point de livraison :<br>");
 		panAjoutLivraison3.add(texteDelivery);
 	}
+
+	
+	public void afficherModificationTournee() {
+		panModificationTournee.ajouterTournee(tournee);
+		affichageTournee.setVisible(false);
+		panModificationTournee.setVisible(true);
+	}
+	
+	
+	
+	// ***** INFOS TOURNEE *****
+	// Passage a la page principale apres le chargement d'un plan
 
 	
 	public static void main(String[] args) {

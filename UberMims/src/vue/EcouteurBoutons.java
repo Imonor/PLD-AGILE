@@ -192,19 +192,12 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
 				
 			break;
-			
-			case "Annuler la dernière modification":
-				System.out.println("CA MARCHE");
-			break;
 
-			
 			case "Modifier l'ordre de la tournée":
 				System.out.println("Modifier tournée");
 				fenetre.afficherModificationTournee();
 			break;			
-			
 			}
->>>>>>> switch des panels ok
 		}
 	}
 }
