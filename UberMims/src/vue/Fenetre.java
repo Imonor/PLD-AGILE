@@ -105,7 +105,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
-	private JPanel panModificationTournee = new ModificationTournee();
+	private ModificationTournee panModificationTournee  = new ModificationTournee();
 
 	public Fenetre() {
 
@@ -198,18 +198,6 @@ public class Fenetre extends JFrame {
 		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
-		
-		/*panInformationAll.setVisible(false);
-		//panInformationAll.setLayout(null);
-		panInformationAll.setBounds(0, 100, 450, 500);
-		panInformationAll.setBackground(backgroundTurquoiseClair);// mettre couleur backgroundTurquoiseClair
-		panDroite.add(panInformationAll);
-
-		panInformationDetail.setVisible(false);
-		panInformationDetail.setLayout(null);
-		panInformationDetail.setBounds(0, 600, 450, 200);
-		panInformationDetail.setBackground(Color.red); //mettre couleur backgroundTurquoiseClair
-		panDroite.add(panInformationDetail);*/
 
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
@@ -274,7 +262,7 @@ public class Fenetre extends JFrame {
 		//PANEL MODIFICATION DE TOURNEE
 		panModificationTournee.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
-		panModificationTournee.setBounds(20, 20, 200, 400);
+		panModificationTournee.setBounds(20, 120, 200, 400);
 		panModificationTournee.setBackground(Color.white);
 		panDroite.add(panModificationTournee);
 
@@ -435,6 +423,12 @@ public class Fenetre extends JFrame {
 		//textePickUp.setForeground(new Color(69, 73, 74));
 		texteDelivery.setText(texteDelivery.getText() + "&rarr; Adresse : " + tronconNouveauDelivery.getNomRue() + "<br>");
 		panAjoutLivraison3.add(texteDelivery);
+	}
+	
+	public void afficherModificationTournee() {
+		panModificationTournee.ajouterTournee(tournee);
+		affichageTournee.setVisible(false);
+		panModificationTournee.setVisible(true);
 	}
 	
 	
