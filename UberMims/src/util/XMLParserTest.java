@@ -17,13 +17,20 @@ class XMLParserTest {
 
 	@Test
 	void testChargerPlanNormal() {
-		Plan plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
+		Plan plan = new Plan();
+		try {
+		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		assertEquals(plan.getIntersections().get("25611760").getId(), "25611760");
 		assertEquals(plan.getIntersections().get("25611760").getLatitude(), 964);
 		assertEquals(plan.getIntersections().get("25611760").getLongitude(), 823);
 		Map<String, Troncon> tronconsSortants = plan.getIntersections().get("25611760").getTronconsSortants();
 		assertEquals(tronconsSortants.get("26317233").getDestination().getId(), "26317233");
-		assertEquals(tronconsSortants.get("26317233").getNomRue(), "Avenue Félix Faure");
+		assertEquals(tronconsSortants.get("26317233").getNomRue(), "Avenue Fï¿½lix Faure");
 		assertEquals(tronconsSortants.get("26317233").getLongueur(), 26.020561);
 		
 		assertEquals(tronconsSortants.get("26317214").getDestination().getId(), "26317214");
@@ -31,13 +38,20 @@ class XMLParserTest {
 		assertEquals(tronconsSortants.get("26317214").getLongueur(), 73.66637);
 		
 		assertEquals(tronconsSortants.get("250042857").getDestination().getId(), "250042857");
-		assertEquals(tronconsSortants.get("250042857").getNomRue(), "Avenue Félix Faure");
+		assertEquals(tronconsSortants.get("250042857").getNomRue(), "Avenue Fï¿½lix Faure");
 		assertEquals(tronconsSortants.get("250042857").getLongueur(), 214.0224);
 	}
 	
 	@Test
 	void testChargerPlanUNOWKN() {
-		Plan plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
+		Plan plan = new Plan();
+		try {
+		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		assertEquals(plan.getIntersections().get("208769027").getId(), "208769027");
 		assertEquals(plan.getIntersections().get("208769027").getLatitude(), 609);
 		assertEquals(plan.getIntersections().get("208769027").getLongitude(), 1439);
@@ -51,7 +65,7 @@ class XMLParserTest {
 		assertEquals(tronconsSortants.get("55475052").getLongueur(), 109.26013);
 		
 		assertEquals(tronconsSortants.get("208769069").getDestination().getId(), "208769069");
-		assertEquals(tronconsSortants.get("208769069").getNomRue(), "Rue Saint-Eusèbe");
+		assertEquals(tronconsSortants.get("208769069").getNomRue(), "Rue Saint-Eusï¿½be");
 		assertEquals(tronconsSortants.get("208769069").getLongueur(), 59.16955);
 	}
 	
@@ -63,8 +77,23 @@ class XMLParserTest {
 	
 	@Test
 	void testChargerContraintesTourneeNormal() {
-		Plan plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
-		ContraintesTournee contraintesTournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit2.xml", plan);
+		Plan plan = new Plan();
+		try {
+		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ContraintesTournee contraintesTournee = new ContraintesTournee ();
+		try {
+		XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit2.xml", plan);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		assertEquals(contraintesTournee.getHeureDepart(), LocalTime.of(8, 0, 0));
 		assertEquals(contraintesTournee.getDepot().getId(), "2835339774");
 		assertEquals(contraintesTournee.getPointsEnlevement().get(0).getId(), "1679901320");
