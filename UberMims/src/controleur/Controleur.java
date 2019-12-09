@@ -17,7 +17,7 @@ public class Controleur {
 	private final int LARGEUR_PLAN = 800;
 	private final int HAUTEUR_PLAN = 600;
 
-	public Map<String, Map<String, Chemin>> plusCourtsChemins;
+	private Map<String, Map<String, Chemin>> plusCourtsChemins;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
 	public static Plan plan;
@@ -28,7 +28,7 @@ public class Controleur {
 		tournee = new Tournee();
 		uniteCalculChemins = new Dijkstra();
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan);
+		chargerTournee(filePathTournee);
 		cmdListe = new CmdListe();
 	}
 
@@ -131,6 +131,10 @@ public class Controleur {
 
 	public ContraintesTournee getContraintes() {
 		return contraintes;
+	}
+
+	public Map<String, Map<String, Chemin>> getPlusCourtsChemins() {
+		return plusCourtsChemins;
 	}
 
 }
