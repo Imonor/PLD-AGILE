@@ -1,10 +1,7 @@
 package controleur;
 
 import model.Tournee;
-import model.PointEnlevement;
-import model.PointLivraison;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
