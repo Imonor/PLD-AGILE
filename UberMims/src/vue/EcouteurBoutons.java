@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 
 import algo.Dijkstra;
 import algo.TSP1;
@@ -22,6 +23,7 @@ import model.Plan;
 import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -66,9 +68,16 @@ public class EcouteurBoutons implements ActionListener{
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
-					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
-					fenetre.setPlan(Controleur.plan);
-					fenetre.afficherPanPrincipal();
+					try {
+						controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);						
+						fenetre.setPlan(Controleur.plan);
+						fenetre.afficherPanPrincipal();
+					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'a pas permis le chargement d'un plan");
+						exception.printStackTrace();
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 				}
 			break;
 			
@@ -86,11 +95,18 @@ public class EcouteurBoutons implements ActionListener{
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
 
+					try {
 					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.setContraintes(null);
 					fenetre.setTournee(null);
 					fenetre.afficherPanPrincipal();
+					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'a pas permis le chargement d'un plan");
+						exception.printStackTrace();
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 				}
 			break;
 			
@@ -106,10 +122,18 @@ public class EcouteurBoutons implements ActionListener{
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
+					try {
 					controleur.chargerTournee(cheminFichierTournee);
 					fenetre.setTournee(null);
 					fenetre.setContraintes(controleur.getContraintes());
 					fenetre.afficherBoutonCalcul();
+					} catch (ExceptionChargement exception) {
+						JOptionPane.showMessageDialog(null, "Le fichier saisie n'est pas conforme");
+						exception.printStackTrace();
+					} catch (Exception exception)
+					{
+						exception.printStackTrace();
+					}
 					
 				}
 			break;
@@ -158,6 +182,7 @@ public class EcouteurBoutons implements ActionListener{
 
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
+
 				
 				//System.out.println(pointEnlevement.getId());
 				//System.out.println(pointLivraison.getId());
