@@ -69,27 +69,15 @@ public abstract class TemplateTSP implements TSP{
 		}
 		
 		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
-		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
-		
-		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
-		    if( iterator.getValue() instanceof PointEnlevement ) {
-		    	vuDispo.put( iterator.getKey(), new Paire(true, false) );
-		    }else {
-		    	vuDispo.put( iterator.getKey(), new Paire(false, false) );
-		    }
-		}
-		
-		//Mettre premier noeud comme deja visite - ici le premier est l'entrepot
-		vuDispo.get(contraintes.getDepot().getId()).setDispo(false);
-		vuDispo.get(contraintes.getDepot().getId()).setVu(true);
+		HashMap<String, Paire> vuDispo = initVuDispo(contraintes, intersections);
 		
 		Tournee tournee = new Tournee();
 		//Sequentiel et MinFirst
-		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
 		
 		//MinFirst + 2-Opt
-//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
-//		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, couts);
+		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins, couts);		
+		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, intersections, couts);
 		
 		return tournee;
 	}
@@ -102,7 +90,7 @@ public abstract class TemplateTSP implements TSP{
 
 		while(it.hasNext()) {
 			String noeudSuivant = it.next();
-			System.out.println("noeudSuiv=" + noeudSuivant);
+//			System.out.println("noeudSuiv=" + noeudSuivant);
 			vuDispo.get(noeudSuivant).setDispo(false);
 			vuDispo.get(noeudSuivant).setVu(true);
 			
@@ -133,22 +121,38 @@ public abstract class TemplateTSP implements TSP{
 		int duree = plusCourtsChemins.get(depart.getId()).get(first).getDuree();
 		Chemin chemin = new Chemin(listeInter, duree);
 		tournee.addChemin(chemin);
-		
 	}
 	
-	protected void twoOpt(int tpsLimite, long tpsDebut, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts) {
+	protected void twoOpt(int tpsLimite, long tpsDebut, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Intersection> intersections, HashMap<String, Integer> couts) {
 		
 		Iterator<Chemin> it = tournee.getPlusCourteTournee().iterator();
-		Iterator<Chemin> it2 = tournee.getPlusCourteTournee().iterator();
 		int nbChemins = tournee.getPlusCourteTournee().size();
-		int i = 0 ;
 		tempsLimiteAtteint = false;
-			
+		
+		//Initialisation nouvelle map ordreNoeuds pour le 2-opt - ordre dans la tournee qu'on calcule
+		//Pour chaque chemin c'est le noeuds de depart qui est mis ici
+		HashMap<String, Integer> ordreNoeuds = new HashMap<String, Integer>();
+		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
+	    	ordreNoeuds.put( iterator.getKey(), -1 );
+		}
+		
 		//Algo 2-Opt
+		int i = 0 ;
 		while(it.hasNext() && i<(nbChemins - 2)) {
 			Chemin chemin = it.next();
+//			System.out.println("//////i="+i+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
+			ordreNoeuds.replace(chemin.getPremiere().getId(), i);
+			ArrayList<String> noeudsUpdate = new ArrayList<String>();
+			
 			int j = 0 ;
+			Iterator<Chemin> it2 = tournee.getPlusCourteTournee().iterator();
 			while(it2.hasNext() && j<nbChemins) {
+				Chemin chemin2 = it2.next();
+				if(j>i) {
+					ordreNoeuds.replace(chemin2.getPremiere().getId(), j);
+					noeudsUpdate.add(chemin2.getPremiere().getId());
+				}
+				System.out.println("j="+j+"; c2.Debut="+chemin2.getPremiere().getId()+"; c2.Fin="+chemin2.getDerniere().getId()+"; c2.duree="+chemin2.getDuree()+"; updateSize="+noeudsUpdate.size());
 				
 				//Pour ne pas depasser le temps limite
 				if (System.currentTimeMillis() - tpsDebut > tpsLimite){
@@ -156,60 +160,100 @@ public abstract class TemplateTSP implements TSP{
 					 return;
 				}
 				
-				Chemin chemin2 = it2.next();
-				if(j>i+2) {
-					int dureeIni = chemin.getDuree() + chemin2.getDuree();
-					String depart1Depart2 = chemin.getPremiere().getId() + chemin2.getPremiere().getId();
-					String fin1Fin2 = chemin.getDerniere().getId() + chemin2.getDerniere().getId();
-					if( couts.get(depart1Depart2) + couts.get(fin1Fin2) < dureeIni ) {
+				if(j>=i+2) {
+//					for( HashMap.Entry<String, Integer> itTmp : ordreNoeuds.entrySet() ) {
+//						System.out.print(itTmp.getKey()+":"+itTmp.getValue()+" | ");
+//					}
+//					System.out.println("");
 					
-						//Changer l'ordre depart1 -> depart2 ; fin1 -> fin2
-						Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId());
-						Chemin newChemin2 = plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId());
-						int index1 = tournee.getPlusCourteTournee().indexOf(chemin);
-						int index2 = tournee.getPlusCourteTournee().indexOf(chemin2);
-						tournee.getPlusCourteTournee().remove(index1);
-						tournee.getPlusCourteTournee().add(index1, newChemin1);
-						tournee.getPlusCourteTournee().remove(index2);
-						tournee.getPlusCourteTournee().add(index2, newChemin2);
+					//Pour tous les chemins qu'on va mettre dans le sens inverse, on s'assure
+					//que pour tous les points de livraison, leur pt d'enlevement est vu avant
+					//ou au noeds de depart du premier chemin du swap
+					boolean possible = true;
+					for(int count = noeudsUpdate.size()-1; count>0; --count) {
+						if( intersections.get(noeudsUpdate.get(count)) instanceof PointLivraison ) {
+							String sonPtEnlev = ((PointLivraison)intersections.get(noeudsUpdate.get(count))).getIdEnlevement();
+							if( ordreNoeuds.get(sonPtEnlev) > ordreNoeuds.get(chemin.getPremiere().getId()) ) {
+								possible = false;
+							}
+						}
+					}
+					
+					System.out.println("possible="+possible);
+					
+					int duree = 0;
+					int newDuree = 0;
+					if(possible) {
+						//Calculer la duree standarde
+						for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
+							duree += couts.get(noeudsUpdate.get(count)+noeudsUpdate.get(count+1));
+						}
+						duree += couts.get(chemin.getPremiere().getId()+chemin.getDerniere().getId());
+						duree += couts.get(chemin2.getPremiere().getId()+chemin2.getDerniere().getId());
 						
+						//Calculer la duree du nouvel ensemble de chemins inverses
+						for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
+							newDuree += couts.get(noeudsUpdate.get(count+1)+noeudsUpdate.get(count));
+						}
+						newDuree += couts.get(chemin.getPremiere().getId()+chemin2.getPremiere().getId());
+						newDuree += couts.get(chemin.getDerniere().getId()+chemin2.getDerniere().getId());
+						
+						System.out.println("oldDuree="+duree+"; newDuree="+newDuree);
+					}
+					
+					
+					if( possible && newDuree < duree ) {
+						twoOptSwap(i, j, chemin, chemin2, noeudsUpdate, ordreNoeuds, tournee, plusCourtsChemins);
+						chemin = tournee.getPlusCourteTournee().get(i);
+						chemin2 = tournee.getPlusCourteTournee().get(j);
 					}
 				}
-				j++;
+				++j;
+			}
+			
+			//Remet les noeuds qu'on a visite dans la 2eme boucle a l'etat non vus
+			for(int count = 0; count<noeudsUpdate.size(); ++count) {
+				ordreNoeuds.replace( noeudsUpdate.get(count), -1 );
 			}
 			++i;
 		}
 	}
 	
-//	protected void testerCalcul(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
-//			
-//		Iterator<String> it = iterator(restants, intersections, vuDispo);
-//		String noeudPreced = null;
-//		
-//		while(it.hasNext()) {
-//			String noeudSuivant = it.next();
-//			
-//			vuDispo.get(noeudSuivant).setDispo(false);
-//			vuDispo.get(noeudSuivant).setVu(true);
-//			
-//			if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
-//				String cleTmp = ((PointEnlevement) intersections.get(noeudSuivant)).getIdLivraison();
-//				vuDispo.get(cleTmp).setDispo(true);
-//			}
-//			
-//			//Creation d'un chemin et l'ajout a la tournee
-//			Intersection depart;
-//			if(noeudPreced != null) {
-//				System.out.println("preced="+noeudPreced+"; actuel="+noeudSuivant);
-//			}else {
-//				System.out.println("preced="+first+"; actuel="+noeudSuivant);
-//			}
-//			
-//			noeudPreced = noeudSuivant;
-//		}
-//		
-//	}
+	private void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, HashMap<String, Integer> ordreNoeuds, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
 		
+		System.out.println("###SWAP### i="+i+"; j="+j);
+		//On mets les chemins compris entre i et j dans l'ordre inverse de parcours pour connecter la tournee
+		//On met aussi les 2 chemins avec les noeuds extremes inter-changes
+		for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
+			int index = i+noeudsUpdate.size()-count-1;
+			Chemin newChemin = plusCourtsChemins.get(noeudsUpdate.get(count+1)).get(noeudsUpdate.get(count));
+			tournee.getPlusCourteTournee().set(index, newChemin);
+			ordreNoeuds.replace(noeudsUpdate.get(count+1), index);
+		}
+		Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId());
+		Chemin newChemin2 = plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId());
+		tournee.getPlusCourteTournee().set(i, newChemin1);
+		tournee.getPlusCourteTournee().set(j, newChemin2);
+		ordreNoeuds.replace(chemin.getDerniere().getId(), j);
+	}
+	
+	private HashMap<String, Paire> initVuDispo(ContraintesTournee contraintes, HashMap<String, Intersection> intersections){
+		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
+		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
+		    if( iterator.getValue() instanceof PointEnlevement ) {
+		    	vuDispo.put( iterator.getKey(), new Paire(true, false) );
+		    }else {
+		    	vuDispo.put( iterator.getKey(), new Paire(false, false) );
+		    }
+		}
+		
+		//Mettre premier noeud comme deja visite - ici le premier est l'entrepot
+		vuDispo.get(contraintes.getDepot().getId()).setDispo(false);
+		vuDispo.get(contraintes.getDepot().getId()).setVu(true);
+		
+		return vuDispo;
+	}
+	
 	
 	public String getMeilleureSolution(int i){
 		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
@@ -242,39 +286,4 @@ public abstract class TemplateTSP implements TSP{
 	 */
 	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts);
 	
-	/**
-	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
-	 * @param sommetCrt le dernier sommet visite
-	 * @param nonVus la liste des sommets qui n'ont pas encore ete visites
-	 * @param vus la liste des sommets visites (y compris sommetCrt)
-	 * @param coutVus la somme des couts des arcs du chemin passant par tous les sommets de vus + la somme des duree des sommets de vus
-	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
-	 * @param tpsDebut : moment ou la resolution a commence
-	 * @param tpsLimite : limite de temps pour la resolution
-	 */	
-//	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite){
-//		 if (System.currentTimeMillis() - tpsDebut > tpsLimite){
-//			 tempsLimiteAtteint = true;
-//			 return;
-//		 }
-//	    if (nonVus.size() == 0){ // tous les sommets ont ete visites
-//	    	coutVus += cout[sommetCrt][0];
-//	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
-//	    		vus.toArray(meilleureSolution);
-//	    		coutMeilleureSolution = coutVus;
-//	    	}
-//	    } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
-//	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
-//	        while (it.hasNext()){
-//	        	Integer prochainSommet = it.next();
-//	        	vus.add(prochainSommet);
-//	        	nonVus.remove(prochainSommet);
-//	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
-//	        	vus.remove(prochainSommet);
-//	        	nonVus.add(prochainSommet);
-//	        }	    
-//	    }
-//	}
-
 }
