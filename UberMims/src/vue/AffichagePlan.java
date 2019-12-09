@@ -74,6 +74,10 @@ public class AffichagePlan extends JScrollPane {
 	//Point de livraison ajoute
 	private Intersection nouvelleLivraison;
 	
+	private int nouveauTempsPickUp;
+	private int nouveauTempsDelivery;
+
+	
 	// Ecouteur de la souris
 	private EcouteurSouris ecouteurSouris;
 	
@@ -92,7 +96,9 @@ public class AffichagePlan extends JScrollPane {
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
-		this.etat = etat.LIVRAISON;		
+		this.etat = etat.LIVRAISON;	
+		nouveauTempsPickUp=0;
+		nouveauTempsDelivery=0;
 	}
 	
 	public void setPlanClickable(boolean planClickable) {
@@ -141,6 +147,22 @@ public class AffichagePlan extends JScrollPane {
 
 	public void setNouvelleLivraison(Intersection nouvelleLivraison) {
 		this.nouvelleLivraison = nouvelleLivraison;
+	}
+	
+	public int getNouveauTempsPickUp() {
+		return nouveauTempsPickUp;
+	}
+
+	public void setNouveauTempsPickUp(int nouveauTempsPickUp) {
+		this.nouveauTempsPickUp = nouveauTempsPickUp;
+	}
+	
+	public int getNouveauTempsDelivery() {
+		return nouveauTempsDelivery;
+	}
+
+	public void setNouveauTempsDelivery(int nouveauTempsDelivery) {
+		this.nouveauTempsDelivery = nouveauTempsDelivery;
 	}
 	
 	public double getZoom() {
