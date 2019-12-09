@@ -152,7 +152,7 @@ public abstract class TemplateTSP implements TSP{
 					ordreNoeuds.replace(chemin2.getPremiere().getId(), j);
 					noeudsUpdate.add(chemin2.getPremiere().getId());
 				}
-				System.out.println("j="+j+"; c2.Debut="+chemin2.getPremiere().getId()+"; c2.Fin="+chemin2.getDerniere().getId()+"; c2.duree="+chemin2.getDuree()+"; updateSize="+noeudsUpdate.size());
+//				System.out.println("j="+j+"; c2.Debut="+chemin2.getPremiere().getId()+"; c2.Fin="+chemin2.getDerniere().getId()+"; c2.duree="+chemin2.getDuree()+"; updateSize="+noeudsUpdate.size());
 				
 				//Pour ne pas depasser le temps limite
 				if (System.currentTimeMillis() - tpsDebut > tpsLimite){

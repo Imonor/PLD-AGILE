@@ -37,7 +37,6 @@ public class IteratorMinFirst implements Iterator<String>{
 	
 	@Override
 	public String next() {
-		System.out.println("debut next");
 		
 		Iterator<Entry<String, Paire>> it = vuDispo.entrySet().iterator();
 		String cle = "";
@@ -51,22 +50,15 @@ public class IteratorMinFirst implements Iterator<String>{
 			actual = courant;
 		}
 		
-		System.out.println("actual=" + actual);
-		
-		
 		//Recherche du min
 		for (HashMap.Entry<String, Intersection> entry : intersections.entrySet()) {
 			String idid = actual.concat(entry.getKey());
-			System.out.println("idid=" + idid + "; dureeAssociee=" + couts.get(idid));
 			if( couts.get(idid) < min && vuDispo.get(entry.getKey()).getDispo() == true && vuDispo.get(entry.getKey()).getVu() == false ) {
 				cle = entry.getKey();
 				min = couts.get(idid);
 			}
-			System.out.println("inside-fin");
 		}
 		
-		System.out.println("+++++ITERATEUR++++");
-		System.out.println("cle=" + cle);
 		restants--;
 		courant = cle;
 		return cle;
