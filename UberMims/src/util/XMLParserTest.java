@@ -85,7 +85,15 @@ class XMLParserTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ContraintesTournee contraintesTournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit2.xml", plan);
+		ContraintesTournee contraintesTournee = new ContraintesTournee ();
+		try {
+		XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit2.xml", plan);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		assertEquals(contraintesTournee.getHeureDepart(), LocalTime.of(8, 0, 0));
 		assertEquals(contraintesTournee.getDepot().getId(), "2835339774");
 		assertEquals(contraintesTournee.getPointsEnlevement().get(0).getId(), "1679901320");

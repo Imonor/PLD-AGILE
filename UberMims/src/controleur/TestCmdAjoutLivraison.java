@@ -18,7 +18,15 @@ public class TestCmdAjoutLivraison {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		ContraintesTournee tournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit1.xml", plan);
+		ContraintesTournee tournee = new ContraintesTournee();
+		try {
+			tournee = XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit1.xml", plan);			
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		for(PointEnlevement e: tournee.getPointsEnlevement()) {
 			System.out.println(e.getId() + " --> " + e.getIdLivraison());
 		}

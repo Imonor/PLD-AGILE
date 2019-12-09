@@ -36,7 +36,7 @@ public class Controleur {
 		plan = XMLParser.chargerPlan(filePathPlan, 1600, 1900);
 	}
 
-	public void chargerTournee(String filePathTournee) {
+	public void chargerTournee(String filePathTournee) throws ExceptionChargement {
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // verifier que le plan nest pas incoherent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		

@@ -99,17 +99,17 @@ public class XMLParser {
 			for (String id : idInters) { 
 				intersections.remove(id); //On supprime les intersections dont l'ID apparait dans la liste des copies d'ID
 			}
-
-			
-			plan.setIntersections(intersections);
-			if (intersections.isEmpty()) throw new Exception("Aucun plan Charge");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+			
+		plan.setIntersections(intersections);
+		if (intersections.isEmpty()) throw new ExceptionChargement("Aucun plan Charge");
 		return plan;
 	}
 
-	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) {
+	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) throws ExceptionChargement {
 		List<PointEnlevement> enlevements = new ArrayList<>();
 		List<PointLivraison> livraisons = new ArrayList<>();
 		ContraintesTournee tournee = new ContraintesTournee();
@@ -143,14 +143,16 @@ public class XMLParser {
 				livraisons.add(livraison);
 				enlevements.add(enlevement);
 			}
-
-			tournee.setPointsEnlevement(enlevements);
-			tournee.setPointsLivraison(livraisons);
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		tournee.setPointsEnlevement(enlevements);
+		tournee.setPointsLivraison(livraisons);
+		
+		if(tournee.getPointsEnlevement().isEmpty()) throw new ExceptionChargement ("Pas de contraintes CHargees");
+		
 		return tournee;
 	}
 

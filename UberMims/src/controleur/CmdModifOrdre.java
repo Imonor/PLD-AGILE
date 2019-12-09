@@ -57,7 +57,14 @@ public class CmdModifOrdre implements Commande {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		c.chargerTournee("fichiersXML2019/demandeMoyen3.xml");
+		try {
+			c.chargerTournee("fichiersXML2019/demandeMoyen3.xml");
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		c.calculerTournee();
 		System.out.println("\n\n\n\n\n\n");
 		for(Chemin ch : c.getTournee().getPlusCourteTournee())
