@@ -120,6 +120,7 @@ public class AffichageTournee extends JPanel {
         JPanel resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollpane = new JScrollPane(resultsPanel);
+        scrollpane.getVerticalScrollBar().setUnitIncrement(16);
         textArea.add(scrollpane, BorderLayout.CENTER);
         
         //------------------------------------------------------------------
@@ -162,12 +163,6 @@ public class AffichageTournee extends JPanel {
 		int compteurDelivery = 1;
 		
 		resultsPanel.add(infoGeneral);
-		
-        /*for (int i = 0; i < 6 ; i++) {
-        	JLabel j = new JLabel("<html> hhhh <br> gggg </html>");
-        	j.setPreferredSize(new Dimension(400, 100));
-            resultsPanel.add(j);
-        }*/
         
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
 			JLabel jlabel = new JLabel("<html> ");
@@ -308,7 +303,8 @@ public class AffichageTournee extends JPanel {
 		}
         
 		int duree = tournee.getDuree() ;
-		JLabel time = new JLabel("<html> <br> Duree totale : " + duree + " minutes. </center> </html>");
+		duree = (int) duree/60;
+		JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 		resultsPanel.add(time);
 		
 		for (int i = 0; i < 4 ; i++) {
