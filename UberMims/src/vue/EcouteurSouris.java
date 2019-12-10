@@ -96,7 +96,9 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		
 		int lol = affichagePlan.getxDiff();
 		
-		if(affichagePlan.getZoom() >1)
+		if(affichagePlan.getZoom() >1 
+				&& (lol < Math.abs(affichagePlan.getxOffset()))
+				)
 		{
 			int clicX = e.getX();
 			int clicY = e.getY();
