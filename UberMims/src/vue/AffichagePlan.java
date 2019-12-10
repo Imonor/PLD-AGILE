@@ -308,6 +308,8 @@ public class AffichagePlan extends JScrollPane {
 		if (zoom == 1f) {
 			xOffset = 0;
 			yOffset = 0;
+			xDiff = 0;
+			yDiff = 0;
 		}
 
 		if (mouseReleased) {
@@ -332,6 +334,7 @@ public class AffichagePlan extends JScrollPane {
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
 		
+		System.out.println("LARGEUR = " + g2d.getTransform().getTranslateX());
 		ajusterZoom(g2d);
 
 		if (plan != null) {

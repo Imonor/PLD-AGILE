@@ -115,23 +115,20 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		{
 			int clicX = e.getX();
 			int clicY = e.getY();
-			int newxDiffActuel = affichagePlan.getnewxDiff();
-			int newyDiffActuel = affichagePlan.getnewyDiff();
 			
 			int deplacementX = clicX - pointDepart.x;
 			int deplacementY = clicY - pointDepart.y;
 			
-			System.out.println(xDiff + newxDiffActuel);	
-			System.out.println();
-			System.out.println(Math.abs(xOffset));
-			System.out.println();
-			if( xDiff + newxDiffActuel< Math.abs(xOffset) || deplacementX <0){
+			if( (xDiff + deplacementX<= Math.abs(xOffset) && deplacementX >0 ) ||
+				( xDiff + deplacementX >= xOffset - Fenetre.LARGEUR_PLAN/2  && deplacementX <0)	){
 				affichagePlan.setnewxDiff(deplacementX);
 			}
+						
 			
-			if(xDiff )
-			System.out.println(clicX - pointDepart.x);
-			if(yDiff + newyDiffActuel < Math.abs(yOffset) ){
+			System.out.println(xDiff + deplacementX);
+			System.out.println(xOffset);
+			System.out.println();
+			if(yDiff + deplacementY < Math.abs(yOffset) ){
 				affichagePlan.setnewyDiff(deplacementY);
 			}		
 				
