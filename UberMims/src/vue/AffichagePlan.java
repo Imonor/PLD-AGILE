@@ -99,6 +99,7 @@ public class AffichagePlan extends JScrollPane {
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
+
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
@@ -123,8 +124,12 @@ public class AffichagePlan extends JScrollPane {
 		yDiff = 0;
 		mouseReleased = true;
 		
-		nouveauTempsPickUp = 0;
-		nouveauTempsDelivery = 0;
+
+
+		this.etat = etat.LIVRAISON;	
+		nouveauTempsPickUp=0;
+		nouveauTempsDelivery=0;
+
 	}
 
 	
@@ -226,6 +231,7 @@ public class AffichagePlan extends JScrollPane {
 		this.zoom = zoom;
 	}
 
+
 	public double getZoomPrecedent() {
 		return zoomPrecedent;
 	}
@@ -262,6 +268,7 @@ public class AffichagePlan extends JScrollPane {
 
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
+
 	
 	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
@@ -311,6 +318,25 @@ public class AffichagePlan extends JScrollPane {
 		
 		ajusterZoom(g2d);
 
+//		g2d.translate(750/2, 750/2);
+//		g2d.scale(zoom, zoom);
+//		g2d.translate(-750/2, -750/2);
+		
+		AffineTransform at = new AffineTransform();
+		
+		double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
+        double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
+        
+        double zoomDiv = zoom/zoomPrecedent;
+        
+        xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
+        yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
+        
+        at.translate(xOffset, yOffset);
+        at.scale(zoom, zoom);
+        zoomPrecedent = zoom;
+        g2d.transform(at);
+        
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
 				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,

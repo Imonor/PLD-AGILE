@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
 
+import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
 import model.Intersection;
@@ -29,21 +30,23 @@ import model.Plan;
 import model.PointEnlevement;
 import model.Tournee;
 
-public class ModificationTournee extends JPanel implements MouseListener{
+public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
 	
 	private JPanel resultsPanel;
 	private JLabel labelSelectionne;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
-	private int deplacementEtape;
+	private List<JLabel> listeLabels;
 	private Plan plan;
+	private Controleur controleur;
 	
 	public ModificationTournee() {
     	ordrePassage = new ArrayList<>();
-    	deplacementEtape = 0;
+    	listeLabels = new ArrayList<>();
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
+        
  
         JPanel panelAll = new JPanel();
         panelAll.setBackground(Color.red);
@@ -51,6 +54,15 @@ public class ModificationTournee extends JPanel implements MouseListener{
         
         JPanel panelDetail = new JPanel();
         panelDetail.setBackground(Color.yellow);
+        JButton boutonHaut = new JButton("^");
+        JButton boutonBas = new JButton("v");
+        boutonHaut.setBounds(15, 5, 20, 20);
+        boutonBas.setBounds(15, 30, 20, 20);
+        boutonHaut.addActionListener(this);
+        boutonBas.addActionListener(this);
+
+        panelDetail.add(boutonHaut);
+        panelDetail.add(boutonBas);
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -109,7 +121,8 @@ public class ModificationTournee extends JPanel implements MouseListener{
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Tournee tournee, Plan plan) {
+    public void ajouterTournee(Tournee tournee, Plan plan, Controleur controleur) {
+    	this.controleur = controleur;
     	this.plan = plan;
         List<Chemin> parcours = tournee.getPlusCourteTournee();
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
@@ -129,8 +142,9 @@ public class ModificationTournee extends JPanel implements MouseListener{
         }
     }
     
-    public void afficherTournee(ContraintesTournee contraintes) {
-
+    public void afficherTournee() {
+    	listeLabels.clear();
+    	resultsPanel.removeAll();
         int compteurPointsEnlevement = 1;
         int compteurPointsLivraison = 1;
         int compteur = 0;
@@ -145,7 +159,7 @@ public class ModificationTournee extends JPanel implements MouseListener{
         	}
         	//Tester si l'étape est un pick up ou un delivery
         	boolean isPtEnlevement = false;
-        	for(PointEnlevement ptEnlevement: contraintes.getPointsEnlevement()) {
+        	for(PointEnlevement ptEnlevement: controleur.getContraintes().getPointsEnlevement()) {
         		if(ptEnlevement.getId().equals(etape.getId())) {
         			isPtEnlevement = true;
         			break;
@@ -164,8 +178,11 @@ public class ModificationTournee extends JPanel implements MouseListener{
         	l.addMouseListener(this);
         	l.setPreferredSize(new Dimension(100, 35));
             resultsPanel.add(l);
+            listeLabels.add(l);
             compteur++;
+            
         }
+        repaint();
     }
     
     private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {
@@ -181,17 +198,15 @@ public class ModificationTournee extends JPanel implements MouseListener{
     }
     
     public void mouseClicked(MouseEvent m) {
-    	if(deplacementEtape == 0) {
-	    	JLabel labelClique = (JLabel) m.getSource();
-	    	if(labelSelectionne != null) {
-	    		precedentLabelSelectionne = labelSelectionne;
-	    		precedentLabelSelectionne.setForeground(Color.CYAN);
-	    	}
-	    	
-	    	labelSelectionne = labelClique;
-	    	labelSelectionne.setForeground(Color.BLUE);
-	    	
+    	JLabel labelClique = (JLabel) m.getSource();
+    	if(labelSelectionne != null) {
+    		precedentLabelSelectionne = labelSelectionne;
+    		precedentLabelSelectionne.setForeground(Color.CYAN);
     	}
+    	
+    	labelSelectionne = labelClique;
+    	labelSelectionne.setForeground(Color.BLUE);
+	    	
     }
 
 	@Override
@@ -216,5 +231,80 @@ public class ModificationTournee extends JPanel implements MouseListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+			case "^":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					if(index-1 >= 0) {
+						Map<String, String> elemSelect = ordrePassage.get(index);
+						Map<String, String> elemDessus = ordrePassage.get(index-1);
+						ordrePassage.remove(index-1);
+						ordrePassage.add(index-1, elemSelect);
+						ordrePassage.remove(index);
+						ordrePassage.add(index, elemDessus);
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index-1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
+						
+						Intersection modif = null, prec = null, suiv = null;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		modif = plan.getIntersections().get(etapeId);
+			        	}
+			        	for(String etapeId: elemDessus.keySet() ) {
+			        		suiv = plan.getIntersections().get(etapeId);
+			        	}
+			        	if(index -1 > 0) {
+				        	for(String etapeId: ordrePassage.get(index-2).keySet() ) {
+				        		prec = plan.getIntersections().get(etapeId);
+				        	}
+						}
+
+			        controleur.modifierOrdrePassage(modif, prec, suiv);
+					}
+				}
+				break;
+
+			case "v":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					if(index+1 < ordrePassage.size()) {
+						Map<String, String> elemSelect = ordrePassage.get(index);
+						Map<String, String> elemDessous = ordrePassage.get(index+1);
+						ordrePassage.remove(index);
+						ordrePassage.add(index, elemDessous);
+						ordrePassage.remove(index+1);
+						ordrePassage.add(index+1, elemSelect);
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index+1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
+						
+						Intersection modif = null, prec = null, suiv = null;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		modif = plan.getIntersections().get(etapeId);
+			        	}
+			        	for(String etapeId: elemDessous.keySet() ) {
+			        		prec = plan.getIntersections().get(etapeId);
+			        	}
+			        	if(index + 2 < ordrePassage.size()) {
+				        	for(String etapeId: ordrePassage.get(index+2).keySet() ) {
+				        		suiv = plan.getIntersections().get(etapeId);
+				        	}
+						}
+
+			        controleur.modifierOrdrePassage(modif, prec, suiv);
+					}
+				}
+				break;
+		}
 	}
 }

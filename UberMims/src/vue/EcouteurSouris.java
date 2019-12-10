@@ -17,6 +17,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private AffichagePlan affichagePlan;
 	private AffichageTournee affichageTournee;
 	private Fenetre fenetre;
+
 	private int cptZoom;
 	private Point pointDepart;
 	private int cumulXDiff;
@@ -34,6 +35,8 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
 		this.affichageTournee = affichageTournee;
 		this.fenetre = fenetre;
+
+
 	}
 
 	@Override
@@ -139,30 +142,23 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
+
+		String message;
 		int x = e.getX();
 		int y = e.getY();
 		System.out.println(cptZoom);
 		int rotationScroll = e.getWheelRotation();
 		if (rotationScroll < 0) {
 			// Zoom avant
-			if(cptZoom <20){
-				affichagePlan.setMouseX(x);
-				affichagePlan.setMouseY(y);
-				affichagePlan.ZoomIn();
-				cptZoom++;
-			}
-			
+			message = "Mouse wheel moved UP " + -rotationScroll + " notch(es)";
+			affichagePlan.ZoomIn();
 		} else {
-			// Zoom arrière			
-			if(cptZoom == 1){
-				affichagePlan.setZoom(1);
-				cptZoom =0;
-				affichagePlan.repaint();
-			}
+			// Zoom arrière
+			message = "Mouse wheel moved DOWN " + rotationScroll + " notch(es)";
 			if(affichagePlan.getZoom() > 1){
 				affichagePlan.ZoomOut();
-				cptZoom --;
-			}			
+			}		
 		}
+		System.out.println(message);
 	}
 }
