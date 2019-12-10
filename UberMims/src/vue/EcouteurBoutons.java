@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 
 import algo.Dijkstra;
 import algo.TSP1;
@@ -17,8 +18,12 @@ import algo.TemplateTSP;
 import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
+import model.Intersection;
 import model.Plan;
+import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -63,9 +68,16 @@ public class EcouteurBoutons implements ActionListener{
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
+					try {
 					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
 					fenetre.setPlan(Controleur.plan);
 					fenetre.afficherPanPrincipal();
+					} catch (ExceptionChargement exception) {
+						exception.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Impossible de charger un plan a partir du fichier fourni");
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 				}
 			break;
 			
@@ -82,12 +94,18 @@ public class EcouteurBoutons implements ActionListener{
 					cheminFichierPlan2 = choixPlan2.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan)
 					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
-
-					controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
-					fenetre.setPlan(Controleur.plan);
-					fenetre.setContraintes(null);
-					fenetre.setTournee(null);
-					fenetre.afficherPanPrincipal();
+					try {
+						controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);						
+						fenetre.setPlan(Controleur.plan);
+						fenetre.setContraintes(null);
+						fenetre.setTournee(null);
+						fenetre.afficherPanPrincipal();
+					} catch (ExceptionChargement exception) {
+						exception.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Impossible de charger un plan a partir du fichier fourni");
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 				}
 			break;
 			
@@ -103,10 +121,17 @@ public class EcouteurBoutons implements ActionListener{
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 					//controleur.creerPlan(cheminFichierPlan);
+					try {
 					controleur.chargerTournee(cheminFichierTournee);
 					fenetre.setTournee(null);
 					fenetre.setContraintes(controleur.getContraintes());
 					fenetre.afficherBoutonCalcul();
+					} catch (ExceptionChargement exception) {
+						exception.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Impossible de charger une tournee sur le plan a partir du fichier fourni");
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
 					
 				}
 			break;
@@ -122,10 +147,9 @@ public class EcouteurBoutons implements ActionListener{
 					fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
 					
 			break;
-			/*
+			
 			case "Ajouter une livraison a la tournee":
 				System.out.println("Ajouter une livraison");
-					//controleur.ajouterLivraison();					
 					fenetre.afficherAjoutLivraison();
 					fenetre.getAffichagePlan().setPlanClickable(true);
 					
@@ -138,22 +162,41 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				fenetre.getAffichagePlan().setPlanClickable(false);
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes(), fenetre);
+				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
 			break;
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
+				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue();
+				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue();
+				System.out.println(nouveauTempsPickUp);
+				System.out.println(nouveauTempsDelivery);
+
+				Intersection nouveauPointPickUp = fenetre.getAffichagePlan().getNouveauPickUp();
+				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
+				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), nouveauTempsPickUp);
+				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), nouveauTempsDelivery);
+				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associé: " + pointEnlevement.getIdLivraison());
+				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associé: " + pointLivraison.getIdEnlevement());
+
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
-				controleur.ajouterLivraison();
+				
+				//System.out.println(pointEnlevement.getId());
+				//System.out.println(pointLivraison.getId());
+
+				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes());
+				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
+				
 			break;
-			
-			*/
-			}
+			case "Annuler la dernière modification":
+				System.out.println("CA MARCHE");
+			break;
+		
 		}
 	}
+}
 

@@ -42,6 +42,7 @@ import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
+import vue.AffichagePlan.LineArrow;
 
 public class AffichageTournee extends JPanel {
 
@@ -170,6 +171,8 @@ public class AffichageTournee extends JPanel {
 			
 			jlabel.addMouseListener(new MouseAdapter() {
 			    public void mouseClicked(MouseEvent e) {
+			    	
+			    	//Affichage Details Texte
 			         
 				 	textInfo.removeAll();
 				 	String lab = (String) e.getSource().toString();
@@ -314,7 +317,7 @@ public class AffichageTournee extends JPanel {
         }
         
 	}
-
+	
 	
 	public int[] traitementTempsLivraison(int livraison) {
 		int livraisonHeure = (int) livraison / 3600;
