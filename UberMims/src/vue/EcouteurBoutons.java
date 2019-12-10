@@ -125,7 +125,7 @@ public class EcouteurBoutons implements ActionListener{
 					fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
 					
 			break;
-			/*
+			
 			case "Ajouter une livraison a la tournee":
 				System.out.println("Ajouter une livraison");
 					fenetre.afficherAjoutLivraison();
@@ -140,34 +140,36 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				fenetre.getAffichagePlan().setPlanClickable(false);
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(fenetre.getTournee(), controleur.getContraintes(), fenetre);
 			break;
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
-				
+				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue();
+				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue();
+				System.out.println(nouveauTempsPickUp);
+				System.out.println(nouveauTempsDelivery);
+
 				Intersection nouveauPointPickUp = fenetre.getAffichagePlan().getNouveauPickUp();
 				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
-				
-				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), 0);
-				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), 0);
+				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), nouveauTempsPickUp);
+				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), nouveauTempsDelivery);
 				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associÃ©: " + pointEnlevement.getIdLivraison());
 				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associÃ©: " + pointLivraison.getIdEnlevement());
 
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				
-				System.out.println(pointEnlevement.getId());
-				System.out.println(pointLivraison.getId());
+				//System.out.println(pointEnlevement.getId());
+				//System.out.println(pointLivraison.getId());
 
 				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
-				controleur.calculerTournee();
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
+				
 			break;
-			*/
+			
+			
 			case "Modifier l'ordre de la tournée":
 				System.out.println("Modifier tournée");
 				fenetre.afficherModificationTournee();
