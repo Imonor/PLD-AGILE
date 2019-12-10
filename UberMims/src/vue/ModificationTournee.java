@@ -8,7 +8,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,16 +23,24 @@ import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
 
 import model.Chemin;
+import model.ContraintesTournee;
 import model.Intersection;
+import model.Plan;
+import model.PointEnlevement;
 import model.Tournee;
 
-public class ModificationTournee extends JPanel implements ActionListener{
+public class ModificationTournee extends JPanel implements MouseListener{
 	
-	JPanel resultsPanel;
-	Button boutonSelectionne;
-	Button precedentBoutonSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
+	private JPanel resultsPanel;
+	private JLabel labelSelectionne;
+	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
+	private List<Map<String, String>> ordrePassage;
+	private int deplacementEtape;
+	private Plan plan;
 	
-    public ModificationTournee() {
+	public ModificationTournee() {
+    	ordrePassage = new ArrayList<>();
+    	deplacementEtape = 0;
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -96,29 +109,112 @@ public class ModificationTournee extends JPanel implements ActionListener{
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Tournee tournee) {
+    public void ajouterTournee(Tournee tournee, Plan plan) {
+    	this.plan = plan;
         List<Chemin> parcours = tournee.getPlusCourteTournee();
-        String depotId = parcours.get(0).getPremiere().getId();
-        Button boutonDepot = new Button(depotId);
-        boutonDepot.setBackground(Color.BLUE);
-        resultsPanel.add(boutonDepot);
-        boutonSelectionne = boutonDepot;
+        //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
+        parcours.remove(parcours.size() - 1);
+
         for (Chemin chemin: parcours) {
-        	String intersectionId = chemin.getDerniere().getId();
-        	Button j = new Button(intersectionId);
-        	j.setBackground(Color.CYAN);
-        	j.addActionListener(this);
-        	j.setPreferredSize(new Dimension(100, 25));
-            resultsPanel.add(j);
+        	JLabel l;
+        	//Récupérer une intersection étape du parcours et l'ajouter à la liste
+        	Intersection etape = chemin.getDerniere();
+        	//Récupérer l'adresse (en prenant le nom de rue du dernier troncon menant à l'intersection)
+        	List<Intersection> cheminement = chemin.getIntersections();
+        	Intersection interPrecedente = cheminement.get(cheminement.size() - 2);
+        	String adresse = interPrecedente.getTronconsSortants().get(etape.getId()).getNomRue();
+        	Map<String, String> map = new HashMap();
+        	map.put(etape.getId(), adresse);
+            ordrePassage.add(map);
         }
     }
     
-    public void actionPerformed(ActionEvent e) {
-    	Button boutonClique = (Button) e.getSource();
-    	precedentBoutonSelectionne = boutonSelectionne;
-    	boutonSelectionne = boutonClique;
-    	
-    	boutonSelectionne.setBackground(Color.BLUE);
-    	precedentBoutonSelectionne.setBackground(Color.CYAN);
+    public void afficherTournee(ContraintesTournee contraintes) {
+
+        int compteurPointsEnlevement = 1;
+        int compteurPointsLivraison = 1;
+        int compteur = 0;
+        for (Map<String, String> paire: ordrePassage) {
+        	JLabel l;
+        	Intersection etape = new Intersection();
+        	String adresse = "";
+        	//Il n'y a qu'une seule valeur dans la map
+        	for(String etapeId: paire.keySet() ) {
+        		etape = plan.getIntersections().get(etapeId);
+        		adresse = paire.get(etapeId);
+        	}
+        	//Tester si l'étape est un pick up ou un delivery
+        	boolean isPtEnlevement = false;
+        	for(PointEnlevement ptEnlevement: contraintes.getPointsEnlevement()) {
+        		if(ptEnlevement.getId().equals(etape.getId())) {
+        			isPtEnlevement = true;
+        			break;
+        		}
+        	}
+        	//Créer le label correspondant
+        	if(isPtEnlevement) {
+        		l = creerLabelEtape(etape, compteurPointsEnlevement, adresse, "enlevement");
+        		compteurPointsEnlevement ++;
+        	} else {
+        		l = creerLabelEtape(etape, compteurPointsLivraison, adresse, "livraison");
+        		compteurPointsLivraison ++;
+        	}
+        	l.setForeground(Color.CYAN);
+        	l.setName(Integer.toString(compteur));
+        	l.addMouseListener(this);
+        	l.setPreferredSize(new Dimension(100, 35));
+            resultsPanel.add(l);
+            compteur++;
+        }
     }
+    
+    private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {
+    	JLabel label = new JLabel("<html> ");
+    	if(type.equals("enlevement")) {
+    		label.setText(label.getText() + "Pick Up n° " + position + " :   <br>");
+    	} else {
+    		label.setText(label.getText() + "Delivery n° " + position + " :   <br>");
+    	}
+			
+		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br>");	
+		return label;
+    }
+    
+    public void mouseClicked(MouseEvent m) {
+    	if(deplacementEtape == 0) {
+	    	JLabel labelClique = (JLabel) m.getSource();
+	    	if(labelSelectionne != null) {
+	    		precedentLabelSelectionne = labelSelectionne;
+	    		precedentLabelSelectionne.setForeground(Color.CYAN);
+	    	}
+	    	
+	    	labelSelectionne = labelClique;
+	    	labelSelectionne.setForeground(Color.BLUE);
+	    	
+    	}
+    }
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
