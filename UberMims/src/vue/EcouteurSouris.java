@@ -37,7 +37,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {/*
+	public void mouseClicked(MouseEvent e) {
 		if (affichagePlan.getPlanClickable()) {
 		    int xClic=e.getX();
 		    int yClic=e.getY();
@@ -69,7 +69,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		    affichagePlan.repaint();
 		    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
 		    
-		}*/
+		}
 			
 			double zoom = affichagePlan.getZoom();
 			
@@ -95,18 +95,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 					distanceMin = distance;
 					interLaPlusProche = i;
 				}
-			}
-
-			switch (affichagePlan.getEtat()) {
-			case LIVRAISON:
-				affichagePlan.setNouvelleLivraison(interLaPlusProche);
-				fenetre.afficherAjoutLivraison3();
-
-				break;
-			case ENLEVEMENT:
-				affichagePlan.setNouveauPickUp(interLaPlusProche);
-				fenetre.afficherAjoutLivraison2();
-				break;
 			}
 
 			affichagePlan.repaint();

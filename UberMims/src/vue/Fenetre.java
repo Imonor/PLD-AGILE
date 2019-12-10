@@ -89,9 +89,6 @@ public class Fenetre extends JFrame {
 	private JComboBox c1;
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
-	private JPanel panInformation = new JPanel();
-	private JPanel panInformationAll = new JPanel();
-	private JPanel panInformationDetail = new JPanel();
 	private JLabel textInfo = new JLabel();
 	private JPanel panDroite = new JPanel();
 	private JPanel panCalculTournee = new JPanel();
@@ -101,7 +98,7 @@ public class Fenetre extends JFrame {
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
-	private AffichageTournee affichageTournee = new AffichageTournee(this);
+	private AffichageTournee affichageTournee = new AffichageTournee();
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panAnnulerAjoutLivraison = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();

@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -47,8 +48,7 @@ import vue.AffichagePlan.LineArrow;
 public class AffichageTournee extends JPanel {
 
 	
-	public AffichageTournee(Fenetre fenetre) {
-		this.addMouseListener(new EcouteurSouris(this, fenetre));
+	public AffichageTournee() {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
@@ -171,7 +171,6 @@ public class AffichageTournee extends JPanel {
 			
 			jlabel.addMouseListener(new MouseAdapter() {
 			    public void mouseClicked(MouseEvent e) {
-			    	
 			    	//Affichage Details Texte
 			         
 				 	textInfo.removeAll();
