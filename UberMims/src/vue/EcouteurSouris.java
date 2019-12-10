@@ -18,7 +18,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
-
+	
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
@@ -80,12 +80,14 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		pointDepart.setLocation(e.getX(), e.getY());
+		affichagePlan.setRelease(false);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		affichagePlan.setRelease(true);
+		affichagePlan.repaint();
 	}
 
 	@Override
@@ -103,11 +105,17 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int clicX = e.getX();
-		int clicY = e.getY();
-		affichagePlan.setxDiff(clicX - pointDepart.x );
-		affichagePlan.setyDiff(clicY - pointDepart.y);
-		affichagePlan.repaint();
+		
+		int lol = affichagePlan.getxDiff();
+		
+		if(affichagePlan.getZoom() >1)
+		{
+			int clicX = e.getX();
+			int clicY = e.getY();
+			affichagePlan.setxDiff( clicX - pointDepart.x );
+			affichagePlan.setyDiff( clicY - pointDepart.y);
+			affichagePlan.repaint();
+		}	
 	}
 
 	@Override
