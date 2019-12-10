@@ -19,6 +19,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
+
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
@@ -95,9 +96,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		
 		int lol = affichagePlan.getxDiff();
 		
-		if(affichagePlan.getZoom() >1 
-				&& (lol < Math.abs(affichagePlan.getxOffset()))
-				)
+		if(affichagePlan.getZoom() >1)
 		{
 			int clicX = e.getX();
 			int clicY = e.getY();

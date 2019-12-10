@@ -106,12 +106,14 @@ public class AffichagePlan extends JScrollPane {
 		this.planClickable = false;
 		this.etat = etat.LIVRAISON;
 		
-		//Ajout des écouteurs souris
+
+		//Ajout des �couteurs souris
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
-		this.addMouseMotionListener(ecouteurSouris);		
-		//Initialisation des variables liées au zoom et au drag & drop
+		this.addMouseMotionListener(ecouteurSouris);
+		
+		//Initialisation des variables li�es au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
 		zoomIn = false;
@@ -136,7 +138,7 @@ public class AffichagePlan extends JScrollPane {
 	public double getyOffset() {
 		return yOffset;
 	}
-	
+
 	public void setPlanClickable(boolean planClickable) {
 		this.planClickable = planClickable;
 	}
@@ -224,12 +226,12 @@ public class AffichagePlan extends JScrollPane {
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
 	}
-	
+
 	public double getZoomPrecedent() {
 		return zoomPrecedent;
 	}
-	
-	public void ZoomIn(){
+
+	public void ZoomIn() {
 		this.zoom = this.zoom * 1.1f;
 		zoomIn = true;
 		zoomOut = false;
@@ -444,6 +446,7 @@ public class AffichagePlan extends JScrollPane {
 			g2.setStroke(new BasicStroke(thickness));
 
 			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o
+
 			// ficar
 			// grossa.
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
