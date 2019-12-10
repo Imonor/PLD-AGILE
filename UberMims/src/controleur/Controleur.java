@@ -102,12 +102,10 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 
-	// public void supprimerLivraison (Livraison livraison) {
-	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
-	// livraison);
-	// cmdListe.addCommande(cmd);
-	// }
-	//
+	 public void supprimerLivraison (PointEnlevement e, PointLivraison l) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, l, plusCourtsChemins);
+		 cmdListe.addCommande(cmd);
+	 }
 
 	/**
 	 * 
@@ -164,6 +162,14 @@ public class Controleur {
 
 	public Map<String, Map<String, Chemin>> getPlusCourtsChemins() {
 		return plusCourtsChemins;
+	}
+
+	public void setTournee(Tournee tournee) {
+		this.tournee = tournee;
+	}
+
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
 	}
 
 }
