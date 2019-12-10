@@ -262,7 +262,7 @@ public class Fenetre extends JFrame {
 		//PANEL MODIFICATION DE TOURNEE
 		panModificationTournee.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
-		panModificationTournee.setBounds(20, 120, 200, 400);
+		panModificationTournee.setBounds(20, 120, 400, 600);
 		panModificationTournee.setBackground(Color.white);
 		panDroite.add(panModificationTournee);
 
@@ -426,7 +426,8 @@ public class Fenetre extends JFrame {
 	}
 	
 	public void afficherModificationTournee() {
-		panModificationTournee.ajouterTournee(tournee);
+		panModificationTournee.ajouterTournee(tournee, plan);
+		panModificationTournee.afficherTournee(contraintes);
 		affichageTournee.setVisible(false);
 		panModificationTournee.setVisible(true);
 	}
