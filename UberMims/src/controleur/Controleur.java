@@ -1,5 +1,6 @@
 package controleur;
 
+import util.ExceptionChargement;
 import util.XMLParser;
 
 
@@ -24,13 +25,13 @@ public class Controleur {
 	private CmdListe cmdListe;
 	private Dijkstra uniteCalculChemins;
 
-	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
-		tournee = new Tournee();
-		uniteCalculChemins = new Dijkstra();
-		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-		chargerTournee(filePathTournee);
-		cmdListe = new CmdListe();
-	}
+//	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
+//		tournee = new Tournee();
+//		uniteCalculChemins = new Dijkstra();
+//		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
+//		chargerTournee(filePathTournee);
+//		cmdListe = new CmdListe();
+//	}
 
 	public Controleur() {
 		tournee = new Tournee();
@@ -38,11 +39,11 @@ public class Controleur {
 		cmdListe = new CmdListe();
 	}
 
-	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
+	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement{
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 	}
 
-	public void chargerTournee(String filePathTournee) {
+	public void chargerTournee(String filePathTournee) throws ExceptionChargement {
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // v�rifier que le plan nest pas incoh�rent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
@@ -59,7 +60,7 @@ public class Controleur {
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
-		tournee = tsp.chercheSolution(0, contraintes, plusCourtsChemins);
+		tournee = tsp.chercheSolution(2000, contraintes, plusCourtsChemins);
 		int dureeEnlevementLivraison = 0;
 		
 		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
@@ -101,12 +102,10 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 
-	// public void supprimerLivraison (Livraison livraison) {
-	// CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes,
-	// livraison);
-	// cmdListe.addCommande(cmd);
-	// }
-	//
+	 public void supprimerLivraison (PointEnlevement e, PointLivraison l) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, l, plusCourtsChemins);
+		 cmdListe.addCommande(cmd);
+	 }
 
 	/**
 	 * 
@@ -163,6 +162,14 @@ public class Controleur {
 
 	public Map<String, Map<String, Chemin>> getPlusCourtsChemins() {
 		return plusCourtsChemins;
+	}
+
+	public void setTournee(Tournee tournee) {
+		this.tournee = tournee;
+	}
+
+	public void setContraintes(ContraintesTournee contraintes) {
+		this.contraintes = contraintes;
 	}
 
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalTime;
 
@@ -18,6 +19,19 @@ public class ContraintesTournee {
 		this.depot = depot;
 		this.pointsEnlevement = enls;
 		this.pointsLivraison = livs;
+	}
+	
+	public ContraintesTournee(ContraintesTournee t) {
+		this.heureDepart = t.getHeureDepart();
+		this.depot = t.getDepot();
+		this.pointsEnlevement = new ArrayList<>();
+		for(PointEnlevement e : t.getPointsEnlevement()) {
+			this.pointsEnlevement.add(e);
+		}
+		pointsLivraison = new ArrayList<>();
+		for(PointLivraison l : t.getPointsLivraison()) {
+			this.pointsLivraison.add(l);
+		}
 	}
 
 	public LocalTime getHeureDepart() {

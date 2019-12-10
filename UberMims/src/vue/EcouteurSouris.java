@@ -18,16 +18,12 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
-	private int cumulXDiff;
-	private int cumulYDiff;
 	
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
 		cptZoom = 0;
 		pointDepart = new Point();
-		cumulXDiff = 0;
-		cumulYDiff = 0;
 	}
 
 	@Override
@@ -111,15 +107,34 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		// TODO Auto-generated method stub
 		
 		int lol = affichagePlan.getxDiff();
-		
-		if(affichagePlan.getZoom() >1 
-				&& (lol < Math.abs(affichagePlan.getxOffset()))
-				)
+		int xDiff = affichagePlan.getxDiff();
+		int yDiff = affichagePlan.getyDiff();
+		double xOffset = affichagePlan.getxOffset() - affichagePlan.getxDiff();
+		double yOffset = affichagePlan.getyOffset() - affichagePlan.getyDiff();
+		if(affichagePlan.getZoom() >1 )			
 		{
 			int clicX = e.getX();
 			int clicY = e.getY();
-			affichagePlan.setxDiff( clicX - pointDepart.x );
-			affichagePlan.setyDiff( clicY - pointDepart.y);
+			int newxDiffActuel = affichagePlan.getnewxDiff();
+			int newyDiffActuel = affichagePlan.getnewyDiff();
+			
+			int deplacementX = clicX - pointDepart.x;
+			int deplacementY = clicY - pointDepart.y;
+			
+			System.out.println(xDiff + newxDiffActuel);	
+			System.out.println();
+			System.out.println(Math.abs(xOffset));
+			System.out.println();
+			if( xDiff + newxDiffActuel< Math.abs(xOffset) || deplacementX <0){
+				affichagePlan.setnewxDiff(deplacementX);
+			}
+			
+			if(xDiff )
+			System.out.println(clicX - pointDepart.x);
+			if(yDiff + newyDiffActuel < Math.abs(yOffset) ){
+				affichagePlan.setnewyDiff(deplacementY);
+			}		
+				
 			affichagePlan.repaint();
 		}	
 	}

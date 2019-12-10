@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class XMLParser {
 
-	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) {
+	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement{
 		Map<String, Intersection> intersections = new HashMap<>();
 		Plan plan = new Plan();
 		try {
@@ -96,15 +96,16 @@ public class XMLParser {
 				intersections.remove(id);
 			}
 			
-
-			plan.setIntersections(intersections);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(intersections.isEmpty()) throw new ExceptionChargement("Aucune intersection Chargee");
+		plan.setIntersections(intersections);
 		return plan;
 	}
 
-	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) {
+	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) throws ExceptionChargement {
 		List<PointEnlevement> enlevements = new ArrayList<>();
 		List<PointLivraison> livraisons = new ArrayList<>();
 		ContraintesTournee tournee = new ContraintesTournee();
@@ -139,12 +140,14 @@ public class XMLParser {
 				enlevements.add(enlevement);
 			}
 
-			tournee.setPointsEnlevement(enlevements);
-			tournee.setPointsLivraison(livraisons);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(enlevements.isEmpty()) throw new ExceptionChargement("Aucune contraintes chargee");
+
+
+		tournee.setPointsEnlevement(enlevements);
+		tournee.setPointsLivraison(livraisons);
 
 		return tournee;
 	}
