@@ -18,12 +18,16 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
+	private int cumulXDiff;
+	private int cumulYDiff;
 	
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
 		cptZoom = 0;
 		pointDepart = new Point();
+		cumulXDiff = 0;
+		cumulYDiff = 0;
 	}
 
 	@Override
@@ -108,7 +112,9 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		
 		int lol = affichagePlan.getxDiff();
 		
-		if(affichagePlan.getZoom() >1)
+		if(affichagePlan.getZoom() >1 
+				&& (lol < Math.abs(affichagePlan.getxOffset()))
+				)
 		{
 			int clicX = e.getX();
 			int clicY = e.getY();
@@ -129,7 +135,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		// TODO Auto-generated method stub
 		int x = e.getX();
 		int y = e.getY();
-		
+		System.out.println(cptZoom);
 		int rotationScroll = e.getWheelRotation();
 		if (rotationScroll < 0) {
 			// Zoom avant
