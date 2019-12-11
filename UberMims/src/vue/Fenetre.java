@@ -194,7 +194,6 @@ public class Fenetre extends JFrame {
 		boutonAnnulerModification.setBounds(95, 55, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
-		panDroite.add(panHautDroite);
 
 		// bouton modifier ordre livraison
 		boutonModifierTournee.setVisible(true);
