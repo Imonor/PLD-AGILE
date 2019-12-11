@@ -157,6 +157,20 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         int compteurPointsEnlevement = 1;
         int compteurPointsLivraison = 1;
         int compteur = 0;
+        
+        Map<String, Integer> indexationPointsE =  new HashMap<>();
+		Map<String, Integer> indexationPointsL =  new HashMap<>();
+		int i = 1;
+		for(PointEnlevement crntPointE: controleur.getContraintes().getPointsEnlevement() ) {
+			indexationPointsE.put(crntPointE.getId(), i);
+			for(PointLivraison crntPointL: controleur.getContraintes().getPointsLivraison() ) {
+				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
+					indexationPointsL.put(crntPointL.getId(), i);
+				}
+	    	}
+			i++;
+    	}
+        
         for (Map<String, String> paire: ordrePassage) {
         	JLabel l;
         	Intersection etape = new Intersection();
@@ -176,10 +190,10 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	}
         	//Créer le label correspondant
         	if(isPtEnlevement) {
-        		l = creerLabelEtape(etape, compteurPointsEnlevement, adresse, "enlevement");
+        		l = creerLabelEtape(etape, indexationPointsE.get(etape.getId()), adresse, "enlevement");
         		compteurPointsEnlevement ++;
         	} else {
-        		l = creerLabelEtape(etape, compteurPointsLivraison, adresse, "livraison");
+        		l = creerLabelEtape(etape, indexationPointsL.get(etape.getId()), adresse, "livraison");
         		compteurPointsLivraison ++;
         	}
         	l.setForeground(Color.CYAN);

@@ -146,7 +146,6 @@ public class AffichageTournee extends JPanel {
 		List<String> idPointsEnlevement = new ArrayList<>();
 		List<String> idPointsLivraison = new ArrayList<>();
 
-		HashMap<String, Integer> succession =  new HashMap<>();
 		
 		Map<String, PointEnlevement> ptEnlevement =  new HashMap<>();
 		Map<String, PointLivraison> ptLivraison =  new HashMap<>();
@@ -163,8 +162,19 @@ public class AffichageTournee extends JPanel {
 			ptLivraison.put(contraintestournee.getPointsLivraison().get(j).getId(), contraintestournee.getPointsLivraison().get(j));
 		}
 		
-		int compteurPickUp = 1;
-		int compteurDelivery = 1;
+		Map<String, Integer> indexationPointsE =  new HashMap<>();
+		Map<String, Integer> indexationPointsL =  new HashMap<>();
+		int i = 1;
+		for(PointEnlevement crntPointE: contraintestournee.getPointsEnlevement() ) {
+			indexationPointsE.put(crntPointE.getId(), i);
+			for(PointLivraison crntPointL: contraintestournee.getPointsLivraison() ) {
+				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
+					indexationPointsL.put(crntPointL.getId(), i);
+				}
+	    	}
+			i++;
+    	}
+		
 		
 		resultsPanel.add(infoGeneral);
         
@@ -245,13 +255,12 @@ public class AffichageTournee extends JPanel {
 				    	minute = minute % 60;
 				    }
 					
-					jlabel.setText(jlabel.getText() + "Pick Up n° " + compteurPickUp + " :   <br>");	
-					succession.put("Pick Up n° " + compteurPickUp, k);
+				    int indexation = indexationPointsE.get(inter.getId());
+					jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " :   <br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
 					
-					compteurPickUp++;
 					
 					heure = heure + tempsLivraison[0];
 				    minute = minute + tempsLivraison[1];
@@ -283,13 +292,12 @@ public class AffichageTournee extends JPanel {
 				    	minute = minute % 60;
 				    }
 						
-					jlabel.setText(jlabel.getText() + "Delivery n° " + compteurDelivery + " :   <br>");		
-					succession.put("Delivery n° " + compteurDelivery, k);
+				    int indexation = indexationPointsL.get(inter.getId());
+					jlabel.setText(jlabel.getText() + "Delivery n° " + indexation + " :   <br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
 					
-					compteurDelivery++;
 					
 					heure = heure + tempsLivraison[0];
 				    minute = minute + tempsLivraison[1];
@@ -312,7 +320,7 @@ public class AffichageTournee extends JPanel {
 		JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 		resultsPanel.add(time);
 		
-		for (int i = 0; i < 4 ; i++) {
+		for (int extra = 0; extra < 4 ; extra++) {
         	JLabel j = new JLabel("");
         	j.setPreferredSize(new Dimension(400, 100));
             resultsPanel.add(j);
