@@ -84,7 +84,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		pointDepart.setLocation(e.getX(), e.getY());
+		pointDepart.setLocation(e.getX() - affichagePlan.getxOffset(), e.getY() - affichagePlan.getyOffset());
 		affichagePlan.setRelease(false);
 	}
 
@@ -113,21 +113,39 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 
 		int xDiff = affichagePlan.getxDiff();
 		int yDiff = affichagePlan.getyDiff();
-		double xOffset = affichagePlan.getxOffset() - affichagePlan.getxDiff();
-		double yOffset = affichagePlan.getyOffset() - affichagePlan.getyDiff();
+		
+		double xOffset = affichagePlan.getxOffset();
+		double yOffset = affichagePlan.getyOffset();
+		
+		double largeurPlan = affichagePlan.getLargeurPlan();
+		double hauteurPlan = affichagePlan.getHauteurPlan();
+		
 		if (affichagePlan.getZoom() > 1) {
-			int clicX = e.getX();
-			int clicY = e.getY();
+			double clicX = e.getX() - xOffset;
+			double clicY = e.getY() - yOffset;
+			System.out.println(" X depart : " +pointDepart.x);
 
-			int deplacementX = clicX - pointDepart.x;
-			int deplacementY = clicY - pointDepart.y;
+			double deplacementX = clicX - pointDepart.x;
+			double deplacementY = clicY - pointDepart.y;
+			System.out.println("deplacement x : " + deplacementX);
+			System.out.println( );
 
-			if ((xDiff + deplacementX <= Math.abs(xOffset) && deplacementX > 0)
-					|| (xDiff + deplacementX >= xOffset - Fenetre.LARGEUR_PLAN / 2 && deplacementX < 0)) {
-				affichagePlan.setnewxDiff(deplacementX);
+//			if ((xDiff + deplacementX <= Math.abs(xOffset) && deplacementX > 0) ||
+//				(xDiff + deplacementX >= xOffset  && deplacementX < 0)) {
+//				affichagePlan.setnewxDiff((int)deplacementX);
+//			}
+//			if (yDiff + deplacementY < Math.abs(yOffset)) {
+//				affichagePlan.setnewyDiff((int)deplacementY);
+//			}
+			
+			if( (Math.abs(deplacementX) <= Math.abs(xOffset) && deplacementX > 0) ||
+				(Math.abs(deplacementX) <= largeurPlan + xOffset - Fenetre.LARGEUR_PLAN) && deplacementX <0){
+				affichagePlan.setnewxDiff((int)deplacementX);
 			}
-			if (yDiff + deplacementY < Math.abs(yOffset)) {
-				affichagePlan.setnewyDiff(deplacementY);
+			
+			if( (Math.abs(deplacementY) <= Math.abs(yOffset) && deplacementY > 0)||
+					(Math.abs(deplacementY) <= hauteurPlan + yOffset - Fenetre.HAUTEUR_PLAN) && deplacementY <0){
+				affichagePlan.setnewyDiff((int)deplacementY);
 			}
 
 			affichagePlan.repaint();

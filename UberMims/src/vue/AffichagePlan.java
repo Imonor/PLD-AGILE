@@ -320,8 +320,6 @@ public class AffichagePlan extends JScrollPane {
 			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * mouseY;
 			xOldMouseX.push(mouseX);
 			yOldMouseY.push(mouseY);
-			System.out.println(xOffset);
-			System.out.println(largeurPlan);
 
 		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
 			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
