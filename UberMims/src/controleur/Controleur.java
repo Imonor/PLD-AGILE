@@ -93,8 +93,13 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 
-	 public void supprimerLivraison (PointEnlevement e, PointLivraison l) {
-		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, l, plusCourtsChemins);
+	 public void supprimerLivraison (PointEnlevement e) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, plusCourtsChemins);
+		 cmdListe.addCommande(cmd);
+	 }
+	 
+	 public void supprimerLivraison (PointLivraison l) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, l, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
 	 }
 
