@@ -40,6 +40,15 @@ public class Tournee {
 		duree = 0;
 	}
 	
+	public Tournee(Tournee t) {
+		this.contraintes = new ContraintesTournee(t.contraintes);
+		this.duree = t.getDuree();
+		this.plusCourteTournee = new LinkedList<>();
+		for(Chemin c : t.getPlusCourteTournee()) {
+			this.plusCourteTournee.add(c);
+		}
+	}
+	
 	public int getDuree() {
 		return duree;
 	}

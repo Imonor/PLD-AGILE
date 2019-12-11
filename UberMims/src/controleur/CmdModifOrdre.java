@@ -28,10 +28,10 @@ public class CmdModifOrdre implements Commande {
 		this.newPrec = prec;
 		this.plusCourtsChemins = plusCourtsChemins;
 		for (Chemin c : tournee.getPlusCourteTournee()) {
-			if (c.getDerniere() == pointModif) {
+			if (c.getDerniere().equals(pointModif)) {
 				this.actuelPrec = c.getPremiere();
 			}
-			if (c.getPremiere() == pointModif) {
+			if (c.getPremiere().equals(pointModif)) {
 				this.actuelSuiv = c.getDerniere();
 			}
 		}
@@ -50,8 +50,8 @@ public class CmdModifOrdre implements Commande {
 	public static void main(String[] args) {
 		Controleur c = new Controleur();
 		try{
-			c.chargerPlan("fichiersXML2019/moyenPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandeMoyen3.xml"); 
+			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
+			c.chargerTournee("fichiersXML2019/demandePetit2.xml"); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -61,9 +61,9 @@ public class CmdModifOrdre implements Commande {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
 		
 		System.out.println();
-		Intersection prec = Controleur.plan.getIntersections().get("26470086");
-		Intersection modif = Controleur.plan.getIntersections().get("505061101");
-		Intersection suiv = Controleur.plan.getIntersections().get("27362899");
+		Intersection prec = Controleur.plan.getIntersections().get("208769457");
+		Intersection modif = Controleur.plan.getIntersections().get("1679901320");
+		Intersection suiv = Controleur.plan.getIntersections().get("25336179");
 		
 		CmdModifOrdre cmd = new CmdModifOrdre(c.getTournee(), modif, prec, suiv, c.getPlusCourtsChemins());
 		cmd.doCode();
@@ -86,11 +86,11 @@ public class CmdModifOrdre implements Commande {
 		Intersection depot = tournee.getPlusCourteTournee().get(0).getPremiere();
 		boolean newPrecApres = false;		
 		for (Chemin c : tournee.getPlusCourteTournee()) {
-			if(c.getDerniere() == pointModif) {
+			if(c.getDerniere().equals(pointModif)) {
 				newPrecApres = true;
 				break;
 			}
-			if(c.getDerniere() == newPrec) {
+			if(c.getDerniere().equals(newPrec)) {
 				break;
 			}
 		}
@@ -115,9 +115,9 @@ public class CmdModifOrdre implements Commande {
 			newChemins.add(newCheminSuiv);
 			for(int i = 1; i< tournee.getPlusCourteTournee().size(); i++) {
 				Chemin c = tournee.getPlusCourteTournee().get(i);
-				if(c.getDerniere() == pointModif) {
+				if(c.getDerniere().equals(pointModif)) {
 					newChemins.add(newCheminModif);
-				} else if(c.getPremiere() == pointModif) {
+				} else if(c.getPremiere().equals(pointModif)) {
 					continue;
 				} else {
 					newChemins.add(c);
@@ -126,9 +126,9 @@ public class CmdModifOrdre implements Commande {
 		} else if(newSuiv == null) {
 			for(int i = 0; i< tournee.getPlusCourteTournee().size() - 1; i++) {
 				Chemin c = tournee.getPlusCourteTournee().get(i);
-				if(c.getDerniere() == pointModif) {
+				if(c.getDerniere().equals(pointModif)) {
 					continue;
-				} else if(c.getPremiere() == pointModif) {
+				} else if(c.getPremiere().equals(pointModif)) {
 					newChemins.add(newCheminModif);
 				} else {
 					newChemins.add(c);
@@ -139,15 +139,15 @@ public class CmdModifOrdre implements Commande {
 		} else if(newPrecApres){
 			for(int i = 0; i< tournee.getPlusCourteTournee().size(); i++) {
 				Chemin c = tournee.getPlusCourteTournee().get(i);
-				if(c.getDerniere() == pointModif) {
+				if(c.getDerniere().equals(pointModif)) {
 					newChemins.add(newCheminModif);
-				} else if(c.getPremiere() == pointModif) {
-					if(c.getDerniere() == newPrec) {
+				} else if(c.getPremiere().equals(pointModif)) {
+					if(c.getDerniere().equals(newPrec)) {
 						newChemins.add(newCheminPrec);
 						newChemins.add(newCheminSuiv);
 						i++;
 					} else continue;
-				} else if(c.getPremiere() == newPrec && c.getDerniere() == newSuiv) {
+				} else if(c.getPremiere().equals(newPrec) && c.getDerniere().equals(newSuiv)) {
 					newChemins.add(newCheminPrec);
 					newChemins.add(newCheminSuiv);
 				} else {
@@ -157,12 +157,12 @@ public class CmdModifOrdre implements Commande {
 		} else {
 			for(int i = 0; i< tournee.getPlusCourteTournee().size(); i++) {
 				Chemin c = tournee.getPlusCourteTournee().get(i);
-				if(c.getPremiere() == newPrec && c.getDerniere() == newSuiv) {
+				if(c.getPremiere().equals(newPrec) && c.getDerniere().equals(newSuiv)) {
 					newChemins.add(newCheminPrec);
 					newChemins.add(newCheminSuiv);
-				} else if(c.getDerniere() == pointModif) {
+				} else if(c.getDerniere().equals(pointModif)) {
 					newChemins.add(newCheminModif);
-				} else if(c.getPremiere() == pointModif) {
+				} else if(c.getPremiere().equals(pointModif)) {
 					continue;
 				} else {
 					newChemins.add(c);

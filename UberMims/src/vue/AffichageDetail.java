@@ -37,7 +37,7 @@ import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
 
-public class AffichagePlan extends JScrollPane {
+public class AffichageDetail extends JScrollPane {
 
 	/**
 	 * 
@@ -53,10 +53,10 @@ public class AffichagePlan extends JScrollPane {
 
 	private Etat etat;
 
-	// Plan charg� via le fichier XML
+	// Plan chargï¿½ via le fichier XML
 	private Plan plan;
 
-	// Contraintes charg�es via le fichier XML
+	// Contraintes chargï¿½es via le fichier XML
 	private ContraintesTournee contraintes;
 
 	// Trajet de livraison
@@ -79,6 +79,8 @@ public class AffichagePlan extends JScrollPane {
 
 	// Ecouteur de la souris
 	private EcouteurSouris ecouteurSouris;
+	
+	private Chemin chemin;
 
 	// Zoom
 	private double zoom;
@@ -95,26 +97,26 @@ public class AffichagePlan extends JScrollPane {
 	// Drag and drop
 	private int xDiff;
 	private int yDiff;
-	private int newxDiff;
-	private int newyDiff;
 	private boolean mouseReleased;
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
 	
-	public AffichagePlan(Plan plan, Fenetre fenetre) {
+	public AffichageDetail(Plan plan, Fenetre fenetre, Chemin chemin) {
+		AffichagePlan af = new AffichagePlan(plan,fenetre);
 		this.plan = plan;
+		this.chemin = chemin;
 		chargementCouleurs();
 		this.planClickable = false;
 		this.etat = etat.LIVRAISON;
 		
-		//Ajout des �couteurs souris
-		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
+		//Ajout des écouteurs souris
+		this.ecouteurSouris = new EcouteurSouris(af, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
 		this.addMouseMotionListener(ecouteurSouris);
 		
-		//Initialisation des variables li�es au zoom et au drag & drop
+		//Initialisation des variables liées au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
 		zoomIn = false;
@@ -123,8 +125,6 @@ public class AffichagePlan extends JScrollPane {
 		yOldMouseY = new Stack<Double>();
 		xDiff = 0;
 		yDiff = 0;
-		newxDiff = 0;
-		newyDiff =0;
 		mouseReleased = true;
 		
 		nouveauTempsPickUp = 0;
@@ -221,22 +221,6 @@ public class AffichagePlan extends JScrollPane {
 	public void setyDiff(int yDiff) {
 		this.yDiff = yDiff;
 	}
-	
-	public int getnewxDiff() {
-		return newxDiff;
-	}
-
-	public void setnewxDiff(int newxDiff) {
-		this.newxDiff = newxDiff;
-	}
-
-	public int getnewyDiff() {
-		return yDiff;
-	}
-
-	public void setnewyDiff(int newyDiff) {
-		this.newyDiff = newyDiff;
-	}
 
 	public double getZoom() {
 		return zoom;
@@ -296,33 +280,28 @@ public class AffichagePlan extends JScrollPane {
 
 		double zoomDiv = zoom / zoomPrecedent;
 		if (zoomIn) {
-			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * mouseX;
-			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * mouseY;
+			xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * mouseX;
+			yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * mouseY;
 			xOldMouseX.push(mouseX);
 			yOldMouseY.push(mouseY);
 
-		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
+		} else if (zoomOut) {
 			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
 			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * yOldMouseY.pop();
 		}
 		if (zoom == 1f) {
 			xOffset = 0;
 			yOffset = 0;
+		}
+
+		if (mouseReleased) {
+			xOffset += xDiff;
+			yOffset += yDiff;
 			xDiff = 0;
 			yDiff = 0;
 		}
 
-		if (mouseReleased) {
-			xDiff += newxDiff;
-			yDiff += newyDiff;
-			xOffset += newxDiff;
-			yOffset += newyDiff;
-			yDiff += newyDiff;
-			newxDiff = 0;
-			newyDiff = 0;
-		}
-
-		at.translate(xOffset + newxDiff, yOffset + newyDiff);
+		at.translate(xOffset + xDiff, yOffset + yDiff);
 		at.scale(zoom, zoom);
 		zoomPrecedent = zoom;
 		g2d.transform(at);
@@ -333,11 +312,15 @@ public class AffichagePlan extends JScrollPane {
 		super.paintComponent(g);
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
-
-		ajusterZoom(g2d);		
+		
+		ajusterZoom(g2d);
 
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
+				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,
+						intersection.getLatitude() - 1, 2, 2);
+				g2d.draw(shape);
+				g2d.fill(shape);
 				for (Troncon troncon : intersection.getTronconsSortants().values()) {
 					Intersection destination = troncon.getDestination();
 					g2d.drawLine((int) intersection.getLongitude(), (int) intersection.getLatitude(),
@@ -425,7 +408,7 @@ public class AffichagePlan extends JScrollPane {
 		}
 		return new Color(0, 0, 0);
 	}
-	
+
 	// The code snippet below was found on the forum
 	// https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 
@@ -459,19 +442,21 @@ public class AffichagePlan extends JScrollPane {
 		public void draw(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			// Calcula o �ngulo da seta.
+			// Calcula o ï¿½ngulo da seta.
 			double angle = Math.atan2(endY - y, endX - x);
 
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
-			// Desenha a linha. Corta 10 pixels na ponta para a ponta n�o
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o
+			// ficar
+			// grossa.
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
-			// Obt�m o AffineTransform original.
+			// Obtï¿½m o AffineTransform original.
 			AffineTransform tx1 = g2.getTransform();
 
-			// Cria uma c�pia do AffineTransform.
+			// Cria uma cï¿½pia do AffineTransform.
 			AffineTransform tx2 = (AffineTransform) tx1.clone();
 
 			// Translada e rotaciona o novo AffineTransform.
