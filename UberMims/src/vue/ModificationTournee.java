@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
 
+import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
 import model.Intersection;
@@ -31,19 +32,21 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 
-public class ModificationTournee extends JPanel implements MouseListener{
+public class ModificationTournee extends JPanel implements MouseListener, ActionListener {
 	
 	private JPanel resultsPanel;
 	private JLabel labelSelectionne;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 	private int deplacementEtape;
+	private List<JLabel> listeLabels;
 	private Plan plan;
 	private Controleur controleur;
 	private Fenetre fenetre;
 	
 	public ModificationTournee(Fenetre fenetre) {
     	ordrePassage = new ArrayList<>();
+    	listeLabels = new ArrayList<>();
     	deplacementEtape = 0;
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
@@ -135,7 +138,6 @@ public class ModificationTournee extends JPanel implements MouseListener{
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
 
         for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
-        	JLabel l;
         	Chemin chemin = tournee.getPlusCourteTournee().get(i);
         	//Récupérer une intersection étape du parcours et l'ajouter à la liste
         	Intersection etape = chemin.getDerniere();
@@ -143,14 +145,16 @@ public class ModificationTournee extends JPanel implements MouseListener{
         	List<Intersection> cheminement = chemin.getIntersections();
         	Intersection interPrecedente = cheminement.get(cheminement.size() - 2);
         	String adresse = interPrecedente.getTronconsSortants().get(etape.getId()).getNomRue();
-        	Map<String, String> map = new HashMap();
+        	Map<String, String> map = new HashMap<>();
         	map.put(etape.getId(), adresse);
             ordrePassage.add(map);
         }
     }
     
-    public void afficherTournee(ContraintesTournee contraintes) {
-
+    public void afficherTournee() {
+    	resultsPanel.removeAll();
+    	listeLabels.clear();
+    	ContraintesTournee contraintes = controleur.getContraintes();
         int compteurPointsEnlevement = 1;
         int compteurPointsLivraison = 1;
         int compteur = 0;
@@ -184,6 +188,7 @@ public class ModificationTournee extends JPanel implements MouseListener{
         	l.addMouseListener(this);
         	l.setPreferredSize(new Dimension(100, 35));
             resultsPanel.add(l);
+            listeLabels.add(l);
             compteur++;
         }
     }

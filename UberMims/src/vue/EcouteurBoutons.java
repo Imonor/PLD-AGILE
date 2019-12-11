@@ -197,7 +197,6 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Modifier tournée");
 				fenetre.afficherModificationTournee();
 			break;			
-			}
 		}
 	}
 }

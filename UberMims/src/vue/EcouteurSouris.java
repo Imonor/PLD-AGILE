@@ -58,10 +58,11 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			}
 
 			affichagePlan.repaint();
-			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "
+			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " " 
 					+ interLaPlusProche.getLatitude());
 
 		}
+	}
 
 
 	@Override
