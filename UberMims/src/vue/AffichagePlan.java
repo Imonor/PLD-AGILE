@@ -81,6 +81,7 @@ public class AffichagePlan extends JScrollPane {
 	private EcouteurSouris ecouteurSouris;
 
 	// Zoom
+	private static double FACTEUR_ZOOM = 1.1f;
 	private double zoom;
 	private double zoomPrecedent;
 	private double xOffset = 0;
@@ -98,6 +99,9 @@ public class AffichagePlan extends JScrollPane {
 	private int newxDiff;
 	private int newyDiff;
 	private boolean mouseReleased;
+	
+	private double largeurPlan;
+	private double hauteurPlan;
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
@@ -126,6 +130,9 @@ public class AffichagePlan extends JScrollPane {
 		newxDiff = 0;
 		newyDiff =0;
 		mouseReleased = true;
+		
+		largeurPlan = Fenetre.LARGEUR_PLAN;
+		hauteurPlan = Fenetre.HAUTEUR_PLAN;
 		
 		nouveauTempsPickUp = 0;
 		nouveauTempsDelivery = 0;
@@ -251,16 +258,20 @@ public class AffichagePlan extends JScrollPane {
 	}
 
 	public void ZoomIn() {
-		this.zoom = this.zoom * 1.1f;
+		this.zoom = this.zoom * FACTEUR_ZOOM;
 		zoomIn = true;
 		zoomOut = false;
+		this.largeurPlan *= FACTEUR_ZOOM;
+		this.hauteurPlan *= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
 	public void ZoomOut() {
-		this.zoom = this.zoom / 1.1f;
+		this.zoom = this.zoom / FACTEUR_ZOOM;
 		zoomIn = false;
 		zoomOut = true;
+		this.largeurPlan /= FACTEUR_ZOOM;
+		this.hauteurPlan /= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
@@ -278,6 +289,15 @@ public class AffichagePlan extends JScrollPane {
 
 	public void setRelease(boolean release) {
 		this.mouseReleased = release;
+	}
+	
+	public double getLargeurPlan() {
+		return largeurPlan;
+	}
+
+
+	public double getHauteurPlan() {
+		return hauteurPlan;
 	}
 
 	
@@ -310,6 +330,9 @@ public class AffichagePlan extends JScrollPane {
 			yOffset = 0;
 			xDiff = 0;
 			yDiff = 0;
+			largeurPlan = Fenetre.LARGEUR_PLAN;
+			hauteurPlan = Fenetre.HAUTEUR_PLAN;
+
 		}
 
 		if (mouseReleased) {
@@ -465,7 +488,8 @@ public class AffichagePlan extends JScrollPane {
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
-			// Desenha a linha. Corta 10 pixels na ponta para a ponta n�o
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o
+
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
 			// Obt�m o AffineTransform original.
