@@ -15,6 +15,7 @@ import model.Intersection;
 public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseMotionListener  {
 
 	private AffichagePlan affichagePlan;
+	private AffichageTournee affichageTournee;
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
@@ -25,10 +26,46 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		cptZoom = 0;
 		pointDepart = new Point();
 	}
+	
+	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
+		this.affichageTournee = affichageTournee;
+		this.fenetre = fenetre;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (affichagePlan.getPlanClickable()) {
+		    int xClic=e.getX();
+		    int yClic=e.getY();
+		    System.out.println("posX:" + xClic + " posY:" + yClic);
+		    
+		    Intersection interLaPlusProche = new Intersection();
+		    double distanceMin = Double.MAX_VALUE;
+		    for(String intersectionId: affichagePlan.getPlan().getIntersections().keySet()) {
+		    	Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
+		    	double distance = (xClic-i.getLongitude())*(xClic-i.getLongitude()) + (yClic-i.getLatitude())*(yClic-i.getLatitude());
+		    	if(distance < distanceMin) {
+		    		distanceMin = distance;
+		    		interLaPlusProche = i;
+		    	}
+		    }
+		  
+		    switch(affichagePlan.getEtat()) {
+		    case LIVRAISON  :
+		    	affichagePlan.setNouvelleLivraison(interLaPlusProche);
+		    	fenetre.afficherAjoutLivraison3();
+
+		    	break;
+		    case ENLEVEMENT :
+		    	affichagePlan.setNouveauPickUp(interLaPlusProche);
+		    	fenetre.afficherAjoutLivraison2();
+		    	break;
+		    }
+		        
+		    affichagePlan.repaint();
+		    System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "+ interLaPlusProche.getLatitude());
+		    
+		}
 			
 			double zoom = affichagePlan.getZoom();
 			
@@ -53,25 +90,12 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				}
 			}
 
-			switch (affichagePlan.getEtat()) {
-			case LIVRAISON:
-				affichagePlan.setNouvelleLivraison(interLaPlusProche);
-				fenetre.afficherAjoutLivraison3();
-
-				break;
-			case ENLEVEMENT:
-				affichagePlan.setNouveauPickUp(interLaPlusProche);
-				fenetre.afficherAjoutLivraison2();
-				break;
-			}
-
 			affichagePlan.repaint();
 			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude() + " "
 					+ interLaPlusProche.getLatitude());
 
 		}
 
-	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
