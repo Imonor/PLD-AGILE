@@ -81,6 +81,7 @@ public class AffichagePlan extends JScrollPane {
 	private EcouteurSouris ecouteurSouris;
 
 	// Zoom
+	private static double FACTEUR_ZOOM = 1.1f;
 	private double zoom;
 	private double zoomPrecedent;
 	private double xOffset = 0;
@@ -98,6 +99,9 @@ public class AffichagePlan extends JScrollPane {
 	private int newxDiff;
 	private int newyDiff;
 	private boolean mouseReleased;
+	
+	private double largeurPlan;
+	private double hauteurPlan;
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
@@ -126,6 +130,9 @@ public class AffichagePlan extends JScrollPane {
 		newxDiff = 0;
 		newyDiff =0;
 		mouseReleased = true;
+		
+		largeurPlan = Fenetre.LARGEUR_PLAN;
+		hauteurPlan = Fenetre.HAUTEUR_PLAN;
 		
 		nouveauTempsPickUp = 0;
 		nouveauTempsDelivery = 0;
@@ -251,16 +258,20 @@ public class AffichagePlan extends JScrollPane {
 	}
 
 	public void ZoomIn() {
-		this.zoom = this.zoom * 1.1f;
+		this.zoom = this.zoom * FACTEUR_ZOOM;
 		zoomIn = true;
 		zoomOut = false;
+		this.largeurPlan *= FACTEUR_ZOOM;
+		this.hauteurPlan *= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
 	public void ZoomOut() {
-		this.zoom = this.zoom / 1.1f;
+		this.zoom = this.zoom / FACTEUR_ZOOM;
 		zoomIn = false;
 		zoomOut = true;
+		this.largeurPlan /= FACTEUR_ZOOM;
+		this.hauteurPlan /= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
@@ -278,6 +289,15 @@ public class AffichagePlan extends JScrollPane {
 
 	public void setRelease(boolean release) {
 		this.mouseReleased = release;
+	}
+	
+	public double getLargeurPlan() {
+		return largeurPlan;
+	}
+
+
+	public double getHauteurPlan() {
+		return hauteurPlan;
 	}
 
 	
@@ -300,6 +320,8 @@ public class AffichagePlan extends JScrollPane {
 			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * mouseY;
 			xOldMouseX.push(mouseX);
 			yOldMouseY.push(mouseY);
+			System.out.println(xOffset);
+			System.out.println(largeurPlan);
 
 		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
 			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
@@ -310,6 +332,8 @@ public class AffichagePlan extends JScrollPane {
 			yOffset = 0;
 			xDiff = 0;
 			yDiff = 0;
+			largeurPlan = Fenetre.LARGEUR_PLAN;
+			hauteurPlan = Fenetre.HAUTEUR_PLAN;
 		}
 
 		if (mouseReleased) {
