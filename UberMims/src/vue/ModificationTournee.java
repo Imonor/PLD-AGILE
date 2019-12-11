@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
@@ -27,6 +28,7 @@ import model.ContraintesTournee;
 import model.Intersection;
 import model.Plan;
 import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
 
 public class ModificationTournee extends JPanel implements MouseListener{
@@ -37,20 +39,37 @@ public class ModificationTournee extends JPanel implements MouseListener{
 	private List<Map<String, String>> ordrePassage;
 	private int deplacementEtape;
 	private Plan plan;
+	private Controleur controleur;
+	private Fenetre fenetre;
 	
-	public ModificationTournee() {
+	public ModificationTournee(Fenetre fenetre) {
     	ordrePassage = new ArrayList<>();
     	deplacementEtape = 0;
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
- 
+        this.fenetre = fenetre;
+
         JPanel panelAll = new JPanel();
         panelAll.setBackground(Color.red);
         panelAll.setLayout(layout);
         
         JPanel panelDetail = new JPanel();
         panelDetail.setBackground(Color.yellow);
+
+        JButton boutonHaut = new JButton("^");
+        JButton boutonBas = new JButton("v");
+        JButton validerModif = new JButton("Valider les modifications");
+        boutonHaut.setBounds(15, 5, 20, 20);
+        boutonBas.setBounds(15, 30, 20, 20);
+        validerModif.setBounds(30, 45, 40, 20);
+        boutonHaut.addActionListener(this);
+        boutonBas.addActionListener(this);
+        validerModif.addActionListener(this);
+
+        panelDetail.add(boutonHaut);
+        panelDetail.add(boutonBas);
+        panelDetail.add(validerModif);
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -109,14 +128,17 @@ public class ModificationTournee extends JPanel implements MouseListener{
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Tournee tournee, Plan plan) {
-    	this.plan = plan;
-        List<Chemin> parcours = tournee.getPlusCourteTournee();
-        //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
-        parcours.remove(parcours.size() - 1);
 
-        for (Chemin chemin: parcours) {
+    public void ajouterTournee(Plan plan, Controleur controleur) {
+    	ordrePassage.clear();
+    	this.controleur = controleur;
+    	Tournee tournee = controleur.getTournee();
+    	this.plan = plan;
+        //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
+
+        for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
         	JLabel l;
+        	Chemin chemin = tournee.getPlusCourteTournee().get(i);
         	//Récupérer une intersection étape du parcours et l'ajouter à la liste
         	Intersection etape = chemin.getDerniere();
         	//Récupérer l'adresse (en prenant le nom de rue du dernier troncon menant à l'intersection)
@@ -216,5 +238,98 @@ public class ModificationTournee extends JPanel implements MouseListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+			case "^":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					if(index-1 >= 0) {
+						Map<String, String> elemSelect = ordrePassage.get(index);
+						Map<String, String> elemDessus = ordrePassage.get(index-1);
+						ordrePassage.remove(index-1);
+						ordrePassage.add(index-1, elemSelect);
+						ordrePassage.remove(index);
+						ordrePassage.add(index, elemDessus);
+						
+						Intersection modif = null, prec = null, suiv = null;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		modif = plan.getIntersections().get(etapeId);
+			        	}
+			        	for(String etapeId: elemDessus.keySet() ) {
+			        		suiv = plan.getIntersections().get(etapeId);
+			        	}
+			        	if(index -1 > 0) {
+				        	for(String etapeId: ordrePassage.get(index-2).keySet() ) {
+				        		prec = plan.getIntersections().get(etapeId);
+				        	}
+						}
+						
+						verifierPrecedencePickupDelivery(modif, suiv, e.getActionCommand());
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index-1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
+
+			        controleur.modifierOrdrePassage(modif, prec, suiv);
+			        fenetre.setTournee(controleur.getTournee());
+					}
+				}
+				break;
+
+			case "v":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					if(index+1 < ordrePassage.size()) {
+						Map<String, String> elemSelect = ordrePassage.get(index);
+						Map<String, String> elemDessous = ordrePassage.get(index+1);
+						ordrePassage.remove(index);
+						ordrePassage.add(index, elemDessous);
+						ordrePassage.remove(index+1);
+						ordrePassage.add(index+1, elemSelect);
+						
+						Intersection modif = null, prec = null, suiv = null;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		modif = plan.getIntersections().get(etapeId);
+			        	}
+			        	for(String etapeId: elemDessous.keySet() ) {
+			        		prec = plan.getIntersections().get(etapeId);
+			        	}
+			        	if(index + 2 < ordrePassage.size()) {
+				        	for(String etapeId: ordrePassage.get(index+2).keySet() ) {
+				        		suiv = plan.getIntersections().get(etapeId);
+				        	}
+						}
+
+						verifierPrecedencePickupDelivery(modif, prec, e.getActionCommand());
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index+1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
+			        controleur.modifierOrdrePassage(modif, prec, suiv);
+			        fenetre.setTournee(controleur.getTournee());
+					}
+				}
+				break;
+			
+			case "Valider les modifications":
+				fenetre.apresModifOrdre();
+				fenetre.afficherInfos();
+				break;
+		}
+	}
+	
+	private void verifierPrecedencePickupDelivery(Intersection elemSelect, Intersection autreElem, String deplacement){
+		if(deplacement.equals("^") && elemSelect instanceof PointLivraison) {
+			if(autreElem.getId().equals(((PointLivraison)elemSelect).getIdEnlevement())) {
+				JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlèvement");
+			}
+		}
 	}
 }
