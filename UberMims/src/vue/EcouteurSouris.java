@@ -32,22 +32,19 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			
 			double zoom = affichagePlan.getZoom();
 			
-			double xClic = e.getX();
-			double yClic = e.getY();
+			double xClic = e.getX()+ Math.abs(affichagePlan.getxOffset());
+			double yClic = e.getY()+ Math.abs(affichagePlan.getyOffset());
 			System.out.println("posX:" + xClic + " posY:" + yClic);
-			e.translatePoint((int)affichagePlan.getxOffset(),(int)affichagePlan.getyOffset() );
-			xClic = e.getX();
-			yClic = e.getY();
 			System.out.println("offsetX:" + affichagePlan.getxOffset() + " offSetY:" + affichagePlan.getyOffset());
-			System.out.println("posX:" + xClic + " posY:" + yClic);
+			//System.out.println("posX:" + xClic + " posY:" + yClic);
 			
 	
 			Intersection interLaPlusProche = new Intersection();
 			double distanceMin = Double.MAX_VALUE;
 			for (String intersectionId : affichagePlan.getPlan().getIntersections().keySet()) {
 				Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
-				double longitude = i.getLongitude() + affichagePlan.getxOffset();
-				double latitude = i.getLatitude() + affichagePlan.getyOffset();
+				double longitude = i.getLongitude() ;// + affichagePlan.getxOffset();
+				double latitude = i.getLatitude() ;//+ affichagePlan.getyOffset();
 				double distance = (xClic - longitude) * (xClic - longitude)
 						+ (yClic - latitude) * (yClic - latitude);
 				if (distance < distanceMin) {
@@ -123,11 +120,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				( xDiff + deplacementX >= xOffset - Fenetre.LARGEUR_PLAN/2  && deplacementX <0)	){
 				affichagePlan.setnewxDiff(deplacementX);
 			}
-						
-			
-			System.out.println(xDiff + deplacementX);
-			System.out.println(xOffset);
-			System.out.println();
 			if(yDiff + deplacementY < Math.abs(yOffset) ){
 				affichagePlan.setnewyDiff(deplacementY);
 			}		

@@ -301,7 +301,7 @@ public class AffichagePlan extends JScrollPane {
 			xOldMouseX.push(mouseX);
 			yOldMouseY.push(mouseY);
 
-		} else if (zoomOut) {
+		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
 			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
 			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * yOldMouseY.pop();
 		}
@@ -333,9 +333,8 @@ public class AffichagePlan extends JScrollPane {
 		super.paintComponent(g);
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
-		
-		System.out.println("LARGEUR = " + g2d.getTransform().getTranslateX());
-		ajusterZoom(g2d);
+
+		ajusterZoom(g2d);		
 
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
