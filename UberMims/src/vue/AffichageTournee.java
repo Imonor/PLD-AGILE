@@ -55,6 +55,7 @@ public class AffichageTournee extends JPanel {
 		System.out.println("OK");
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
+        this.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
  
         JPanel panelAll = new JPanel();

@@ -104,12 +104,15 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
+
+	private ModificationTournee panModificationTournee  = new ModificationTournee(this);
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private Font police = new Font("Verdana", 0, 15);
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
+
 
 	public Fenetre() {
 
@@ -137,8 +140,8 @@ public class Fenetre extends JFrame {
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 		JButton boutonAnnulerModification = new JButton("Annuler la derniÃ¨re modification");
-		
-		
+		JButton boutonModifierTournee = new JButton("Modifier l'ordre de la tournée");
+
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -191,9 +194,15 @@ public class Fenetre extends JFrame {
 		boutonAnnulerModification.setBounds(95, 55, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
+
+		// bouton modifier ordre livraison
+		boutonModifierTournee.setVisible(true);
+		boutonModifierTournee.setBounds(75, 65, 300, 30);
+		panHautDroite.add(boutonModifierTournee);
+		boutonModifierTournee.addActionListener(ecouteurBoutons);
+		
 		panDroite.add(panHautDroite);
-		
-		
+
 		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
 		panCalculTournee.setVisible(false);
 		panCalculTournee.setLayout(null);
@@ -212,14 +221,14 @@ public class Fenetre extends JFrame {
 		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
-		
+
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
 		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
-
+		
 		// Panel Annuler livraison
 		panAnnulerAjoutLivraison.setVisible(true);
 		panAnnulerAjoutLivraison.setLayout(null);
@@ -283,6 +292,14 @@ public class Fenetre extends JFrame {
 		boutonValiderAjoutLivraison.setBounds(75, 600, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
+		
+		
+		//PANEL MODIFICATION DE TOURNEE
+		panModificationTournee.setVisible(false);
+		panAjoutLivraison3.setLayout(null);
+		panModificationTournee.setBounds(20, 120, 400, 600);
+		panModificationTournee.setBackground(Color.white);
+		panDroite.add(panModificationTournee);
 
 //***************************************//
 
@@ -377,6 +394,7 @@ public class Fenetre extends JFrame {
 			panAjoutLivraison3.setVisible(false);
 			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
+			panModificationTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
@@ -415,6 +433,10 @@ public class Fenetre extends JFrame {
 	public void apresAjoutLivraison() {
 		panAjoutLivraison3.setVisible(false);
 		this.setContentPane(panPrincipal);
+	}
+	
+	public void apresModifOrdre() {
+		affichageTournee.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 	}
 
 	// Affichage Infos du point ajoute avant clic sur bouton valider ajout
@@ -462,6 +484,19 @@ public class Fenetre extends JFrame {
 				+ tronconNouveauDelivery.getNomRue() + "</font><br><br>Duree au point de livraison :<br>");
 		panAjoutLivraison3.add(texteDelivery);
 	}
+
+	
+	public void afficherModificationTournee() {
+		panModificationTournee.ajouterTournee(plan, controleur);
+		panModificationTournee.afficherTournee();
+		affichageTournee.setVisible(false);
+		panModificationTournee.setVisible(true);
+	}
+	
+	
+	
+	// ***** INFOS TOURNEE *****
+	// Passage a la page principale apres le chargement d'un plan
 
 	
 	public static void main(String[] args) {
