@@ -73,6 +73,9 @@ public class AffichagePlan extends JScrollPane {
 
 	// Point de livraison ajoute
 	private Intersection nouvelleLivraison;
+	
+	// InterSection du chemin à mettre en surbrillance
+	private Intersection intersectionSelectionne;
 
 	private int nouveauTempsPickUp;
 	private int nouveauTempsDelivery;
@@ -299,6 +302,10 @@ public class AffichagePlan extends JScrollPane {
 	public double getHauteurPlan() {
 		return hauteurPlan;
 	}
+	
+	public void setIntersectionSelectionne(Intersection intersectionSelectionne) {
+		this.intersectionSelectionne = intersectionSelectionne;
+	}
 
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
@@ -311,6 +318,10 @@ public class AffichagePlan extends JScrollPane {
 		}
 	}
 
+	
+	// Le code de la fonction ci-dessous a été fortement inspiré par le lien suivant
+	// https://stackoverflow.com/questions/6543453/zooming-in-and-zooming-out-within-a-panel
+	
 	public void ajusterZoom(Graphics2D g2d) {
 		AffineTransform at = new AffineTransform();
 
@@ -374,7 +385,14 @@ public class AffichagePlan extends JScrollPane {
 				Color couleurLigne;
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
-					couleurLigne = getArrowColor(cptColor);
+					int epaisseur = 2;
+					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne)){
+						couleurLigne = Color.RED;
+						epaisseur = 4;
+					}else{
+						couleurLigne = getArrowColor(cptColor);
+					}
+					
 					int k = 0;
 					for (int i = 0; i < inters.size() - 1; ++i) {
 						Intersection inter = inters.get(i);
@@ -382,18 +400,17 @@ public class AffichagePlan extends JScrollPane {
 						if (inter.getTronconsSortants().size() > 3 || k == 3) {
 							LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude(),
-									couleurLigne, 2);
+									couleurLigne, epaisseur);
 							line.draw(g2d);
 							k = 0;
 						} else {
-							g2d.setStroke(new BasicStroke(2));
+							g2d.setStroke(new BasicStroke(epaisseur));
 							g2d.setPaint(couleurLigne);
 							g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude()));
 							k++;
 						}
 					}
-
 					cptColor++;
 				}
 			}

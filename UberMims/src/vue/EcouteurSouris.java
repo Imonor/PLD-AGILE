@@ -35,34 +35,21 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
+		// Récuperation de la position du curseur en y soustrayant les offset
+		double xClic = e.getX() - affichagePlan.getxOffset();
+		double yClic = e.getY() - affichagePlan.getyOffset();
+		
+		// Passage de la position du clic à la bonne échelle
+		double xPos = (xClic * Fenetre.LARGEUR_PLAN )/affichagePlan.getLargeurPlan();
+		double yPos = (yClic * Fenetre.HAUTEUR_PLAN )/affichagePlan.getHauteurPlan();
+		
+		// Recherche de l'intersection la plus proche
+		Intersection interLaPlusProche = trouverIntersectionLaPlusProche(xPos, yPos);
+		
 		if (affichagePlan.getPlanClickable()) {
-			double zoom = affichagePlan.getZoom();
 			
-			// Récuperation de la position du curseur en y soustrayant les offset
-			double xClic = e.getX() - affichagePlan.getxOffset();
-			double yClic = e.getY() - affichagePlan.getyOffset();
-			
-			// Passage de la position du clic à la bonne échelle
-			double xPos = (xClic * Fenetre.LARGEUR_PLAN )/affichagePlan.getLargeurPlan();
-			double yPos = (yClic * Fenetre.HAUTEUR_PLAN )/affichagePlan.getHauteurPlan();
-			
-			// Recherche de l'intersection la plus proche
-			Intersection interLaPlusProche = new Intersection();
-			double distanceMin = Double.MAX_VALUE;
-			for (String intersectionId : affichagePlan.getPlan().getIntersections().keySet()) {
-				Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
-				double longitude = i.getLongitude();
-				double latitude = i.getLatitude();	
-				double distance = Point2D.distanceSq(xPos, yPos, longitude, latitude);
-
-				if (distance < distanceMin) {
-					distanceMin = distance;
-					interLaPlusProche = i;
-				}
-			}
-			System.out.println("Distance : " + distanceMin);
-			System.out.println("Logitude: "+(interLaPlusProche.getLongitude()- affichagePlan.getxOffset()));
-			System.out.println("Latitude: "+(interLaPlusProche.getLatitude()- affichagePlan.getyOffset()));
+			affichagePlan.setIntersectionSelectionne(null);
 			switch (affichagePlan.getEtat()) {
 			case LIVRAISON:
 				affichagePlan.setNouvelleLivraison(interLaPlusProche);
@@ -78,6 +65,9 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			affichagePlan.repaint();
 			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude()+ " "
 					+ interLaPlusProche.getLatitude());
+		} 
+		else{
+			affichagePlan.setIntersectionSelectionne(interLaPlusProche);
 		}
 
 	}
@@ -178,5 +168,22 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				cptZoom--;
 			}
 		}
+	}
+	
+	public Intersection trouverIntersectionLaPlusProche(double xPos, double yPos){
+		Intersection interLaPlusProche = new Intersection();
+		double distanceMin = Double.MAX_VALUE;
+		for (String intersectionId : affichagePlan.getPlan().getIntersections().keySet()) {
+			Intersection i = affichagePlan.getPlan().getIntersections().get(intersectionId);
+			double longitude = i.getLongitude();
+			double latitude = i.getLatitude();	
+			double distance = Point2D.distanceSq(xPos, yPos, longitude, latitude);
+
+			if (distance < distanceMin) {
+				distanceMin = distance;
+				interLaPlusProche = i;
+			}
+		}
+		return interLaPlusProche;
 	}
 }
