@@ -143,6 +143,7 @@ public class XMLParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(tournee.getDepot() == null) throw new ExceptionChargement("Absence de depot");
 		if(enlevements.isEmpty()) throw new ExceptionChargement("Aucune contraintes chargee");
 
 

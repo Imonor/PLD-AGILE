@@ -12,6 +12,7 @@ public class ContraintesTournee {
 	private List<PointLivraison> pointsLivraison;
 
 	public ContraintesTournee() {
+		depot = null;
 	}
 
 	public ContraintesTournee(LocalTime heureDepart, Intersection depot, List<PointEnlevement> enls, List<PointLivraison> livs) {
