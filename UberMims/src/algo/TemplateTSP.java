@@ -1,6 +1,7 @@
 package algo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.List;
@@ -59,8 +60,6 @@ public abstract class TemplateTSP implements TSP{
 		Tournee tournee = new Tournee();
 		//Sequentiel et MinFirst
 //		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
-		
-//		System.out.println("longueur="+couts.get("253192551370403192"));
 		
 		//MinFirst + 2-Opt
 		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
@@ -126,8 +125,14 @@ public abstract class TemplateTSP implements TSP{
 			//Algo 2-Opt
 			int i = 0 ;
 			while(it.hasNext() && i<(nbChemins - 2)) {
+				
+//				for(int count = 0; count < tournee.getPlusCourteTournee().size(); ++count) {
+//					System.out.print(count+"."+tournee.getPlusCourteTournee().get(count).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(count).getDerniere().getId()+" | ");
+//				}
+//				System.out.println("");
+				
 				Chemin chemin = it.next();
-				System.out.println("//////i="+i+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
+//				System.out.println("//////i="+i+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
 				ordreNoeuds.replace(chemin.getPremiere().getId(), i);
 				ArrayList<String> noeudsUpdate = new ArrayList<String>();
 				
@@ -175,13 +180,13 @@ public abstract class TemplateTSP implements TSP{
 							//Calculer la duree du nouvel ensemble de chemins inverses
 							for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
 								newDuree += plusCourtsChemins.get(noeudsUpdate.get(count+1)).get(noeudsUpdate.get(count)).getDuree();
-								System.out.println("starti="+noeudsUpdate.get(count+1)+"; endi="+noeudsUpdate.get(count));
+//								System.out.println("starti="+noeudsUpdate.get(count+1)+"; endi="+noeudsUpdate.get(count));
 							}
 							newDuree += plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId()).getDuree();
 							newDuree += plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId()).getDuree();
 							
-							System.out.println("start="+chemin.getPremiere().getId()+"; end="+chemin2.getPremiere().getId());
-							System.out.println("start1="+chemin.getDerniere().getId()+"; end1="+chemin2.getDerniere().getId());
+//							System.out.println("start="+chemin.getPremiere().getId()+"; end="+chemin2.getPremiere().getId());
+//							System.out.println("start1="+chemin.getDerniere().getId()+"; end1="+chemin2.getDerniere().getId());
 						}
 						
 						
@@ -192,7 +197,7 @@ public abstract class TemplateTSP implements TSP{
 							System.out.println("possible="+possible+"; oldDuree="+duree+"; newDuree="+newDuree);
 						}
 					}
-					System.out.println("fin:j="+j+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
+//					System.out.println("fin:j="+j+"; c.Debut="+chemin2.getPremiere().getId()+"; c.Fin="+chemin2.getDerniere().getId()+"; c.duree="+chemin2.getDuree());
 					++j;
 				}
 				
@@ -200,7 +205,7 @@ public abstract class TemplateTSP implements TSP{
 				for(int count = 0; count<noeudsUpdate.size(); ++count) {
 					ordreNoeuds.replace( noeudsUpdate.get(count), -1 );
 				}
-				System.out.println("/////fin:i="+i+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
+//				System.out.println("/////fin:i="+i+"; c.Debut="+chemin.getPremiere().getId()+"; c.Fin="+chemin.getDerniere().getId()+"; c.duree="+chemin.getDuree());
 				++i;
 			}
 		}
@@ -208,20 +213,60 @@ public abstract class TemplateTSP implements TSP{
 	
 	private void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, HashMap<String, Integer> ordreNoeuds, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
 		
+		System.out.println("");
+		for(int count = 0; count < tournee.getPlusCourteTournee().size(); ++count) {
+			System.out.print(count+"-"+tournee.getPlusCourteTournee().get(count).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(count).getDerniere().getId()+" | ");
+		}
+		System.out.println("");
+		for(int count = 0; count < noeudsUpdate.size(); ++count) {
+			System.out.print(count+"."+noeudsUpdate.get(count)+": ");
+		}
+		System.out.println("");
 		System.out.println("###SWAP### i="+i+"; j="+j);
 		//On mets les chemins compris entre i et j dans l'ordre inverse de parcours pour connecter la tournee
 		//On met aussi les 2 chemins avec les noeuds extremes inter-changes
+//		for(int count = 0; count< (noeudsUpdate.size()-1)/2; ++count) {
+//			Collections.swap(tournee.getPlusCourteTournee(), count, noeudsUpdate.size()-2-count);
+//			Chemin cheminTmp = tournee.getPlusCourteTournee().get(count);
+//			tournee.getPlusCourteTournee().set(count, tournee.getPlusCourteTournee().get( noeudsUpdate.size()-2-count ));
+//			tournee.getPlusCourteTournee().set(noeudsUpdate.size()-2-count, cheminTmp);
+//		}
+		
+		List<Chemin> listeTmp = new ArrayList<Chemin>();
 		for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
-			int index = i+noeudsUpdate.size()-count-1;
-			Chemin newChemin = plusCourtsChemins.get(noeudsUpdate.get(count+1)).get(noeudsUpdate.get(count));
-			tournee.getPlusCourteTournee().set(index, newChemin);
-			ordreNoeuds.replace(noeudsUpdate.get(count+1), index);
+			int ascending = i+count+1;
+			listeTmp.add(tournee.getPlusCourteTournee().get(ascending));
+		}
+//		for(int count = noeudsUpdate.size()-2; count>=0; --count) {
+//			int ascending = i+noeudsUpdate.size()-count-1;
+//			int descending = i+count+1;
+//			String premiere = tournee.getPlusCourteTournee().get(ascending).getPremiere().getId();
+//			String derniere = tournee.getPlusCourteTournee().get(ascending).getDerniere().getId();
+//			Chemin newChemin = plusCourtsChemins.get(derniere).get(premiere);
+//			tournee.getPlusCourteTournee().set(descending, newChemin);
+//			ordreNoeuds.replace(derniere, ascending);
+//			System.out.print(count+"."+tournee.getPlusCourteTournee().get(descending).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(descending).getDerniere().getId()+" / ");
+//			System.out.print(count+"~"+premiere+"->"+derniere+" / ");
+//		}
+		for(int count = 0; count< noeudsUpdate.size()-1; ++count) {
+			int ascending = i+count+1;
+			int descending = i+noeudsUpdate.size()-count-1;
+			String premiere = listeTmp.get(count).getPremiere().getId();
+			String derniere = listeTmp.get(count).getDerniere().getId();
+			Chemin newChemin = plusCourtsChemins.get(derniere).get(premiere);
+			tournee.getPlusCourteTournee().set(descending, newChemin);
+			ordreNoeuds.replace(derniere, ascending);
+			System.out.print(count+"."+tournee.getPlusCourteTournee().get(ascending).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(ascending).getDerniere().getId()+" / ");
+//			System.out.print(count+"~"+premiere+"->"+derniere+" / ");
 		}
 		Chemin newChemin1 = plusCourtsChemins.get(chemin.getPremiere().getId()).get(chemin2.getPremiere().getId());
 		Chemin newChemin2 = plusCourtsChemins.get(chemin.getDerniere().getId()).get(chemin2.getDerniere().getId());
 		tournee.getPlusCourteTournee().set(i, newChemin1);
 		tournee.getPlusCourteTournee().set(j, newChemin2);
 		ordreNoeuds.replace(chemin.getDerniere().getId(), j);
+		System.out.println("");
+		System.out.println("d1d2 "+tournee.getPlusCourteTournee().get(i).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(i).getDerniere().getId()+" / ");
+		System.out.println("f1f2 "+tournee.getPlusCourteTournee().get(j).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(j).getDerniere().getId()+" / ");
 	}
 	
 	private HashMap<String, Paire> initVuDispo(ContraintesTournee contraintes, HashMap<String, Intersection> intersections){
