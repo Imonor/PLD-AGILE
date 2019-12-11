@@ -107,7 +107,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
-	private ModificationTournee panModificationTournee  = new ModificationTournee();
+	private ModificationTournee panModificationTournee  = new ModificationTournee(this);
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private Font police = new Font("Verdana", 0, 15);
@@ -397,6 +397,7 @@ public class Fenetre extends JFrame {
 			panAjoutLivraison3.setVisible(false);
 			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
+			panModificationTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
@@ -436,6 +437,10 @@ public class Fenetre extends JFrame {
 	public void apresAjoutLivraison() {
 		panAjoutLivraison3.setVisible(false);
 		this.setContentPane(panPrincipal);
+	}
+	
+	public void apresModifOrdre() {
+		affichageTournee.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 	}
 
 	// Affichage Infos du point ajoute avant clic sur bouton valider ajout
@@ -485,7 +490,7 @@ public class Fenetre extends JFrame {
 	}
 	
 	public void afficherModificationTournee() {
-		panModificationTournee.ajouterTournee(tournee, plan, controleur);
+		panModificationTournee.ajouterTournee(plan, controleur);
 		panModificationTournee.afficherTournee();
 		affichageTournee.setVisible(false);
 		panModificationTournee.setVisible(true);
