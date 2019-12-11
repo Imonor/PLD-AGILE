@@ -53,10 +53,10 @@ public class AffichagePlan extends JScrollPane {
 
 	private Etat etat;
 
-	// Plan chargï¿½ via le fichier XML
+	// Plan charg� via le fichier XML
 	private Plan plan;
 
-	// Contraintes chargï¿½es via le fichier XML
+	// Contraintes charg�es via le fichier XML
 	private ContraintesTournee contraintes;
 
 	// Trajet de livraison
@@ -112,13 +112,13 @@ public class AffichagePlan extends JScrollPane {
 		this.planClickable = false;
 		this.etat = etat.LIVRAISON;
 		
-		//Ajout des écouteurs souris
+		//Ajout des �couteurs souris
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
 		this.addMouseMotionListener(ecouteurSouris);
 		
-		//Initialisation des variables liées au zoom et au drag & drop
+		//Initialisation des variables li�es au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
 		zoomIn = false;
@@ -332,6 +332,7 @@ public class AffichagePlan extends JScrollPane {
 			yDiff = 0;
 			largeurPlan = Fenetre.LARGEUR_PLAN;
 			hauteurPlan = Fenetre.HAUTEUR_PLAN;
+
 		}
 
 		if (mouseReleased) {
@@ -481,19 +482,20 @@ public class AffichagePlan extends JScrollPane {
 		public void draw(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			// Calcula o ï¿½ngulo da seta.
+			// Calcula o �ngulo da seta.
 			double angle = Math.atan2(endY - y, endX - x);
 
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
 			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o
+
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
-			// Obtï¿½m o AffineTransform original.
+			// Obt�m o AffineTransform original.
 			AffineTransform tx1 = g2.getTransform();
 
-			// Cria uma cï¿½pia do AffineTransform.
+			// Cria uma c�pia do AffineTransform.
 			AffineTransform tx2 = (AffineTransform) tx1.clone();
 
 			// Translada e rotaciona o novo AffineTransform.

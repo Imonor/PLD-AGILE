@@ -162,7 +162,7 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				fenetre.getAffichagePlan().setPlanClickable(false);
 				fenetre.afficherInfos();
-				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(),controleur.getContraintes());
 			break;
 			
 			case "Valider l'ajout d'une livraison":
@@ -189,13 +189,14 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(),controleur.getContraintes());
 				
 			break;
-			case "Annuler la derniÃ¨re modification":
-				System.out.println("CA MARCHE");
-			break;
-		
+
+			case "Modifier l'ordre de la tournée":
+				System.out.println("Modifier tournée");
+				fenetre.afficherModificationTournee();
+			break;			
 		}
 	}
 }

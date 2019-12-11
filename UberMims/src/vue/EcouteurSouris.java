@@ -54,6 +54,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				double longitude = i.getLongitude();
 				double latitude = i.getLatitude();	
 				double distance = Point2D.distanceSq(xPos, yPos, longitude, latitude);
+
 				if (distance < distanceMin) {
 					distanceMin = distance;
 					interLaPlusProche = i;
@@ -130,14 +131,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			System.out.println("deplacement x : " + deplacementX);
 			System.out.println( );
 
-//			if ((xDiff + deplacementX <= Math.abs(xOffset) && deplacementX > 0) ||
-//				(xDiff + deplacementX >= xOffset  && deplacementX < 0)) {
-//				affichagePlan.setnewxDiff((int)deplacementX);
-//			}
-//			if (yDiff + deplacementY < Math.abs(yOffset)) {
-//				affichagePlan.setnewyDiff((int)deplacementY);
-//			}
-			
 			if( (Math.abs(deplacementX) <= Math.abs(xOffset) && deplacementX > 0) ||
 				(Math.abs(deplacementX) <= largeurPlan + xOffset - Fenetre.LARGEUR_PLAN) && deplacementX <0){
 				affichagePlan.setnewxDiff((int)deplacementX);
