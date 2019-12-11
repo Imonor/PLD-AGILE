@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -42,12 +43,14 @@ import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
 import util.XMLParser;
+import vue.AffichagePlan.LineArrow;
 
 public class AffichageTournee extends JPanel {
 
+	private Plan plan;
 	
-	public AffichageTournee(Fenetre fenetre) {
-		this.addMouseListener(new EcouteurSouris(this, fenetre));
+	public AffichageTournee(Plan plan) {
+		this.plan = plan;
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
@@ -120,6 +123,7 @@ public class AffichageTournee extends JPanel {
         JPanel resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollpane = new JScrollPane(resultsPanel);
+        scrollpane.getVerticalScrollBar().setUnitIncrement(16);
         textArea.add(scrollpane, BorderLayout.CENTER);
         
         //------------------------------------------------------------------
@@ -162,12 +166,6 @@ public class AffichageTournee extends JPanel {
 		int compteurDelivery = 1;
 		
 		resultsPanel.add(infoGeneral);
-		
-        /*for (int i = 0; i < 6 ; i++) {
-        	JLabel j = new JLabel("<html> hhhh <br> gggg </html>");
-        	j.setPreferredSize(new Dimension(400, 100));
-            resultsPanel.add(j);
-        }*/
         
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
 			JLabel jlabel = new JLabel("<html> ");
@@ -175,12 +173,13 @@ public class AffichageTournee extends JPanel {
 			
 			jlabel.addMouseListener(new MouseAdapter() {
 			    public void mouseClicked(MouseEvent e) {
-			         
+			    	//Affichage Details Texte
 				 	textInfo.removeAll();
 				 	String lab = (String) e.getSource().toString();
 				 
 				 	int index = Integer.parseInt(lab.substring(19, 20));
 				 	Chemin current = tournee.getPlusCourteTournee().get(index);
+				 	
 				 	int tailleC = current.getIntersections().size();
 				 	Chemin previous;
 				 	String depart;
@@ -308,7 +307,8 @@ public class AffichageTournee extends JPanel {
 		}
         
 		int duree = tournee.getDuree() ;
-		JLabel time = new JLabel("<html> <br> Duree totale : " + duree + " minutes. </center> </html>");
+		duree = (int) duree/60;
+		JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 		resultsPanel.add(time);
 		
 		for (int i = 0; i < 4 ; i++) {
@@ -318,7 +318,7 @@ public class AffichageTournee extends JPanel {
         }
         
 	}
-
+	
 	
 	public int[] traitementTempsLivraison(int livraison) {
 		int livraisonHeure = (int) livraison / 3600;

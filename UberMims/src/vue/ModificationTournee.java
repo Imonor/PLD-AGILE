@@ -328,9 +328,19 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	}
 	
 	private void verifierPrecedencePickupDelivery(Intersection elemSelect, Intersection autreElem, String deplacement){
-		if(deplacement.equals("^") && elemSelect instanceof PointLivraison) {
-			if(autreElem.getId().equals(((PointLivraison)elemSelect).getIdEnlevement())) {
-				JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlèvement");
+		if(deplacement.equals("^")) {
+			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
+				if(pl.equals(elemSelect) && autreElem.getId().equals(pl.getIdEnlevement())) {
+					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlèvement !");
+					break;
+				}
+			}
+		} else {
+			for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
+				if(pe.equals(elemSelect) && autreElem.getId().equals(pe.getIdLivraison())) {
+					JOptionPane.showMessageDialog(null, "Attention, le point d'enlèvement est après le point de livraison !");
+					break;
+				}
 			}
 		}
 	}
