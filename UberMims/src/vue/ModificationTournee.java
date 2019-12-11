@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
@@ -28,6 +29,7 @@ import model.ContraintesTournee;
 import model.Intersection;
 import model.Plan;
 import model.PointEnlevement;
+import model.PointLivraison;
 import model.Tournee;
 
 public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
@@ -39,13 +41,15 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private List<JLabel> listeLabels;
 	private Plan plan;
 	private Controleur controleur;
+	private Fenetre fenetre;
 	
-	public ModificationTournee() {
+	public ModificationTournee(Fenetre fenetre) {
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
+        this.fenetre = fenetre;
         
  
         JPanel panelAll = new JPanel();
@@ -56,13 +60,17 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         panelDetail.setBackground(Color.yellow);
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
+        JButton validerModif = new JButton("Valider les modifications");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
+        validerModif.setBounds(30, 45, 40, 20);
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
+        validerModif.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
+        panelDetail.add(validerModif);
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -121,15 +129,16 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Tournee tournee, Plan plan, Controleur controleur) {
+    public void ajouterTournee(Plan plan, Controleur controleur) {
+    	ordrePassage.clear();
     	this.controleur = controleur;
+    	Tournee tournee = controleur.getTournee();
     	this.plan = plan;
-        List<Chemin> parcours = tournee.getPlusCourteTournee();
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
-        parcours.remove(parcours.size() - 1);
 
-        for (Chemin chemin: parcours) {
+        for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
         	JLabel l;
+        	Chemin chemin = tournee.getPlusCourteTournee().get(i);
         	//Récupérer une intersection étape du parcours et l'ajouter à la liste
         	Intersection etape = chemin.getDerniere();
         	//Récupérer l'adresse (en prenant le nom de rue du dernier troncon menant à l'intersection)
@@ -247,12 +256,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						ordrePassage.remove(index);
 						ordrePassage.add(index, elemDessus);
 						
-						this.afficherTournee();
-				        labelSelectionne = listeLabels.get(index-1);
-				        labelSelectionne.setForeground(Color.BLUE);
-				        repaint();
-				        updateUI();
-						
 						Intersection modif = null, prec = null, suiv = null;
 			        	for(String etapeId: elemSelect.keySet() ) {
 			        		modif = plan.getIntersections().get(etapeId);
@@ -265,8 +268,17 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				        		prec = plan.getIntersections().get(etapeId);
 				        	}
 						}
+						
+						verifierPrecedencePickupDelivery(modif, suiv, e.getActionCommand());
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index-1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
 
 			        controleur.modifierOrdrePassage(modif, prec, suiv);
+			        fenetre.setTournee(controleur.getTournee());
 					}
 				}
 				break;
@@ -282,12 +294,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						ordrePassage.remove(index+1);
 						ordrePassage.add(index+1, elemSelect);
 						
-						this.afficherTournee();
-				        labelSelectionne = listeLabels.get(index+1);
-				        labelSelectionne.setForeground(Color.BLUE);
-				        repaint();
-				        updateUI();
-						
 						Intersection modif = null, prec = null, suiv = null;
 			        	for(String etapeId: elemSelect.keySet() ) {
 			        		modif = plan.getIntersections().get(etapeId);
@@ -301,10 +307,41 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				        	}
 						}
 
+						verifierPrecedencePickupDelivery(modif, prec, e.getActionCommand());
+						
+						this.afficherTournee();
+				        labelSelectionne = listeLabels.get(index+1);
+				        labelSelectionne.setForeground(Color.BLUE);
+				        repaint();
+				        updateUI();
 			        controleur.modifierOrdrePassage(modif, prec, suiv);
+			        fenetre.setTournee(controleur.getTournee());
 					}
 				}
 				break;
+			
+			case "Valider les modifications":
+				fenetre.apresModifOrdre();
+				fenetre.afficherInfos();
+				break;
+		}
+	}
+	
+	private void verifierPrecedencePickupDelivery(Intersection elemSelect, Intersection autreElem, String deplacement){
+		if(deplacement.equals("^")) {
+			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
+				if(pl.equals(elemSelect) && autreElem.getId().equals(pl.getIdEnlevement())) {
+					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlèvement !");
+					break;
+				}
+			}
+		} else {
+			for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
+				if(pe.equals(elemSelect) && autreElem.getId().equals(pe.getIdLivraison())) {
+					JOptionPane.showMessageDialog(null, "Attention, le point d'enlèvement est après le point de livraison !");
+					break;
+				}
+			}
 		}
 	}
 }

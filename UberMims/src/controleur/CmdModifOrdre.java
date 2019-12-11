@@ -50,8 +50,8 @@ public class CmdModifOrdre implements Commande {
 	public static void main(String[] args) {
 		Controleur c = new Controleur();
 		try{
-			c.chargerPlan("fichiersXML2019/moyenPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandeMoyen3.xml"); 
+			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
+			c.chargerTournee("fichiersXML2019/demandePetit2.xml"); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -61,9 +61,9 @@ public class CmdModifOrdre implements Commande {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
 		
 		System.out.println();
-		Intersection prec = Controleur.plan.getIntersections().get("26470086");
-		Intersection modif = Controleur.plan.getIntersections().get("505061101");
-		Intersection suiv = Controleur.plan.getIntersections().get("27362899");
+		Intersection prec = Controleur.plan.getIntersections().get("208769457");
+		Intersection modif = Controleur.plan.getIntersections().get("1679901320");
+		Intersection suiv = Controleur.plan.getIntersections().get("25336179");
 		
 		CmdModifOrdre cmd = new CmdModifOrdre(c.getTournee(), modif, prec, suiv, c.getPlusCourtsChemins());
 		cmd.doCode();
