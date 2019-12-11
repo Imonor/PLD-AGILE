@@ -488,7 +488,6 @@ public class Fenetre extends JFrame {
 
 	
 	public void afficherModificationTournee() {
-
 		panModificationTournee.ajouterTournee(plan, controleur);
 		panModificationTournee.afficherTournee();
 		affichageTournee.setVisible(false);
