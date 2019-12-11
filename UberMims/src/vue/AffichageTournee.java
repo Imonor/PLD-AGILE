@@ -183,7 +183,6 @@ public class AffichageTournee extends JPanel {
 			i++;
     	}
 		
-		
 		resultsPanel.add(infoGeneral);
         
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {

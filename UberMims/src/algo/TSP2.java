@@ -16,8 +16,8 @@ public class TSP2 extends TemplateTSP{
 	}
 	
 	@Override
-	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Integer> couts) {
-		return new IteratorMinFirst(restants, intersections, vuDispo, couts);
+	protected Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
+		return new IteratorMinFirst(restants, intersections, vuDispo, plusCourtsChemins);
 	}
 
 	@Override

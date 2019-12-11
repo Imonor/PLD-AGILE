@@ -95,11 +95,12 @@ public class AffichagePlan extends JScrollPane {
 	// Drag and drop
 	private int xDiff;
 	private int yDiff;
+	private int newxDiff;
+	private int newyDiff;
 	private boolean mouseReleased;
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
-
 	
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
@@ -122,14 +123,12 @@ public class AffichagePlan extends JScrollPane {
 		yOldMouseY = new Stack<Double>();
 		xDiff = 0;
 		yDiff = 0;
+		newxDiff = 0;
+		newyDiff =0;
 		mouseReleased = true;
 		
-
-
-		this.etat = etat.LIVRAISON;	
-		nouveauTempsPickUp=0;
-		nouveauTempsDelivery=0;
-
+		nouveauTempsPickUp = 0;
+		nouveauTempsDelivery = 0;
 	}
 
 	
@@ -222,6 +221,22 @@ public class AffichagePlan extends JScrollPane {
 	public void setyDiff(int yDiff) {
 		this.yDiff = yDiff;
 	}
+	
+	public int getnewxDiff() {
+		return newxDiff;
+	}
+
+	public void setnewxDiff(int newxDiff) {
+		this.newxDiff = newxDiff;
+	}
+
+	public int getnewyDiff() {
+		return yDiff;
+	}
+
+	public void setnewyDiff(int newyDiff) {
+		this.newyDiff = newyDiff;
+	}
 
 	public double getZoom() {
 		return zoom;
@@ -230,7 +245,6 @@ public class AffichagePlan extends JScrollPane {
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
 	}
-
 
 	public double getZoomPrecedent() {
 		return zoomPrecedent;
@@ -268,7 +282,6 @@ public class AffichagePlan extends JScrollPane {
 
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
-
 	
 	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
@@ -283,8 +296,8 @@ public class AffichagePlan extends JScrollPane {
 
 		double zoomDiv = zoom / zoomPrecedent;
 		if (zoomIn) {
-			xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * mouseX;
-			yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * mouseY;
+			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * mouseX;
+			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * mouseY;
 			xOldMouseX.push(mouseX);
 			yOldMouseY.push(mouseY);
 
@@ -295,16 +308,21 @@ public class AffichagePlan extends JScrollPane {
 		if (zoom == 1f) {
 			xOffset = 0;
 			yOffset = 0;
-		}
-
-		if (mouseReleased) {
-			xOffset += xDiff;
-			yOffset += yDiff;
 			xDiff = 0;
 			yDiff = 0;
 		}
 
-		at.translate(xOffset + xDiff, yOffset + yDiff);
+		if (mouseReleased) {
+			xDiff += newxDiff;
+			yDiff += newyDiff;
+			xOffset += newxDiff;
+			yOffset += newyDiff;
+			yDiff += newyDiff;
+			newxDiff = 0;
+			newyDiff = 0;
+		}
+
+		at.translate(xOffset + newxDiff, yOffset + newyDiff);
 		at.scale(zoom, zoom);
 		zoomPrecedent = zoom;
 		g2d.transform(at);
@@ -316,33 +334,11 @@ public class AffichagePlan extends JScrollPane {
 		Random rand = new Random();
 		Graphics2D g2d = (Graphics2D) g;
 		
+		System.out.println("LARGEUR = " + g2d.getTransform().getTranslateX());
 		ajusterZoom(g2d);
 
-//		g2d.translate(750/2, 750/2);
-//		g2d.scale(zoom, zoom);
-//		g2d.translate(-750/2, -750/2);
-		
-		AffineTransform at = new AffineTransform();
-		
-		double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
-        double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
-        
-        double zoomDiv = zoom/zoomPrecedent;
-        
-        xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
-        yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
-        
-        at.translate(xOffset, yOffset);
-        at.scale(zoom, zoom);
-        zoomPrecedent = zoom;
-        g2d.transform(at);
-        
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
-				Ellipse2D.Double shape = new Ellipse2D.Double(intersection.getLongitude() - 1,
-						intersection.getLatitude() - 1, 2, 2);
-				g2d.draw(shape);
-				g2d.fill(shape);
 				for (Troncon troncon : intersection.getTronconsSortants().values()) {
 					Intersection destination = troncon.getDestination();
 					g2d.drawLine((int) intersection.getLongitude(), (int) intersection.getLatitude(),
@@ -430,7 +426,7 @@ public class AffichagePlan extends JScrollPane {
 		}
 		return new Color(0, 0, 0);
 	}
-
+	
 	// The code snippet below was found on the forum
 	// https://itqna.net/questions/3389/how-draw-arrow-using-java2d
 
@@ -471,8 +467,6 @@ public class AffichagePlan extends JScrollPane {
 			g2.setStroke(new BasicStroke(thickness));
 
 			// Desenha a linha. Corta 10 pixels na ponta para a ponta n�o
-			// ficar
-			// grossa.
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
 			// Obt�m o AffineTransform original.
