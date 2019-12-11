@@ -139,7 +139,7 @@ public class Fenetre extends JFrame {
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
-		JButton boutonModifierTournee = new JButton("Modifier l'ordre de la tournée");
+		JButton boutonModifierTournee = new JButton("Modifier l'ordre de la tournee");
 		JButton boutonAnnulerModification = new JButton("Annuler la derniÃ¨re modification");
 
 //************** ACCUEIL ****************//
@@ -185,19 +185,19 @@ public class Fenetre extends JFrame {
 		panHautDroite.setBounds(0, 0, 450, 100);
 		// bouton ajouter livraison
 		boutonAjouterLivraison.setVisible(true);
-		boutonAjouterLivraison.setBounds(95, 15, 260, 30);
+		boutonAjouterLivraison.setBounds(95,7, 260, 30);
 		panHautDroite.add(boutonAjouterLivraison);
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		//bouton annuler la derniere modification
 		boutonAnnulerModification.setVisible(true);
 		boutonAnnulerModification.setEnabled(false);
-		boutonAnnulerModification.setBounds(95, 55, 260, 30);
+		boutonAnnulerModification.setBounds(95, 71, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
 		panDroite.add(panHautDroite);
 		// bouton modifier ordre livraison
 		boutonModifierTournee.setVisible(true);
-		boutonModifierTournee.setBounds(75, 65, 300, 30);
+		boutonModifierTournee.setBounds(95, 39, 260, 30);
 		panHautDroite.add(boutonModifierTournee);
 		boutonModifierTournee.addActionListener(ecouteurBoutons);
 		

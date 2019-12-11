@@ -195,9 +195,13 @@ public class EcouteurBoutons implements ActionListener{
 				
 			break;
 
-			case "Modifier l'ordre de la tournée":
-				System.out.println("Modifier tournée");
+			case "Annuler la derniere modification":
+				System.out.println("Annuler derniere modification");
+			break;
+			case "Modifier la tournee":
+				System.out.println("Modifier tournee");
 				fenetre.afficherModificationTournee();
+			break;
 		}
 	}
 }
