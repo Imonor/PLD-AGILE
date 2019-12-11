@@ -83,7 +83,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger un autre plan de la ville":
 				System.out.println("Chargement d'un autre plan de la ville");
-				
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixPlan2 = new JFileChooser();
 				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
@@ -112,6 +112,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger une demande de tournee":
 				System.out.println("Chargement d'une demande de tournee");
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixTournee = new JFileChooser();
 				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML

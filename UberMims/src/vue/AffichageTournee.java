@@ -164,12 +164,20 @@ public class AffichageTournee extends JPanel {
 		
 		Map<String, Integer> indexationPointsE =  new HashMap<>();
 		Map<String, Integer> indexationPointsL =  new HashMap<>();
+		
+		Map<String, Color> colorPointsE =  new HashMap<>();
+		Map<String, Color> colorPointsL =  new HashMap<>();
+		Random rand = new Random();
+
 		int i = 1;
 		for(PointEnlevement crntPointE: contraintestournee.getPointsEnlevement() ) {
+			Color randomColor = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 			indexationPointsE.put(crntPointE.getId(), i);
+			colorPointsE.put(crntPointE.getId(), randomColor);
 			for(PointLivraison crntPointL: contraintestournee.getPointsLivraison() ) {
 				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
 					indexationPointsL.put(crntPointL.getId(), i);
+					colorPointsL.put(crntPointL.getId(), randomColor);
 				}
 	    	}
 			i++;
@@ -256,6 +264,7 @@ public class AffichageTournee extends JPanel {
 				    }
 					
 				    int indexation = indexationPointsE.get(inter.getId());
+				    jlabel.setForeground(colorPointsE.get(inter.getId()));
 					jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " :   <br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
@@ -293,6 +302,7 @@ public class AffichageTournee extends JPanel {
 				    }
 						
 				    int indexation = indexationPointsL.get(inter.getId());
+				    jlabel.setForeground(colorPointsL.get(inter.getId()));
 					jlabel.setText(jlabel.getText() + "Delivery n° " + indexation + " :   <br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
