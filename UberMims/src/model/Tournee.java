@@ -40,15 +40,6 @@ public class Tournee {
 		duree = 0;
 	}
 	
-	public Tournee(Tournee t) {
-		this.contraintes = new ContraintesTournee(t.contraintes);
-		this.duree = t.getDuree();
-		this.plusCourteTournee = new LinkedList<>();
-		for(Chemin c : t.getPlusCourteTournee()) {
-			this.plusCourteTournee.add(c);
-		}
-	}
-	
 	public int getDuree() {
 		return duree;
 	}
@@ -65,11 +56,17 @@ public class Tournee {
 		plusCourteTournee.add(chemin);
 	}
 	
-	public void calculDuree(int tempsElevementLivraison) {
+	public void calculDuree() {
+		duree = 0;
 		for(Chemin currentChemin : plusCourteTournee) {
 			duree+=currentChemin.getDuree();
 		}
-		duree+=tempsElevementLivraison;
+		for(PointEnlevement pe : contraintes.getPointsEnlevement()) {
+			duree+=pe.getTempsEnlevement();
+		}
+		for(PointLivraison pl : contraintes.getPointsLivraison()) {
+			duree+=pl.getTempsLivraison();
+		}
 	}
 	
 	public LocalTime getHeureArrivee() {
