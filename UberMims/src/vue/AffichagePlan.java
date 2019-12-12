@@ -344,7 +344,6 @@ public class AffichagePlan extends JScrollPane {
 			yDiff = 0;
 			largeurPlan = Fenetre.LARGEUR_PLAN;
 			hauteurPlan = Fenetre.HAUTEUR_PLAN;
-
 		}
 
 		if (mouseReleased) {
