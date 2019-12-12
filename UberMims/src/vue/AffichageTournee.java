@@ -25,6 +25,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,11 +138,7 @@ public class AffichageTournee extends JPanel {
 			String adresseDepart = tournee.getPlusCourteTournee().get(0).getIntersections().get(0).getTronconsSortants().get(tournee.getPlusCourteTournee().get(0).getIntersections().get(1).getId()).getNomRue();
 			infoGeneral.setText(infoGeneral.getText() + adresseDepart + ". <br>");
 			
-			int heure = contraintestournee.getHeureDepart().getHour();
-			int minute = contraintestournee.getHeureDepart().getMinute();
-			int seconde = contraintestournee.getHeureDepart().getSecond();
-			
-			String tempsDepart = heure + ":" + minute + ":" + seconde;
+			LocalTime tempsDepart = contraintestournee.getHeureDepart();
 			infoGeneral.setText(infoGeneral.getText() + "Heure de depart : " + tempsDepart + "<br> <br> </left>");
 			
 			List<String> idPointsEnlevement = new ArrayList<>();
@@ -251,80 +248,36 @@ public class AffichageTournee extends JPanel {
 						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
 	
-						heure = heure + tempsChemin[0];
-					    minute = minute + tempsChemin[1];
-					    seconde = seconde + tempsChemin[2];
-					    if (seconde >= 60) {
-					    	minute ++;
-					      seconde = seconde % 60;
-					    }
-					    if (minute >= 60) {
-					    	minute ++;
-					    	minute = minute % 60;
-					    }
+						LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());
 						
 					    int indexation = indexationPointsE.get(inter.getId());
 					    jlabel.setForeground(colorPointsE.get(inter.getId()));
 						jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " :   <br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
-						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
+						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
-						
-						
-						heure = heure + tempsLivraison[0];
-					    minute = minute + tempsLivraison[1];
-					    seconde = seconde + tempsLivraison[2];
-					    if (seconde >= 60) {
-					    	minute ++;
-					      seconde = seconde % 60;
-					    }
-					    if (minute >= 60) {
-					    	minute ++;
-					    	minute = minute % 60;
-					    }
+
 					}else if (idPointsLivraison.contains(inter.getId())) {
 						int duree = c.getDuree();
 						int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
 						
 						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
-	
-						heure = heure + tempsChemin[0];
-					    minute = minute + tempsChemin[1];
-					    seconde = seconde + tempsChemin[2];
-					    if (seconde >= 60) {
-					    	minute ++;
-					      seconde = seconde % 60;
-					    }
-					    if (minute >= 60) {
-					    	minute ++;
-					    	minute = minute % 60;
-					    }
-							
+						
+						LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());						
 					    int indexation = indexationPointsL.get(inter.getId());
 					    jlabel.setForeground(colorPointsL.get(inter.getId()));
 						jlabel.setText(jlabel.getText() + "Delivery n° " + indexation + " :   <br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
-						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
+						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
 						
 						
-						heure = heure + tempsLivraison[0];
-					    minute = minute + tempsLivraison[1];
-					    seconde = seconde + tempsLivraison[2];
-					    if (seconde >= 60) {
-					    	minute ++;
-					      seconde = seconde % 60;
-					    }
-					    if (minute >= 60) {
-					    	minute ++;
-					    	minute = minute % 60;
-					    }
 					} 
 		        	jlabel.setPreferredSize(new Dimension(400, 100));
 		            resultsPanel.add(jlabel);
 			}
-	        
+	        tournee.calculDuree();
 			int duree = tournee.getDuree() ;
 			duree = (int) duree/60;
 			JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
