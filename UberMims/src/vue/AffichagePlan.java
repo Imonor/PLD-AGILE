@@ -73,6 +73,9 @@ public class AffichagePlan extends JScrollPane {
 
 	// Point de livraison ajoute
 	private Intersection nouvelleLivraison;
+	
+	// InterSection du chemin à mettre en surbrillance
+	private Intersection intersectionSelectionne;
 
 	private int nouveauTempsPickUp;
 	private int nouveauTempsDelivery;
@@ -81,6 +84,7 @@ public class AffichagePlan extends JScrollPane {
 	private EcouteurSouris ecouteurSouris;
 
 	// Zoom
+	private static double FACTEUR_ZOOM = 1.1f;
 	private double zoom;
 	private double zoomPrecedent;
 	private double xOffset = 0;
@@ -98,6 +102,9 @@ public class AffichagePlan extends JScrollPane {
 	private int newxDiff;
 	private int newyDiff;
 	private boolean mouseReleased;
+	
+	private double largeurPlan;
+	private double hauteurPlan;
 
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
@@ -126,6 +133,9 @@ public class AffichagePlan extends JScrollPane {
 		newxDiff = 0;
 		newyDiff =0;
 		mouseReleased = true;
+		
+		largeurPlan = Fenetre.LARGEUR_PLAN;
+		hauteurPlan = Fenetre.HAUTEUR_PLAN;
 		
 		nouveauTempsPickUp = 0;
 		nouveauTempsDelivery = 0;
@@ -251,16 +261,20 @@ public class AffichagePlan extends JScrollPane {
 	}
 
 	public void ZoomIn() {
-		this.zoom = this.zoom * 1.1f;
+		this.zoom = this.zoom * FACTEUR_ZOOM;
 		zoomIn = true;
 		zoomOut = false;
+		this.largeurPlan *= FACTEUR_ZOOM;
+		this.hauteurPlan *= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
 	public void ZoomOut() {
-		this.zoom = this.zoom / 1.1f;
+		this.zoom = this.zoom / FACTEUR_ZOOM;
 		zoomIn = false;
 		zoomOut = true;
+		this.largeurPlan /= FACTEUR_ZOOM;
+		this.hauteurPlan /= FACTEUR_ZOOM;
 		this.repaint();
 	}
 
@@ -279,6 +293,19 @@ public class AffichagePlan extends JScrollPane {
 	public void setRelease(boolean release) {
 		this.mouseReleased = release;
 	}
+	
+	public double getLargeurPlan() {
+		return largeurPlan;
+	}
+
+
+	public double getHauteurPlan() {
+		return hauteurPlan;
+	}
+	
+	public void setIntersectionSelectionne(Intersection intersectionSelectionne) {
+		this.intersectionSelectionne = intersectionSelectionne;
+	}
 
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
@@ -291,6 +318,10 @@ public class AffichagePlan extends JScrollPane {
 		}
 	}
 
+	
+	// Le code de la fonction ci-dessous a été fortement inspiré par le lien suivant
+	// https://stackoverflow.com/questions/6543453/zooming-in-and-zooming-out-within-a-panel
+	
 	public void ajusterZoom(Graphics2D g2d) {
 		AffineTransform at = new AffineTransform();
 
@@ -310,6 +341,9 @@ public class AffichagePlan extends JScrollPane {
 			yOffset = 0;
 			xDiff = 0;
 			yDiff = 0;
+			largeurPlan = Fenetre.LARGEUR_PLAN;
+			hauteurPlan = Fenetre.HAUTEUR_PLAN;
+
 		}
 
 		if (mouseReleased) {
@@ -351,7 +385,14 @@ public class AffichagePlan extends JScrollPane {
 				Color couleurLigne;
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
-					couleurLigne = getArrowColor(cptColor);
+					int epaisseur = 2;
+					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne)){
+						couleurLigne = Color.RED;
+						epaisseur = 4;
+					}else{
+						couleurLigne = getArrowColor(cptColor);
+					}
+					
 					int k = 0;
 					for (int i = 0; i < inters.size() - 1; ++i) {
 						Intersection inter = inters.get(i);
@@ -359,18 +400,17 @@ public class AffichagePlan extends JScrollPane {
 						if (inter.getTronconsSortants().size() > 3 || k == 3) {
 							LineArrow line = new LineArrow((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude(),
-									couleurLigne, 2);
+									couleurLigne, epaisseur);
 							line.draw(g2d);
 							k = 0;
 						} else {
-							g2d.setStroke(new BasicStroke(2));
+							g2d.setStroke(new BasicStroke(epaisseur));
 							g2d.setPaint(couleurLigne);
 							g2d.draw(new Line2D.Float((int) inter.getLongitude(), (int) inter.getLatitude(),
 									(int) inters.get(i + 1).getLongitude(), (int) inters.get(i + 1).getLatitude()));
 							k++;
 						}
 					}
-
 					cptColor++;
 				}
 			}
@@ -465,7 +505,8 @@ public class AffichagePlan extends JScrollPane {
 			g2.setColor(color);
 			g2.setStroke(new BasicStroke(thickness));
 
-			// Desenha a linha. Corta 10 pixels na ponta para a ponta nï¿½o
+			// Desenha a linha. Corta 10 pixels na ponta para a ponta nÃ¯Â¿Â½o
+
 			g2.drawLine(x, y, (int) (endX - 10 * Math.cos(angle)), (int) (endY - 10 * Math.sin(angle)));
 
 			// Obtï¿½m o AffineTransform original.

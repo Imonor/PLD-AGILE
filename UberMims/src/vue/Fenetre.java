@@ -2,57 +2,21 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-
 import controleur.Controleur;
-import model.Chemin;
 import model.Intersection;
 import model.Plan;
-import model.PointEnlevement;
-import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
 import model.ContraintesTournee;
-import model.Intersection;
-import model.Plan;
-import model.Tournee;
-import util.XMLParser;
 import vue.AffichagePlan.Etat;
 
 public class Fenetre extends JFrame {
@@ -105,7 +69,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
 
-	private ModificationTournee panModificationTournee  = new ModificationTournee(this);
+	private ModificationTournee panModificationTournee;
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private Font police = new Font("Verdana", 0, 15);
@@ -119,6 +83,8 @@ public class Fenetre extends JFrame {
 		controleur = new Controleur();
 		champPickUp.setValue(0);
 		champDelivery.setValue(0);
+		
+		panModificationTournee = new ModificationTournee(this, controleur);
 
 
 		// Page globale
@@ -127,7 +93,7 @@ public class Fenetre extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(new BorderLayout());
 
 		// BOUTONS
@@ -487,7 +453,7 @@ public class Fenetre extends JFrame {
 
 	
 	public void afficherModificationTournee() {
-		panModificationTournee.ajouterTournee(plan, controleur);
+		panModificationTournee.ajouterTournee(plan);
 		panModificationTournee.afficherTournee();
 		affichageTournee.setVisible(false);
 		panModificationTournee.setVisible(true);
