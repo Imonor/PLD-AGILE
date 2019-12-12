@@ -60,7 +60,12 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				affichagePlan.setNouveauPickUp(interLaPlusProche);
 				fenetre.afficherAjoutLivraison2();
 				break;
+				
+			case MODIF_ADRESSE:
+				affichagePlan.setNouvelleAdresse(interLaPlusProche);
+				fenetre.getPanModificationTournee().afficherValidationModifAdresse();
 			}
+			
 
 			affichagePlan.repaint();
 			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude()+ " "
