@@ -78,6 +78,7 @@ public class Fenetre extends JFrame {
 	private JLabel texteBienvenue = new JLabel ();
 
 
+
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -513,5 +514,9 @@ public class Fenetre extends JFrame {
 	public void setContraintes(ContraintesTournee contraintes) {
 		this.contraintes = contraintes;
 		this.affichagePlan.setContraintes(contraintes);
+	}
+	
+	public ModificationTournee getPanModificationTournee() {
+		return panModificationTournee;
 	}
 }
