@@ -111,7 +111,7 @@ public class TourneeTest {
 		List<Intersection> is1 = new LinkedList<Intersection>();
 		is1.add(depot);
 		is1.add(i1);
-		Chemin c1 = new Chemin (is1,10);
+		Chemin c1 = new Chemin (is1,3600);
 		
 		List<Intersection> is2 = new LinkedList<Intersection>();
 		is2.add(i1);
@@ -163,7 +163,12 @@ public class TourneeTest {
 		//Test Pour le départ
 		assertEquals(time, t.getHeureDePassage(depot.getId()));
 		
-		time = time.plusSeconds(10);
+		System.out.println(time);
+		
+		
+		time = time.plusSeconds(3600);
+		
+		System.out.println(time);
 		
 		//Test pour tous les points de passage
 		assertEquals(time, t.getHeureDePassage(i1.getId()));
