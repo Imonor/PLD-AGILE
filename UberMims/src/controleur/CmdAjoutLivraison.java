@@ -30,13 +30,18 @@ public class CmdAjoutLivraison implements Commande {
 		contraintes.addLivraison(enlevement, livraison);
 		Chemin newCheminPrec, newCheminModif, newCheminSuiv;
 		List<Chemin> chemins = tournee.getPlusCourteTournee();
-		Chemin cheminFin = chemins.get(chemins.size()-1);
-		chemins.remove(chemins.size()-1);
-		
-		newCheminPrec = plusCourtsChemins.get(cheminFin.getPremiere().getId()).get(enlevement.getId());		
-		newCheminModif = plusCourtsChemins.get(enlevement.getId()).get(livraison.getId());		
-		newCheminSuiv = plusCourtsChemins.get(livraison.getId()).get(cheminFin.getDerniere().getId());
-		
+		if(chemins.isEmpty()) {
+			newCheminPrec = plusCourtsChemins.get(contraintes.getDepot().getId()).get(enlevement.getId());		
+			newCheminModif = plusCourtsChemins.get(enlevement.getId()).get(livraison.getId());		
+			newCheminSuiv = plusCourtsChemins.get(livraison.getId()).get(contraintes.getDepot().getId());	
+		} else {
+			Chemin cheminFin = chemins.get(chemins.size()-1);
+			chemins.remove(chemins.size()-1);
+			
+			newCheminPrec = plusCourtsChemins.get(cheminFin.getPremiere().getId()).get(enlevement.getId());		
+			newCheminModif = plusCourtsChemins.get(enlevement.getId()).get(livraison.getId());		
+			newCheminSuiv = plusCourtsChemins.get(livraison.getId()).get(cheminFin.getDerniere().getId());
+		}
 		chemins.add(newCheminPrec);
 		chemins.add(newCheminModif);
 		chemins.add(newCheminSuiv);
@@ -54,9 +59,11 @@ public class CmdAjoutLivraison implements Commande {
 		chemins.remove(chemins.size()-1);
 		chemins.remove(chemins.size()-1);
 		
-		Chemin newCheminFin = plusCourtsChemins.get(chemins.get(chemins.size()-1).getDerniere().getId()).get(cheminFin.getDerniere().getId());
-		
-		chemins.add(newCheminFin);
+		if(!chemins.isEmpty()) {
+			Chemin newCheminFin = plusCourtsChemins.get(chemins.get(chemins.size()-1).getDerniere().getId()).get(cheminFin.getDerniere().getId());
+			
+			chemins.add(newCheminFin);
+		}
 		
 		tournee.setPlusCourteTournee(chemins);
 		
