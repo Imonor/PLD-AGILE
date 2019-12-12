@@ -200,7 +200,7 @@ public class AffichageTournee extends JPanel {
 			resultsPanel.add(infoGeneral);
 	        
 			for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
-				JLabel jlabel = new JLabel("<html> ");
+				//JLabel jlabel = new JLabel("<html> ");
 				jlabel.setName(Integer.toString(k));
 				
 				jlabel.addMouseListener(new MouseAdapter() {
@@ -349,7 +349,6 @@ public class AffichageTournee extends JPanel {
 	            resultsPanel.add(j);
 	        }
         }
-        
 	}
 	
 	
@@ -379,7 +378,9 @@ public class AffichageTournee extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-	
+		if (intersectionClique != null) {
+			jlabel.setText("<html> Est-ce-que ça marche? </html>");
+		}
 	}
 
 }
