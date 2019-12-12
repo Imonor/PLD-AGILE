@@ -380,7 +380,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				fenetre.apresModifOrdre();
 				fenetre.afficherInfos();
 				break;
-			case "Supprimer la livraison associ�e":
+			case "Supprimer la livraison associee":
 				if(labelSelectionne != null) {
 					int index = Integer.parseInt(labelSelectionne.getName());
 					Map<String, String> elemSelect = ordrePassage.get(index);
