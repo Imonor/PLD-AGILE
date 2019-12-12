@@ -427,9 +427,12 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						this.afficherTournee();
 				        updateUI();
 				        fenetre.setTournee(controleur.getTournee());
+						labelSelectionne=null;
+
 					}
 					labelSelectionne = null;
 				}
+				
 				break;
 			case "Modifier l'emplacement de ce pick-up/delivery":
 				this.panelValiderModifAdresse.setVisible(false);
