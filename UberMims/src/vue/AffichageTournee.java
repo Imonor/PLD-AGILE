@@ -51,6 +51,8 @@ public class AffichageTournee extends JPanel {
 	
 	private Plan plan;
 	
+	JLabel jlabel;
+	
 	public Intersection getIntersectionClique() {
 		return intersectionClique;
 	}
@@ -61,6 +63,7 @@ public class AffichageTournee extends JPanel {
 	
 	public AffichageTournee(Plan plan) {
 		this.plan = plan;
+		jlabel = new JLabel("<html> ");
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
@@ -239,14 +242,8 @@ public class AffichageTournee extends JPanel {
 			    }
 			});
 			
-			boolean gras = false;
-			
 			Chemin c = tournee.getPlusCourteTournee().get(k);
 			List<Intersection> inters =  c.getIntersections();
-			
-			if(inters.contains(intersectionClique)){
-				gras = true;
-			}
 			
 			int taille = inters.size();
 			Intersection inter = inters.get(taille-1);
@@ -370,6 +367,11 @@ public class AffichageTournee extends JPanel {
 	    int ret[] = {trajetHeure, trajetMinute, trajetSecond};
 	    
 	    return ret;
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+	
 	}
 	
 
