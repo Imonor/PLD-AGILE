@@ -385,12 +385,14 @@ public class AffichagePlan extends JScrollPane {
 				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
 				int cptColor = 0;
 				Color couleurLigne;
+				boolean trouve = false;
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
 					int epaisseur = 2;
-					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne)){
+					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne) && !trouve){
 						couleurLigne = Color.RED;
 						epaisseur = 4;
+						trouve = true;
 					}else{
 						couleurLigne = getArrowColor(cptColor);
 					}

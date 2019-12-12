@@ -238,20 +238,21 @@ public class AffichageTournee extends JPanel {
 			 		        
 			    }
 			});
-		 		
-		     
-			System.out.println(k);
+			
+			boolean gras = false;
+			
 			Chemin c = tournee.getPlusCourteTournee().get(k);
 			List<Intersection> inters =  c.getIntersections();
+			
+			if(inters.contains(intersectionClique)){
+				gras = true;
+			}
+			
 			int taille = inters.size();
 			Intersection inter = inters.get(taille-1);
 			Intersection interPrevious = inters.get(taille-2);
 
-			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
-			System.out.println(tronc.getNomRue());
-			System.out.println(inter.getId());
-
-			
+			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());	
 			
 				if (idPointsEnlevement.contains(inter.getId())) {
 					int duree = c.getDuree();
@@ -273,12 +274,11 @@ public class AffichageTournee extends JPanel {
 				    }
 					
 				    int indexation = indexationPointsE.get(inter.getId());
-				    jlabel.setForeground(colorPointsE.get(inter.getId()));
-					jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " :   <br>");
+				    jlabel.setForeground(colorPointsE.get(inter.getId()));			    
+					jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " : <br>");
 					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
-					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
-					
+					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");					
 					
 					heure = heure + tempsLivraison[0];
 				    minute = minute + tempsLivraison[1];

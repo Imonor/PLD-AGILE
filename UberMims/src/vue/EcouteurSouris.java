@@ -179,7 +179,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			double longitude = i.getLongitude();
 			double latitude = i.getLatitude();	
 			double distance = Point2D.distanceSq(xPos, yPos, longitude, latitude);
-
+	
 			if (distance < distanceMin) {
 				distanceMin = distance;
 				interLaPlusProche = i;
@@ -187,4 +187,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		}
 		return interLaPlusProche;
 	}
+	
+	
 }
