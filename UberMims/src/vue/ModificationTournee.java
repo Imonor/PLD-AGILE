@@ -428,7 +428,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				        updateUI();
 				        fenetre.setTournee(controleur.getTournee());
 						labelSelectionne=null;
-}
+
+					}
 				}
 				
 				break;
