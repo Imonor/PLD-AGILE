@@ -69,7 +69,7 @@ public class Fenetre extends JFrame {
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
 
-	private ModificationTournee panModificationTournee  = new ModificationTournee(this);
+	private ModificationTournee panModificationTournee;
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private Font police = new Font("Verdana", 0, 15);
@@ -83,6 +83,8 @@ public class Fenetre extends JFrame {
 		controleur = new Controleur();
 		champPickUp.setValue(0);
 		champDelivery.setValue(0);
+		
+		panModificationTournee = new ModificationTournee(this, controleur);
 
 
 		// Page globale
@@ -91,7 +93,7 @@ public class Fenetre extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(new BorderLayout());
 
 		// BOUTONS
@@ -451,7 +453,7 @@ public class Fenetre extends JFrame {
 
 	
 	public void afficherModificationTournee() {
-		panModificationTournee.ajouterTournee(plan, controleur);
+		panModificationTournee.ajouterTournee(plan);
 		panModificationTournee.afficherTournee();
 		affichageTournee.setVisible(false);
 		panModificationTournee.setVisible(true);

@@ -39,20 +39,20 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private JLabel labelSelectionne;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
-	private int deplacementEtape;
 	private List<JLabel> listeLabels;
 	private Plan plan;
 	private Controleur controleur;
 	private Fenetre fenetre;
 	
-	public ModificationTournee(Fenetre fenetre) {
+	public ModificationTournee(Fenetre fenetre, Controleur controleur) {
+		this.controleur = controleur;
+		this.fenetre = fenetre;
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
-    	deplacementEtape = 0;
+
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
-        this.fenetre = fenetre;
         JPanel panelAll = new JPanel();
         panelAll.setBackground(Color.red);
         panelAll.setLayout(layout);
@@ -64,18 +64,24 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         JButton boutonBas = new JButton("v");
         JButton validerModif = new JButton("Valider les modifications");
         JButton supprLivr = new JButton("Supprimer la livraison associée");
+        JButton modifAdresse = new JButton("Modifier l'emplacement de ce pick-up/delivery");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
-        validerModif.setBounds(30, 45, 40, 20);
+        modifAdresse.setBounds(30, 45, 40, 20);
+        validerModif.setBounds(30, 60, 40, 20);
+        
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
         validerModif.addActionListener(this);
         supprLivr.addActionListener(this);
+        modifAdresse.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
         panelDetail.add(validerModif);
         panelDetail.add(supprLivr);
+        panelDetail.add(modifAdresse);
+        
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -134,9 +140,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Plan plan, Controleur controleur) {
+    public void ajouterTournee(Plan plan) {
     	ordrePassage.clear();
-    	this.controleur = controleur;
     	Tournee tournee = controleur.getTournee();
     	this.plan = plan;
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
@@ -210,17 +215,13 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     }
     
     public void mouseClicked(MouseEvent m) {
-    	if(deplacementEtape == 0) {
-	    	JLabel labelClique = (JLabel) m.getSource();
-	    	if(labelSelectionne != null) {
-	    		precedentLabelSelectionne = labelSelectionne;
-	    		precedentLabelSelectionne.setForeground(Color.CYAN);
-	    	}
-	    	
-	    	labelSelectionne = labelClique;
-	    	labelSelectionne.setForeground(Color.BLUE);
-	    	
+    	JLabel labelClique = (JLabel) m.getSource();
+    	if(labelSelectionne != null) {
+    		precedentLabelSelectionne = labelSelectionne;
+    		precedentLabelSelectionne.setForeground(Color.CYAN);
     	}
+    	labelSelectionne = labelClique;
+    	labelSelectionne.setForeground(Color.BLUE);
     }
 
 	@Override
@@ -379,6 +380,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					}
 				}
 				break;
+			//case "Modifier l'emplacement de ce pick-up/delivery":
+				
 		}
 	}
 	
