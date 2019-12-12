@@ -33,12 +33,15 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 
-public class ModificationTournee extends JPanel implements MouseListener, ActionListener {
+public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
+
 	
 	private JPanel resultsPanel;
 	private JLabel labelSelectionne;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
+
+	private int deplacementEtape;
 	private List<JLabel> listeLabels;
 	private Plan plan;
 	private Controleur controleur;
@@ -50,9 +53,12 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
 
+    	deplacementEtape = 0;
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
+        this.fenetre = fenetre;
+        
         JPanel panelAll = new JPanel();
         panelAll.setBackground(Color.red);
         panelAll.setLayout(layout);
@@ -147,6 +153,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
 
         for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
+        	JLabel l;
+
         	Chemin chemin = tournee.getPlusCourteTournee().get(i);
         	//Récupérer une intersection étape du parcours et l'ajouter à la liste
         	Intersection etape = chemin.getDerniere();
@@ -154,19 +162,38 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	List<Intersection> cheminement = chemin.getIntersections();
         	Intersection interPrecedente = cheminement.get(cheminement.size() - 2);
         	String adresse = interPrecedente.getTronconsSortants().get(etape.getId()).getNomRue();
-        	Map<String, String> map = new HashMap<>();
+        	Map<String, String> map = new HashMap();
+
         	map.put(etape.getId(), adresse);
             ordrePassage.add(map);
         }
     }
     
     public void afficherTournee() {
-    	resultsPanel.removeAll();
+
     	listeLabels.clear();
-    	ContraintesTournee contraintes = controleur.getContraintes();
+    	resultsPanel.removeAll();
         int compteurPointsEnlevement = 1;
         int compteurPointsLivraison = 1;
         int compteur = 0;
+        
+        Map<String, Integer> indexationPointsE =  new HashMap<>();
+		Map<String, Integer> indexationPointsL =  new HashMap<>();
+		int i = 1;
+		for(PointEnlevement crntPointE: controleur.getContraintes().getPointsEnlevement() ) {
+			indexationPointsE.put(crntPointE.getId(), i);
+			for(PointLivraison crntPointL: controleur.getContraintes().getPointsLivraison() ) {
+				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
+					indexationPointsL.put(crntPointL.getId(), i);
+				}
+	    	}
+			i++;
+    	}
+        
+    	resultsPanel.removeAll();
+    	listeLabels.clear();
+    	ContraintesTournee contraintes = controleur.getContraintes();
+
         for (Map<String, String> paire: ordrePassage) {
         	JLabel l;
         	Intersection etape = new Intersection();
@@ -178,6 +205,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	}
         	//Tester si l'étape est un pick up ou un delivery
         	boolean isPtEnlevement = false;
+
         	for(PointEnlevement ptEnlevement: contraintes.getPointsEnlevement()) {
         		if(ptEnlevement.getId().equals(etape.getId())) {
         			isPtEnlevement = true;
@@ -186,10 +214,10 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	}
         	//Créer le label correspondant
         	if(isPtEnlevement) {
-        		l = creerLabelEtape(etape, compteurPointsEnlevement, adresse, "enlevement");
+        		l = creerLabelEtape(etape, indexationPointsE.get(etape.getId()), adresse, "enlevement");
         		compteurPointsEnlevement ++;
         	} else {
-        		l = creerLabelEtape(etape, compteurPointsLivraison, adresse, "livraison");
+        		l = creerLabelEtape(etape, indexationPointsL.get(etape.getId()), adresse, "livraison");
         		compteurPointsLivraison ++;
         	}
         	l.setForeground(Color.CYAN);
@@ -199,7 +227,10 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
             resultsPanel.add(l);
             listeLabels.add(l);
             compteur++;
+
         }
+        repaint();
+
     }
     
     private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {

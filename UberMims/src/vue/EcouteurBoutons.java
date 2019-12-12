@@ -85,7 +85,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger un autre plan de la ville":
 				System.out.println("Chargement d'un autre plan de la ville");
-				
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixPlan2 = new JFileChooser();
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
 				choixPlan2.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
@@ -116,6 +116,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger une demande de tournee":
 				System.out.println("Chargement d'une demande de tournee");
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixTournee = new JFileChooser();
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
 				
@@ -200,10 +201,13 @@ public class EcouteurBoutons implements ActionListener{
 				
 			break;
 
-			case "Modifier l'ordre de la tournée":
-				System.out.println("Modifier tournée");
+			case "Annuler la derniere modification":
+				System.out.println("Annuler derniere modification");
+			break;
+			case "Modifier la tournee":
+				System.out.println("Modifier tournee");
 				fenetre.afficherModificationTournee();
-			break;			
+			break;
 		}
 	}
 }
