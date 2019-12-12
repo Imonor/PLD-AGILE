@@ -64,16 +64,16 @@ public class AffichageTournee extends JPanel {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-		System.out.println("OK");
+		//System.out.println("OK");
         this.setFont(new Font("Avenir",1,15));
 
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         this.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
- 
+        		
         JPanel panelAll = new JPanel();
-        panelAll.setBackground(Color.red);
+        panelAll.setBackground(backgroundTurquoiseClair);
         panelAll.setLayout(layout);
         
         JPanel panelDetail = new JPanel();
@@ -221,15 +221,15 @@ public class AffichageTournee extends JPanel {
 					 	textInfo.removeAll();
 					 	String lab = (String) e.getSource().toString();
 
-				    	System.out.println("///////////ok///////////" + lab);
+				    	//System.out.println("///////////ok///////////" + lab);
 				    	String indBeforeTest = lab.substring(19, 21);
 				    	if (indBeforeTest.contains(",")) {
 				    		indBeforeTest = indBeforeTest.substring(0, 1);
 				    	}
 					 	int index = Integer.parseInt(indBeforeTest);
-					 	System.out.println(index);
+					 	//System.out.println(index);
 					 	Chemin current = tournee.getPlusCourteTournee().get(index);
-					 	System.out.println(current.getPremiere().getId());
+					 	//System.out.println(current.getPremiere().getId());
 					 	
 					 	int tailleC = current.getIntersections().size();
 					 	Chemin previous;
@@ -255,9 +255,9 @@ public class AffichageTournee extends JPanel {
 						 	}
 					 		tmp = crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue();     	
 					 	}
-					 	System.out.println(arrivee);
-					 	System.out.println(depart);
-					 	System.out.println(itineraire);
+					 	//System.out.println(arrivee);
+					 	//System.out.println(depart);
+					 	//System.out.println(itineraire);
 					 		        
 					 	itineraire = itineraire.substring(0, itineraire.length()-7);
 					 	textInfo.setText(("<html> <b> <font color=\"424242\"> Pour acceder a " + arrivee + " a partir de " + depart + " : </b><br> " + itineraire + "</font> </html>"));
@@ -266,7 +266,7 @@ public class AffichageTournee extends JPanel {
 				});
 			 		
 			     
-				System.out.println(k);
+				//System.out.println(k);
 				Chemin c = tournee.getPlusCourteTournee().get(k);
 				List<Intersection> inters =  c.getIntersections();
 				int taille = inters.size();
@@ -274,8 +274,8 @@ public class AffichageTournee extends JPanel {
 				Intersection interPrevious = inters.get(taille-2);
 	
 				Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
-				System.out.println(tronc.getNomRue());
-				System.out.println(inter.getId());
+				//System.out.println(tronc.getNomRue());
+				//System.out.println(inter.getId());
 	
 				
 				
@@ -321,11 +321,11 @@ public class AffichageTournee extends JPanel {
 			JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 			resultsPanel.add(time);
 			
-			for (int extra = 0; extra < 4 ; extra++) {
+			/*for (int extra = 0; extra < 4 ; extra++) {
 	        	JLabel j = new JLabel("");
 	        	j.setPreferredSize(new Dimension(400, 100));
 	            resultsPanel.add(j);
-	        }
+	        }*/
         }
         
 	}

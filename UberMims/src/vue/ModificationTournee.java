@@ -48,7 +48,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private JPanel panelValiderModifAdresse;
 	
 	private JLabel labelSelectionne;
-	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on s�lectionne un autre bouton
+	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 
 	private int deplacementEtape;
@@ -385,7 +385,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					int index = Integer.parseInt(labelSelectionne.getName());
 					Map<String, String> elemSelect = ordrePassage.get(index);
 					
-					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associ�s � cette livraison ?") == JOptionPane.OK_OPTION) {
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associes a cette livraison ?") == JOptionPane.OK_OPTION) {
 						ordrePassage.remove(index);
 						Intersection elemSuppr = null;
 						PointEnlevement enlevement = null;
@@ -428,6 +428,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				        updateUI();
 				        fenetre.setTournee(controleur.getTournee());
 					}
+					labelSelectionne = null;
 				}
 				break;
 			case "Modifier l'emplacement de ce pick-up/delivery":
@@ -469,14 +470,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		if(deplacement.equals("^")) {
 			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
 				if(pl.equals(elemSelect) && autreElem.getId().equals(pl.getIdEnlevement())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enl�vement !");
+					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlevement !");
 					break;
 				}
 			}
 		} else {
 			for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
 				if(pe.equals(elemSelect) && autreElem.getId().equals(pe.getIdLivraison())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point d'enl�vement est apr�s le point de livraison !");
+					JOptionPane.showMessageDialog(null, "Attention, le point d'enlevement est apres le point de livraison !");
 					break;
 				}
 			}
