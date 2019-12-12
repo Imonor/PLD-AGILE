@@ -105,7 +105,7 @@ public class Fenetre extends JFrame {
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
-		JButton boutonModifierTournee = new JButton("Modifier l'ordre de la tournee");
+		JButton boutonModifierTournee = new JButton("Modifier la tournee");
 		JButton boutonAnnulerModification = new JButton("Annuler la dernière modification");
 
 //************** ACCUEIL ****************//

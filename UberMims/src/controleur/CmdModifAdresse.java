@@ -1,5 +1,6 @@
 package controleur;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,11 +28,11 @@ public class CmdModifAdresse implements Commande {
 		this.enlevement = e;
 		for(PointLivraison l : c.getPointsLivraison())
 		{
-			if(l.getId() == e.getIdLivraison()) 
+			if(l.getId().equals(e.getIdLivraison()))
 				this.livraison = l;
 		}
 		newEnlevement = new PointEnlevement(newInter, livraison.getId(), enlevement.getTempsEnlevement());
-		newLivraison = livraison;
+		newLivraison = new PointLivraison(livraison, newInter.getId(), livraison.getTempsLivraison());
 		this.plusCourtsChemins = plusCourtsChemins;
 		isEnlevement = true;
 	}
@@ -42,11 +43,11 @@ public class CmdModifAdresse implements Commande {
 		this.livraison = l;
 		for(PointEnlevement e : c.getPointsEnlevement())
 		{
-			if(e.getId() == l.getIdEnlevement()) 
+			if(e.getId().equals(l.getIdEnlevement()))
 				this.enlevement = e;
 		}
-		newEnlevement = enlevement;
 		newLivraison = new PointLivraison(newInter, enlevement.getId(), livraison.getTempsLivraison());
+		newEnlevement = new PointEnlevement(enlevement, newInter.getId(), enlevement.getTempsEnlevement());
 		this.plusCourtsChemins = plusCourtsChemins;
 		isEnlevement = false;
 	}
@@ -59,10 +60,10 @@ public class CmdModifAdresse implements Commande {
 		if(isEnlevement) {
 			int i = 0;
 			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getDerniere() == enlevement) {
+				if(c.getDerniere().equals(enlevement)) {
 					Chemin newC = plusCourtsChemins.get(c.getPremiere().getId()).get(newEnlevement.getId());
 					tournee.getPlusCourteTournee().set(i, newC);
-				} else if(c.getPremiere() == enlevement) {
+				} else if(c.getPremiere().equals(enlevement)) {
 					Chemin newC = plusCourtsChemins.get(newEnlevement.getId()).get(c.getDerniere().getId());
 					tournee.getPlusCourteTournee().set(i, newC);
 				}
@@ -71,10 +72,10 @@ public class CmdModifAdresse implements Commande {
 		} else {
 			int i = 0;
 			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getDerniere() == livraison) {
+				if(c.getDerniere().equals(livraison)) {
 					Chemin newC = plusCourtsChemins.get(c.getPremiere().getId()).get(newLivraison.getId());
 					tournee.getPlusCourteTournee().set(i, newC);
-				} else if(c.getPremiere() == livraison) {
+				} else if(c.getPremiere().equals(livraison)) {
 					Chemin newC = plusCourtsChemins.get(newLivraison.getId()).get(c.getDerniere().getId());
 					tournee.getPlusCourteTournee().set(i, newC);
 				}
@@ -91,10 +92,10 @@ public class CmdModifAdresse implements Commande {
 		if(isEnlevement) {
 			int i = 0;
 			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getDerniere() == newEnlevement) {
+				if(c.getDerniere().equals(newEnlevement)) {
 					Chemin newC = plusCourtsChemins.get(c.getPremiere().getId()).get(enlevement.getId());
 					tournee.getPlusCourteTournee().set(i, newC);
-				} else if(c.getPremiere() == newEnlevement) {
+				} else if(c.getPremiere().equals(newEnlevement)) {
 					Chemin newC = plusCourtsChemins.get(enlevement.getId()).get(c.getDerniere().getId());
 					tournee.getPlusCourteTournee().set(i, newC);
 				}
@@ -103,17 +104,64 @@ public class CmdModifAdresse implements Commande {
 		} else {
 			int i = 0;
 			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getDerniere() == newLivraison) {
+				if(c.getDerniere().equals(newLivraison)) {
 					Chemin newC = plusCourtsChemins.get(c.getPremiere().getId()).get(livraison.getId());
 					tournee.getPlusCourteTournee().set(i, newC);
-				} else if(c.getPremiere() == newLivraison) {
+				} else if(c.getPremiere().equals(newLivraison)) {
 					Chemin newC = plusCourtsChemins.get(livraison.getId()).get(c.getDerniere().getId());
 					tournee.getPlusCourteTournee().set(i, newC);
 				}
 				++i;
 			}
 		}
-
 	}
+	
+	public static void main(String[] args) {
+		Controleur c = new Controleur();
+		try {
+			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
+			c.chargerTournee("fichiersXML2019/demandePetit2.xml");
+		} catch(Exception e) {
+			System.out.println();
+		}
+		c.calculerTournee();
+		System.out.println("\n\n\n\n\n\n");
+		for(Chemin ch : c.getTournee().getPlusCourteTournee())
+			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
+		
+		System.out.println();
+		ContraintesTournee contraintes = c.getContraintes();
+		PointEnlevement e = c.getContraintes().getPointsEnlevement().get(0);
+		Intersection inter = Controleur.plan.getIntersections().get("342868447");
 
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		intersectionsAVisiter.put(inter.getId(), inter);
+		Dijkstra d = new Dijkstra();
+		Map<String, Map<String, Chemin>> plusCourtsChemins = d.plusCourtsCheminsPlan(Controleur.plan.getIntersections(), intersectionsAVisiter);
+		
+		
+		CmdModifAdresse cmd = new CmdModifAdresse(c.getContraintes(), c.getTournee(), e, inter, plusCourtsChemins);
+		cmd.doCode();
+
+		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
+			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
+		}
+		System.out.println();
+		cmd.undoCode();
+		
+		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
+			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
+		}
+	}	
+	
+	
+	
 }
