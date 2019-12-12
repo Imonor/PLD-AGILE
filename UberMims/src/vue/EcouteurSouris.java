@@ -9,9 +9,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-
 import model.Intersection;
+import java.awt.geom.Point2D;
 
 public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseMotionListener {
 
@@ -48,7 +47,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		Intersection interLaPlusProche = trouverIntersectionLaPlusProche(xPos, yPos);
 		
 		if (affichagePlan.getPlanClickable()) {
-			
 			affichagePlan.setIntersectionSelectionne(null);
 			switch (affichagePlan.getEtat()) {
 			case LIVRAISON:
@@ -74,8 +72,8 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		else{
 			affichagePlan.setIntersectionSelectionne(interLaPlusProche);
 		}
-
 	}
+
 
 	@Override
 	public void mousePressed(MouseEvent e) {
