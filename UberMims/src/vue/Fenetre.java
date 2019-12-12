@@ -76,6 +76,7 @@ public class Fenetre extends JFrame {
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
+	private JButton boutonAnnulerModification = new JButton("⟲");
 
 
 
@@ -107,7 +108,6 @@ public class Fenetre extends JFrame {
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 		JButton boutonModifierTournee = new JButton("Modifier la tournee");
-		JButton boutonAnnulerModification = new JButton("Annuler la derniere modification");
 
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
@@ -157,7 +157,6 @@ public class Fenetre extends JFrame {
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		//bouton annuler la derniere modification
 		boutonAnnulerModification.setVisible(true);
-		boutonAnnulerModification.setEnabled(false);
 		boutonAnnulerModification.setBounds(95, 71, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
@@ -365,6 +364,12 @@ public class Fenetre extends JFrame {
 			panCalculTournee.setVisible(false);
 			panModificationTournee.setVisible(false);
 			panHautDroite.setVisible(true);
+			if(controleur.getCmdListe().isEmpty()) {
+				boutonAnnulerModification.setEnabled(false);
+			} else {
+				boutonAnnulerModification.setEnabled(true);
+			}
+
 			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
 			this.setContentPane(panPrincipal);

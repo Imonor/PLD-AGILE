@@ -163,6 +163,10 @@ public class Controleur {
 	public ContraintesTournee getContraintes() {
 		return contraintes;
 	}
+	
+	public CmdListe getCmdListe() {
+		return this.cmdListe;
+	}
 
 	public Map<String, Map<String, Chemin>> getPlusCourtsChemins() {
 		return plusCourtsChemins;
