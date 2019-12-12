@@ -385,7 +385,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					int index = Integer.parseInt(labelSelectionne.getName());
 					Map<String, String> elemSelect = ordrePassage.get(index);
 					
-					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associï¿½s ï¿½ cette livraison ?") == JOptionPane.OK_OPTION) {
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associés à cette livraison ?") == JOptionPane.OK_OPTION) {
 						ordrePassage.remove(index);
 						Intersection elemSuppr = null;
 						PointEnlevement enlevement = null;

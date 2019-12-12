@@ -102,25 +102,26 @@ public class CmdSupprimeLivraison implements Commande {
 				break;
 			}
 		}
-		
-		if(ePrec.equals(contraintes.getDepot())) {
-			chemins.add(0, newPrec);
-		}
-		for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
-			Chemin c = it.next();
-			if(c.getDerniere().equals(newPrec.getPremiere())) {
-				it.add(newPrec);
-				if(newSuiv == null)
+		if(!chemins.isEmpty()) {
+			if(ePrec.equals(contraintes.getDepot())) {
+				chemins.add(0, newPrec);
+			}
+			for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
+				Chemin c = it.next();
+				if(c.getDerniere().equals(newPrec.getPremiere())) {
+					it.add(newPrec);
+					if(newSuiv == null)
+						break;
+				}
+				if(!lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
+					it.add(newSuiv);
 					break;
+				}
 			}
-			if(!lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
-				it.add(newSuiv);
-				break;
+			
+			if(lSuiv.equals(contraintes.getDepot())) {
+				chemins.add(newSuiv);
 			}
-		}
-		
-		if(lSuiv.equals(contraintes.getDepot())) {
-			chemins.add(newSuiv);
 		}
 	}
 
