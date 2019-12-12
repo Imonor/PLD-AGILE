@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -62,16 +63,19 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
         JButton validerModif = new JButton("Valider les modifications");
+        JButton supprLivr = new JButton("Supprimer la livraison associée");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
         validerModif.setBounds(30, 45, 40, 20);
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
         validerModif.addActionListener(this);
+        supprLivr.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
         panelDetail.add(validerModif);
+        panelDetail.add(supprLivr);
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -324,6 +328,56 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 			case "Valider les modifications":
 				fenetre.apresModifOrdre();
 				fenetre.afficherInfos();
+				break;
+			case "Supprimer la livraison associée":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					Map<String, String> elemSelect = ordrePassage.get(index);
+					
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associés à cette livraison ?") == JOptionPane.OK_OPTION) {
+						ordrePassage.remove(index);
+						Intersection elemSuppr = null;
+						PointEnlevement enlevement = null;
+						PointLivraison livraison = null;
+						boolean isSuppr = false;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		elemSuppr = plan.getIntersections().get(etapeId);
+			        	}
+			        	
+						for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
+							if(pl.equals(elemSuppr)) {
+								isSuppr = true;
+								for(ListIterator<Map<String, String>> it = ordrePassage.listIterator(); it.hasNext();) {
+									Map<String, String> elem = it.next();
+									if(elem.containsKey(pl.getIdEnlevement())) {
+										it.remove();
+										break;
+									}
+								}
+								controleur.supprimerLivraison(pl);
+								break;
+							}
+						}
+						if(!isSuppr) {
+							for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
+								if(pe.equals(elemSuppr)) {
+									for(ListIterator<Map<String, String>> it = ordrePassage.listIterator(); it.hasNext();) {
+										Map<String, String> elem = it.next();
+										if(elem.containsKey(pe.getIdLivraison())) {
+											it.remove();
+											break;
+										}
+									}
+									controleur.supprimerLivraison(pe);
+									break;
+								}
+							}
+						}
+						this.afficherTournee();
+				        updateUI();
+			        fenetre.setTournee(controleur.getTournee());
+					}
+				}
 				break;
 		}
 	}
