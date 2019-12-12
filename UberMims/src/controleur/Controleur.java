@@ -59,8 +59,12 @@ public class Controleur {
 
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
-		tournee = tsp.chercheSolution(500, contraintes, plusCourtsChemins);
+		tournee = tsp.chercheSolution(2000, contraintes, plusCourtsChemins);
+		int dureeEnlevementLivraison = 0;
 		
+		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
+			dureeEnlevementLivraison += p.getTempsEnlevement();
+		}
 		tournee.calculDuree();
 		
 		for (Chemin c : tournee.getPlusCourteTournee()) {

@@ -49,7 +49,7 @@ public class AffichagePlan extends JScrollPane {
 	 * Page d'accueil : chargement du plan
 	 */
 	public enum Etat {
-		LIVRAISON, ENLEVEMENT;
+		LIVRAISON, ENLEVEMENT, MODIF_ADRESSE;
 	}
 
 	private Etat etat;
@@ -75,6 +75,10 @@ public class AffichagePlan extends JScrollPane {
 	// Point de livraison ajoute
 	private Intersection nouvelleLivraison;
 	
+	// Nouvelle intersection pour un pick-up/delivery
+	private Intersection nouvelleAdresse;
+	
+
 	// InterSection du chemin à mettre en surbrillance
 	private Intersection intersectionSelectionne;
 
@@ -307,6 +311,14 @@ public class AffichagePlan extends JScrollPane {
 	public void setIntersectionSelectionne(Intersection intersectionSelectionne) {
 		this.intersectionSelectionne = intersectionSelectionne;
 	}
+	
+	public Intersection getNouvelleAdresse() {
+		return nouvelleAdresse;
+	}
+
+	public void setNouvelleAdresse(Intersection nouvelleAdresse) {
+		this.nouvelleAdresse = nouvelleAdresse;
+	}
 
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
@@ -455,6 +467,13 @@ public class AffichagePlan extends JScrollPane {
 						nouveauPickUp.getLatitude() - 5, 10, 10);
 				g2d.setPaint(Color.RED);
 				g2d.draw(pointEnlevement);
+			}
+			
+			if (nouvelleAdresse != null) {
+				Ellipse2D.Double pointNouvelleAdresse = new Ellipse2D.Double(nouvelleAdresse.getLongitude() - 5,
+						nouvelleAdresse.getLatitude() - 5, 10, 10);
+				g2d.setPaint(Color.RED);
+				g2d.draw(pointNouvelleAdresse);
 			}
 		}
 	}

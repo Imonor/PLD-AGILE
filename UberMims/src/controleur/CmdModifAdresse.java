@@ -55,6 +55,7 @@ public class CmdModifAdresse implements Commande {
 	@Override
 	public void doCode() {
 		contraintes.removeLivraison(enlevement, livraison);
+		System.out.println("enlev="+newEnlevement.getId());
 		contraintes.addLivraison(newEnlevement, newLivraison);
 		
 		if(isEnlevement) {
