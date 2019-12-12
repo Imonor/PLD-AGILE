@@ -103,7 +103,9 @@ public class CmdSupprimeLivraison implements Commande {
 			}
 		}
 		
-		
+		if(ePrec.equals(contraintes.getDepot())) {
+			chemins.add(0, newPrec);
+		}
 		for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
 			Chemin c = it.next();
 			if(c.getDerniere().equals(newPrec.getPremiere())) {
@@ -111,10 +113,14 @@ public class CmdSupprimeLivraison implements Commande {
 				if(newSuiv == null)
 					break;
 			}
-			if(c.getDerniere().equals(newSuiv.getPremiere())) {
+			if(!lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
 				it.add(newSuiv);
 				break;
 			}
+		}
+		
+		if(lSuiv.equals(contraintes.getDepot())) {
+			chemins.add(newSuiv);
 		}
 	}
 
@@ -167,7 +173,7 @@ public class CmdSupprimeLivraison implements Commande {
 		Controleur c = new Controleur();
 		try {
 			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandePetit1.xml");
+			c.chargerTournee("fichiersXML2019/demandePetit2.xml");
 		} catch(Exception e) {
 			System.out.println();
 		}
@@ -177,11 +183,11 @@ public class CmdSupprimeLivraison implements Commande {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
 		
 		System.out.println();
-		PointEnlevement e = c.getContraintes().getPointsEnlevement().get(0);
-		System.out.println(e.getId() + "    yeet    " + e.getIdLivraison());
+		PointLivraison l = c.getContraintes().getPointsLivraison().get(1);
+		System.out.println(l.getId() + "    yeet    " + l.getIdEnlevement());
 		
 		
-		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), e, c.getPlusCourtsChemins());
+		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), l, c.getPlusCourtsChemins());
 		cmd.doCode();
 
 		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
