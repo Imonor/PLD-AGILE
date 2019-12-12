@@ -32,13 +32,23 @@ import model.Plan;
 import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
+import vue.AffichagePlan.Etat;
 
 public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
 
 	
+	
+	private JPanel panelAll;
 	private JPanel resultsPanel;
+	
+	private JPanel panelDetail;
+	
+	private JPanel panelModifAdresse;
+	private JPanel panelInfoModifAdresse;
+	private JPanel panelValiderModifAdresse;
+	
 	private JLabel labelSelectionne;
-	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sélectionne un autre bouton
+	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on sï¿½lectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 
 	private int deplacementEtape;
@@ -53,23 +63,32 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
 
-    	deplacementEtape = 0;
+    	//--------------------LAYOUT-----------------------------//
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
-        this.fenetre = fenetre;
         
-        JPanel panelAll = new JPanel();
+      //--------------------PANEL ALL-----------------------------//
+        panelAll = new JPanel();
         panelAll.setBackground(Color.red);
         panelAll.setLayout(layout);
         
-        JPanel panelDetail = new JPanel();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.weighty=2.5;
+        gbc.fill = GridBagConstraints.BOTH;
+        
+        this.add(panelAll, gbc);
+        
+      //--------------------PANEL DETAIL-----------------------------//
+        panelDetail = new JPanel();
         panelDetail.setBackground(Color.yellow);
 
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
         JButton validerModif = new JButton("Valider les modifications");
-        JButton supprLivr = new JButton("Supprimer la livraison associée");
+        JButton supprLivr = new JButton("Supprimer la livraison associee");
         JButton modifAdresse = new JButton("Modifier l'emplacement de ce pick-up/delivery");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
@@ -88,19 +107,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         panelDetail.add(supprLivr);
         panelDetail.add(modifAdresse);
         
-        
-        JPanel separation = new JPanel();
-        separation.setBackground(Color.black);
-        
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.weighty=2.5;
-        gbc.fill = GridBagConstraints.BOTH;
-
-        
-        this.add(panelAll, gbc);
-
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0.5;
@@ -109,16 +115,39 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         
         this.add(panelDetail, gbc);
         
-        //----------------------
+      //--------------------PANEL MODIF ADRESSE-----------------------------//
+        panelModifAdresse = new JPanel();
+        panelModifAdresse.setBackground(Color.red);
+        panelModifAdresse.setVisible(false);
         
-        JPanel topMargin = new JPanel();
-        panelAll.setBackground(Color.pink);
+        JButton annulerModifAdresse = new JButton("Annuler la modification de l'adresse");
+        annulerModifAdresse.addActionListener(this);
+        
+        panelInfoModifAdresse = new JPanel();
+        JLabel infoModifAdresse = new JLabel("Veuillez cliquer sur l'intersection ou vous souhaitez realiser le pick-up/delivery");
+        panelInfoModifAdresse.add(infoModifAdresse);
+        
+        
+        panelValiderModifAdresse = new JPanel();
+        panelValiderModifAdresse.setVisible(false);
+        JButton validerModifAdresse = new JButton("Valider la modification de l'adresse");
+        validerModifAdresse.addActionListener(this);
+        panelValiderModifAdresse.add(validerModifAdresse);
+        
+        
+        panelModifAdresse.add(panelInfoModifAdresse);
+        panelModifAdresse.add(panelValiderModifAdresse);
+        panelModifAdresse.add(annulerModifAdresse);
+             
         gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty=0.0;
-        gbc.weightx=0.0;
-        panelAll.add(topMargin, gbc);
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+        gbc.weighty=1.0;
+        gbc.fill = GridBagConstraints.BOTH;
         
+        this.add(panelModifAdresse, gbc);
+        
+      //--------------------AFFICHAGE DES ETAPES-----------------------------//
         JPanel textArea = new JPanel();
         textArea.setLayout(new BorderLayout());
         textArea.setBackground(Color.cyan);
@@ -129,19 +158,9 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         panelAll.add(textArea, gbc);
         
         
-        JPanel bottomMargin = new JPanel();
-        panelAll.setBackground(Color.magenta);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty=0.0;
-        gbc.weightx= 0.0;
-        panelAll.add(bottomMargin, gbc);
-        
         resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollpane = new JScrollPane(resultsPanel);
-
-
         
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
@@ -150,15 +169,15 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	ordrePassage.clear();
     	Tournee tournee = controleur.getTournee();
     	this.plan = plan;
-        //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
+        //Retirer la derniï¿½re ï¿½tape du parcours, qui est arrive sur le point de dï¿½pï¿½t
 
         for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
         	JLabel l;
 
         	Chemin chemin = tournee.getPlusCourteTournee().get(i);
-        	//Récupérer une intersection étape du parcours et l'ajouter à la liste
+        	//Rï¿½cupï¿½rer une intersection ï¿½tape du parcours et l'ajouter ï¿½ la liste
         	Intersection etape = chemin.getDerniere();
-        	//Récupérer l'adresse (en prenant le nom de rue du dernier troncon menant à l'intersection)
+        	//Rï¿½cupï¿½rer l'adresse (en prenant le nom de rue du dernier troncon menant ï¿½ l'intersection)
         	List<Intersection> cheminement = chemin.getIntersections();
         	Intersection interPrecedente = cheminement.get(cheminement.size() - 2);
         	String adresse = interPrecedente.getTronconsSortants().get(etape.getId()).getNomRue();
@@ -203,7 +222,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         		etape = plan.getIntersections().get(etapeId);
         		adresse = paire.get(etapeId);
         	}
-        	//Tester si l'étape est un pick up ou un delivery
+        	//Tester si l'ï¿½tape est un pick up ou un delivery
         	boolean isPtEnlevement = false;
 
         	for(PointEnlevement ptEnlevement: contraintes.getPointsEnlevement()) {
@@ -212,7 +231,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         			break;
         		}
         	}
-        	//Créer le label correspondant
+        	//Crï¿½er le label correspondant
         	if(isPtEnlevement) {
         		l = creerLabelEtape(etape, indexationPointsE.get(etape.getId()), adresse, "enlevement");
         		compteurPointsEnlevement ++;
@@ -236,9 +255,9 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {
     	JLabel label = new JLabel("<html> ");
     	if(type.equals("enlevement")) {
-    		label.setText(label.getText() + "Pick Up n° " + position + " :   <br>");
+    		label.setText(label.getText() + "Pick Up numero " + position + " :   <br>");
     	} else {
-    		label.setText(label.getText() + "Delivery n° " + position + " :   <br>");
+    		label.setText(label.getText() + "Delivery numero " + position + " :   <br>");
     	}
 			
 		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br>");	
@@ -361,12 +380,12 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				fenetre.apresModifOrdre();
 				fenetre.afficherInfos();
 				break;
-			case "Supprimer la livraison associée":
+			case "Supprimer la livraison associee":
 				if(labelSelectionne != null) {
 					int index = Integer.parseInt(labelSelectionne.getName());
 					Map<String, String> elemSelect = ordrePassage.get(index);
 					
-					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associés à cette livraison ?") == JOptionPane.OK_OPTION) {
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associï¿½s ï¿½ cette livraison ?") == JOptionPane.OK_OPTION) {
 						ordrePassage.remove(index);
 						Intersection elemSuppr = null;
 						PointEnlevement enlevement = null;
@@ -407,29 +426,86 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						}
 						this.afficherTournee();
 				        updateUI();
-			        fenetre.setTournee(controleur.getTournee());
+				        fenetre.setTournee(controleur.getTournee());
 					}
 				}
 				break;
-			//case "Modifier l'emplacement de ce pick-up/delivery":
+			case "Modifier l'emplacement de ce pick-up/delivery":
+				this.panelValiderModifAdresse.setVisible(false);
+				if(labelSelectionne != null) {
+					fenetre.getAffichagePlan().setPlanClickable(true);
+					panelDetail.setVisible(false);
+					panelModifAdresse.setVisible(true);
+					fenetre.getAffichagePlan().setEtat(Etat.MODIF_ADRESSE);
+				} else {
+					JOptionPane.showMessageDialog(null, "Veuillez saisir un point de pick-up/delivery !");
+				}
+				break;
 				
+			case "Annuler la modification de l'adresse":
+				fenetre.getAffichagePlan().setPlanClickable(false);
+				fenetre.getAffichagePlan().setNouvelleAdresse(null);
+				fenetre.getAffichagePlan().repaint();
+				labelSelectionne = null;
+				panelDetail.setVisible(true);
+				panelModifAdresse.setVisible(false);
+				break;
+				
+			case "Valider la modification de l'adresse":
+				fenetre.getAffichagePlan().setPlanClickable(false);
+				modifierAdresse();
+				fenetre.getAffichagePlan().setNouvelleAdresse(null);
+				fenetre.getAffichagePlan().repaint();
+				labelSelectionne = null;
+				panelDetail.setVisible(true);
+				panelModifAdresse.setVisible(false);
+				ajouterTournee(fenetre.getPlan());
+				afficherTournee();
 		}
 	}
+	
 	
 	private void verifierPrecedencePickupDelivery(Intersection elemSelect, Intersection autreElem, String deplacement){
 		if(deplacement.equals("^")) {
 			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
 				if(pl.equals(elemSelect) && autreElem.getId().equals(pl.getIdEnlevement())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlèvement !");
+					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlï¿½vement !");
 					break;
 				}
 			}
 		} else {
 			for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
 				if(pe.equals(elemSelect) && autreElem.getId().equals(pe.getIdLivraison())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point d'enlèvement est après le point de livraison !");
+					JOptionPane.showMessageDialog(null, "Attention, le point d'enlï¿½vement est aprï¿½s le point de livraison !");
 					break;
 				}
+			}
+		}
+	}
+	
+	
+	public void afficherValidationModifAdresse() {
+		panelValiderModifAdresse.setVisible(true);
+	}
+	
+	private void modifierAdresse() {
+		Intersection nouvelleAdresse = fenetre.getAffichagePlan().getNouvelleAdresse();
+		int index = Integer.parseInt(labelSelectionne.getName());
+		Map<String, String> elemSelect = ordrePassage.get(index);
+		
+		String intersectionAmodifierId = elemSelect.keySet().iterator().next();
+		Intersection intersectionAModifier = plan.getIntersections().get(intersectionAmodifierId);
+		
+		for(PointEnlevement ptE: controleur.getContraintes().getPointsEnlevement()) {
+			if(ptE.equals(intersectionAModifier)) {
+				controleur.modifierAdresse(ptE, nouvelleAdresse);
+				return;
+			}
+		}
+		for(PointLivraison ptL: controleur.getContraintes().getPointsLivraison()) {
+			if(ptL.equals(intersectionAModifier)) {
+				controleur.modifierAdresse(ptL, nouvelleAdresse);
+				return;
 			}
 		}
 	}

@@ -4,26 +4,29 @@ import java.util.LinkedList;
 
 public class CmdListe {
 
-	private LinkedList<Commande>liste;
+	private Commande liste[];
 	private int i;
 	
 	public CmdListe () {
-		liste = new LinkedList<Commande>();
+		liste = new Commande[20];
 		i = -1;
 	}
 	
+	public boolean isEmpty() {
+		return (i < 0);
+	}
+	
 	public void addCommande(Commande commande) {
-		liste.add(commande);
-		i = liste.size()-1;
+		liste[++i] = commande;
 		commande.doCode();
 	}
 	
 	public void undo() {
 		if(i>=0)
-			liste.get(i--).undoCode();
+			liste[i--].undoCode();
 	}
 	public void redo() {
-		if(i<liste.size()-1)
-			liste.get(++i).doCode();
+		if(i<20)
+			liste[++i].doCode();
 	}	
 }
