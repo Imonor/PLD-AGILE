@@ -64,7 +64,7 @@ public class AffichageTournee extends JPanel {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-		System.out.println("OK");
+		System.out.println("OK------------------" + contraintestournee.getPointsEnlevement().get(contraintestournee.getPointsEnlevement().size()-1).getTempsEnlevement());
         this.setFont(new Font("Avenir",1,15));
 
         GridBagLayout layout = new GridBagLayout();
@@ -182,7 +182,9 @@ public class AffichageTournee extends JPanel {
 				ptEnlevement.put(contraintestournee.getPointsEnlevement().get(i).getId(), contraintestournee.getPointsEnlevement().get(i));
 			}
 			
-			for(int j = 0; j < contraintestournee.getPointsEnlevement().size(); j++) {
+			System.out.println("okkkkkkk" + ptEnlevement.get(contraintestournee.getPointsEnlevement().get(contraintestournee.getPointsEnlevement().size()-1).getId()).getTempsEnlevement());
+			
+			for(int j = 0; j < contraintestournee.getPointsLivraison().size(); j++) {
 				idPointsLivraison.add(contraintestournee.getPointsLivraison().get(j).getId());
 				System.out.println(contraintestournee.getPointsLivraison().get(j).getId());
 				ptLivraison.put(contraintestournee.getPointsLivraison().get(j).getId(), contraintestournee.getPointsLivraison().get(j));
@@ -295,10 +297,9 @@ public class AffichageTournee extends JPanel {
 						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
 
-					}else if (idPointsLivraison.contains(inter.getId())) {
+					} else if (idPointsLivraison.contains(inter.getId())) {
 						int duree = c.getDuree();
 						int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
-						
 						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
 						
