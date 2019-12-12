@@ -50,8 +50,27 @@ public class AffichageTournee extends JPanel {
 	private Intersection intersectionClique;
 	
 	private Plan plan;
+	private Tournee tournee;
+	private ContraintesTournee contraintestournee;
 	
-	JLabel jlabel;
+	List<JLabel> jlabels;
+	JLabel textInfo; 
+	
+	private List<String> idPointsEnlevement;
+	private List<String> idPointsLivraison;
+	
+	Map<String, PointEnlevement> ptEnlevement;
+	Map<String, PointLivraison> ptLivraison;
+	
+	Map<String, Integer> indexationPointsE = new HashMap<>();
+	Map<String, Integer> indexationPointsL = new HashMap<>();
+
+	Map<String, Color> colorPointsE = new HashMap<>();
+	Map<String, Color> colorPointsL = new HashMap<>();
+	
+	int heure; 
+	int minute;
+	int seconde;
 	
 	public Intersection getIntersectionClique() {
 		return intersectionClique;
@@ -63,11 +82,13 @@ public class AffichageTournee extends JPanel {
 	
 	public AffichageTournee(Plan plan) {
 		this.plan = plan;
-		this.jlabel = new JLabel("<html>");
+		this.jlabels = new ArrayList<JLabel>();
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-		System.out.println("OK");
+		this.tournee = tournee;
+		this.contraintestournee = contraintestournee;
+		
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         this.removeAll();
@@ -200,7 +221,7 @@ public class AffichageTournee extends JPanel {
 			resultsPanel.add(infoGeneral);
 	        
 			for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
-				//JLabel jlabel = new JLabel("<html> ");
+				JLabel jlabel = new JLabel("<html> ");
 				jlabel.setName(Integer.toString(k));
 				
 				jlabel.addMouseListener(new MouseAdapter() {
@@ -282,8 +303,7 @@ public class AffichageTournee extends JPanel {
 						jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
 						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":" + seconde +"<br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
-						
-						
+					
 						heure = heure + tempsLivraison[0];
 					    minute = minute + tempsLivraison[1];
 					    seconde = seconde + tempsLivraison[2];
@@ -336,6 +356,7 @@ public class AffichageTournee extends JPanel {
 					} 
 		        	jlabel.setPreferredSize(new Dimension(400, 100));
 		            resultsPanel.add(jlabel);
+		            jlabels.add(jlabel);
 			}
 	        
 			int duree = tournee.getDuree() ;
@@ -376,11 +397,160 @@ public class AffichageTournee extends JPanel {
 	    return ret;
 	}
 	
+	public void detailsTournee(){
+		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
+			JLabel jlabel = new JLabel("<html> ");
+			jlabel.setName(Integer.toString(k));
+			jlabel.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					// Affichage Details Texte
+					textInfo.removeAll();
+					String lab = (String) e.getSource().toString();
+
+					int index = Integer.parseInt(lab.substring(19, 20));
+					Chemin current = tournee.getPlusCourteTournee().get(index);
+
+					int tailleC = current.getIntersections().size();
+					Chemin previous;
+					String depart;
+					String arrivee = current.getIntersections().get(tailleC - 2).getTronconsSortants()
+							.get(current.getIntersections().get(tailleC - 1).getId()).getNomRue();
+					if (index != 0) {
+						previous = tournee.getPlusCourteTournee().get(index - 1);
+						int tailleInters = previous.getIntersections().size();
+						depart = previous.getIntersections().get(tailleInters - 2).getTronconsSortants()
+								.get(previous.getIntersections().get(tailleInters - 1).getId()).getNomRue();
+					} else {
+						previous = null;
+						depart = tournee.getPlusCourteTournee().get(0).getIntersections().get(0)
+								.getTronconsSortants()
+								.get(tournee.getPlusCourteTournee().get(0).getIntersections().get(1).getId())
+								.getNomRue();
+						;
+					}
+
+					String itineraire = depart + " -> ";
+					String tmp = depart;
+
+					for (int i = 0; i < current.getIntersections().size() - 1; i++) {
+						Intersection crntInters = current.getIntersections().get(i);
+						Intersection nextInters = current.getIntersections().get(i + 1);
+						if (!tmp.equals(crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue())) {
+							itineraire = itineraire
+									+ crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue() + " -> ";
+						}
+						tmp = crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue();
+					}
+
+					itineraire = itineraire.substring(0, itineraire.length() - 3);
+					textInfo.setText(("<html> Pour accéder à " + arrivee + " à partir de " + depart + " : <br> "
+							+ itineraire + "</html>"));
+
+				}
+			});
+			
+			Chemin c = tournee.getPlusCourteTournee().get(k);
+			List<Intersection> inters = c.getIntersections();
+			int taille = inters.size();
+			Intersection inter = inters.get(taille - 1);
+			Intersection interPrevious = inters.get(taille - 2);
+
+			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
+
+			if (idPointsEnlevement.contains(inter.getId())) {
+				int duree = c.getDuree();
+				int livraison = ptEnlevement.get(inter.getId()).getTempsEnlevement();
+
+				int tempsChemin[] = traitementTempsChemin(duree);
+				int tempsLivraison[] = traitementTempsLivraison(livraison);
+
+				heure = heure + tempsChemin[0];
+				minute = minute + tempsChemin[1];
+				seconde = seconde + tempsChemin[2];
+				if (seconde >= 60) {
+					minute++;
+					seconde = seconde % 60;
+				}
+				if (minute >= 60) {
+					minute++;
+					minute = minute % 60;
+				}
+
+				int indexation = indexationPointsE.get(inter.getId());
+				jlabel.setForeground(colorPointsE.get(inter.getId()));
+				jlabel.setText(jlabel.getText() + "Pick Up n° " + indexation + " :   <br>");
+				jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() + "<br>");
+				jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":"
+						+ seconde + "<br>");
+				jlabel.setText(
+						jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
+
+				heure = heure + tempsLivraison[0];
+				minute = minute + tempsLivraison[1];
+				seconde = seconde + tempsLivraison[2];
+				if (seconde >= 60) {
+					minute++;
+					seconde = seconde % 60;
+				}
+				if (minute >= 60) {
+					minute++;
+					minute = minute % 60;
+				}
+			} else if (idPointsLivraison.contains(inter.getId())) {
+				int duree = c.getDuree();
+				int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
+
+				int tempsChemin[] = traitementTempsChemin(duree);
+				int tempsLivraison[] = traitementTempsLivraison(livraison);
+
+				heure = heure + tempsChemin[0];
+				minute = minute + tempsChemin[1];
+				seconde = seconde + tempsChemin[2];
+				if (seconde >= 60) {
+					minute++;
+					seconde = seconde % 60;
+				}
+				if (minute >= 60) {
+					minute++;
+					minute = minute % 60;
+				}
+
+				int indexation = indexationPointsL.get(inter.getId());
+				jlabel.setForeground(colorPointsL.get(inter.getId()));
+				jlabel.setText(jlabel.getText() + "Delivery n° " + indexation + " :   <br>");
+				jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() + "<br>");
+				jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heure + ":" + minute + ":"
+						+ seconde + "<br>");
+				jlabel.setText(
+						jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
+
+				heure = heure + tempsLivraison[0];
+				minute = minute + tempsLivraison[1];
+				seconde = seconde + tempsLivraison[2];
+				if (seconde >= 60) {
+					minute++;
+					seconde = seconde % 60;
+				}
+				if (minute >= 60) {
+					minute++;
+					minute = minute % 60;
+				}
+			}
+        	jlabel.setPreferredSize(new Dimension(400, 100));
+            resultsPanel.add(jlabel);
+            jlabels.add(jlabel);
+		}
+	}
+	
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		if (intersectionClique != null) {
-			jlabel.setText("<html> Est-ce-que ça marche? </html>");
+			for (JLabel jLabel : jlabels) {
+				jLabel.setText("<html> Est-ce-que ça marche? </html>");
+			}
 		}
+
 	}
 
 }

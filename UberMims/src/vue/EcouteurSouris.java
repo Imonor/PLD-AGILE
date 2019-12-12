@@ -124,8 +124,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 
 			double deplacementX = clicX - pointDepart.x;
 			double deplacementY = clicY - pointDepart.y;
-			System.out.println("deplacement x : " + deplacementX);
-			System.out.println( );
 
 			if( (Math.abs(deplacementX) <= Math.abs(xOffset) && deplacementX > 0) ||
 				(Math.abs(deplacementX) <= largeurPlan + xOffset - Fenetre.LARGEUR_PLAN) && deplacementX <0){
