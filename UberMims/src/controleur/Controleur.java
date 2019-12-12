@@ -57,21 +57,15 @@ public class Controleur {
 		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
 	}
 
-
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
-		tournee = tsp.chercheSolution(500, contraintes, plusCourtsChemins);
+		tournee = tsp.chercheSolution(2000, contraintes, plusCourtsChemins);
 		int dureeEnlevementLivraison = 0;
 		
 		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
 			dureeEnlevementLivraison += p.getTempsEnlevement();
 		}
-		
-		for(PointLivraison p : contraintes.getPointsLivraison()) {
-			dureeEnlevementLivraison += p.getTempsLivraison();
-		}
-		
-		tournee.calculDuree(dureeEnlevementLivraison);
+		tournee.calculDuree();
 		
 		for (Chemin c : tournee.getPlusCourteTournee()) {
 			List<Intersection> inters = c.getIntersections();
@@ -83,7 +77,6 @@ public class Controleur {
 			System.out.println("; duree= " + c.getDuree());
 		}
 	}
-
 
 	public void ajouterLivraison (PointEnlevement e, PointLivraison l) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
@@ -102,10 +95,15 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 
-	 public void supprimerLivraison (PointEnlevement e, PointLivraison l) {
-		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, l, plusCourtsChemins);
+	public void supprimerLivraison (PointEnlevement e) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
 	 }
+	 
+	public void supprimerLivraison (PointLivraison l) {
+		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, l, plusCourtsChemins);
+		 cmdListe.addCommande(cmd);
+	}
 
 	/**
 	 * 
@@ -113,17 +111,23 @@ public class Controleur {
 	 * @param newPrec Si le pr�c�dent est le d�p�t, mettre 'null'
 	 * @param newSuiv Si le suivant est le d�p�t, mettre 'null'
 	 */
-	 public void modifierOrdrePassage (Intersection pointModif, Intersection newPrec, Intersection newSuiv) {
+	public void modifierOrdrePassage (Intersection pointModif, Intersection newPrec, Intersection newSuiv) {
 		 CmdModifOrdre cmd = new CmdModifOrdre(tournee, pointModif, newPrec, newSuiv, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
-	 }
+	}
 	
 	public void modifierAdresse(PointEnlevement e, Intersection newI) {
-		Map<String, Intersection> intersectionAVisiter = new HashMap<>();
-		Map<String, Chemin> newChemins = new HashMap<String, Chemin>();
-		intersectionAVisiter.put(newI.getId(), newI);
-		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionAVisiter).get(newI.getId());
-		plusCourtsChemins.put(newI.getId(), newChemins);
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		intersectionsAVisiter.put(newI.getId(), newI);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);
 		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, e, newI, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}

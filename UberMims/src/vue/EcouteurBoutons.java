@@ -83,7 +83,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger un autre plan de la ville":
 				System.out.println("Chargement d'un autre plan de la ville");
-				
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixPlan2 = new JFileChooser();
 				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
@@ -112,6 +112,7 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Charger une demande de tournee":
 				System.out.println("Chargement d'une demande de tournee");
+				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixTournee = new JFileChooser();
 				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
 				// 2EME ITERATION : FILTRER LES FICHIERS XML
@@ -162,7 +163,7 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				fenetre.getAffichagePlan().setPlanClickable(false);
 				fenetre.afficherInfos();
-				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(),controleur.getContraintes());
 			break;
 			
 			case "Valider l'ajout d'une livraison":
@@ -189,13 +190,17 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.setTournee(controleur.getTournee());
 				fenetre.apresAjoutLivraison();
 				fenetre.afficherInfos();
-				fenetre.getAffichageTournee().afficherDetailTournee(fenetre.getTournee(),fenetre.getContraintes());
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(),controleur.getContraintes());
 				
 			break;
-			case "Annuler la dernière modification":
-				System.out.println("CA MARCHE");
+
+			case "Annuler la derniere modification":
+				System.out.println("Annuler derniere modification");
 			break;
-		
+			case "Modifier la tournee":
+				System.out.println("Modifier tournee");
+				fenetre.afficherModificationTournee();
+			break;
 		}
 	}
 }

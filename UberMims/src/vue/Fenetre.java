@@ -2,57 +2,21 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-
 import controleur.Controleur;
-import model.Chemin;
 import model.Intersection;
 import model.Plan;
-import model.PointEnlevement;
-import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
 import model.ContraintesTournee;
-import model.Intersection;
-import model.Plan;
-import model.Tournee;
-import util.XMLParser;
 import vue.AffichagePlan.Etat;
 
 public class Fenetre extends JFrame {
@@ -98,12 +62,14 @@ public class Fenetre extends JFrame {
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
 	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
-	private AffichageTournee affichageTournee = new AffichageTournee();
+	private AffichageTournee affichageTournee = new AffichageTournee(plan);
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panAnnulerAjoutLivraison = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
+
+	private ModificationTournee panModificationTournee;
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private Font police = new Font("Verdana", 0, 15);
@@ -111,11 +77,14 @@ public class Fenetre extends JFrame {
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
 
+
 	public Fenetre() {
 
 		controleur = new Controleur();
 		champPickUp.setValue(0);
 		champDelivery.setValue(0);
+		
+		panModificationTournee = new ModificationTournee(this, controleur);
 
 
 		// Page globale
@@ -124,7 +93,7 @@ public class Fenetre extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(new BorderLayout());
 
 		// BOUTONS
@@ -136,9 +105,9 @@ public class Fenetre extends JFrame {
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
+		JButton boutonModifierTournee = new JButton("Modifier la tournee");
 		JButton boutonAnnulerModification = new JButton("Annuler la dernière modification");
-		
-		
+
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
 		panAccueil.setLayout(null);
@@ -182,18 +151,24 @@ public class Fenetre extends JFrame {
 		panHautDroite.setBounds(0, 0, 450, 100);
 		// bouton ajouter livraison
 		boutonAjouterLivraison.setVisible(true);
-		boutonAjouterLivraison.setBounds(95, 15, 260, 30);
+		boutonAjouterLivraison.setBounds(95,7, 260, 30);
 		panHautDroite.add(boutonAjouterLivraison);
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		//bouton annuler la derniere modification
 		boutonAnnulerModification.setVisible(true);
 		boutonAnnulerModification.setEnabled(false);
-		boutonAnnulerModification.setBounds(95, 55, 260, 30);
+		boutonAnnulerModification.setBounds(95, 71, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
 		panDroite.add(panHautDroite);
+		// bouton modifier ordre livraison
+		boutonModifierTournee.setVisible(true);
+		boutonModifierTournee.setBounds(95, 39, 260, 30);
+		panHautDroite.add(boutonModifierTournee);
+		boutonModifierTournee.addActionListener(ecouteurBoutons);
 		
-		
+		panDroite.add(panHautDroite);
+
 		// Panel de CALCUL TOURNEE : partie qui contient le bouton Calculer Tournee
 		panCalculTournee.setVisible(false);
 		panCalculTournee.setLayout(null);
@@ -212,14 +187,14 @@ public class Fenetre extends JFrame {
 		affichageTournee.setBounds(0, 100, 435, 660);
 		affichageTournee.setBackground(Color.blue);
 		panDroite.add(affichageTournee);
-		
+
 		// Panel AJOUT LIVRAISON
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
 		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
-
+		
 		// Panel Annuler livraison
 		panAnnulerAjoutLivraison.setVisible(true);
 		panAnnulerAjoutLivraison.setLayout(null);
@@ -283,6 +258,14 @@ public class Fenetre extends JFrame {
 		boutonValiderAjoutLivraison.setBounds(75, 600, 300, 30);
 		boutonValiderAjoutLivraison.addActionListener(ecouteurBoutons);
 		panAjoutLivraison3.add(boutonValiderAjoutLivraison);
+		
+		
+		//PANEL MODIFICATION DE TOURNEE
+		panModificationTournee.setVisible(false);
+		panAjoutLivraison3.setLayout(null);
+		panModificationTournee.setBounds(20, 120, 400, 600);
+		panModificationTournee.setBackground(Color.white);
+		panDroite.add(panModificationTournee);
 
 //***************************************//
 
@@ -371,12 +354,15 @@ public class Fenetre extends JFrame {
 		this.repaint();
 	}
 
+		// Affichage des informations apres avoir clique sur bouton calculer tournee
+
 		public void afficherInfos() {
 			panAjoutLivraison1.setVisible(false);
 			panAjoutLivraison2.setVisible(false);
 			panAjoutLivraison3.setVisible(false);
 			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
+			panModificationTournee.setVisible(false);
 			panHautDroite.setVisible(true);
 			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
@@ -415,6 +401,10 @@ public class Fenetre extends JFrame {
 	public void apresAjoutLivraison() {
 		panAjoutLivraison3.setVisible(false);
 		this.setContentPane(panPrincipal);
+	}
+	
+	public void apresModifOrdre() {
+		affichageTournee.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 	}
 
 	// Affichage Infos du point ajoute avant clic sur bouton valider ajout
@@ -462,6 +452,18 @@ public class Fenetre extends JFrame {
 				+ tronconNouveauDelivery.getNomRue() + "</font><br><br>Duree au point de livraison :<br>");
 		panAjoutLivraison3.add(texteDelivery);
 	}
+
+	
+	public void afficherModificationTournee() {
+		panModificationTournee.ajouterTournee(plan);
+		panModificationTournee.afficherTournee();
+		affichageTournee.setVisible(false);
+		panModificationTournee.setVisible(true);
+	}
+
+	
+	// ***** INFOS TOURNEE *****
+	// Passage a la page principale apres le chargement d'un plan
 
 	
 	public static void main(String[] args) {
