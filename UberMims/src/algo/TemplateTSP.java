@@ -57,7 +57,7 @@ public abstract class TemplateTSP implements TSP{
 		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
 		HashMap<String, Paire> vuDispo = initVuDispo(contraintes, intersections);
 		
-		Tournee tournee = new Tournee();
+		Tournee tournee = new Tournee(contraintes);
 		//Sequentiel et MinFirst
 //		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
 		

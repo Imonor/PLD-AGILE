@@ -7,7 +7,6 @@ import model.PointLivraison;
 import model.Tournee;
 import model.Chemin;
 
-import java.net.NetworkInterface;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class CmdSupprimeLivraison implements Commande {
 		this.lSuiv = null;
 	}
 	
-	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointEnlevement e, Map<String, Map<String, Chemin>> ch, Controleur controleur) {
+	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointEnlevement e, Map<String, Map<String, Chemin>> ch) {
 		this.contraintes = c;
 		this.tournee = t;
 		this.enlevement = e;
@@ -50,7 +49,7 @@ public class CmdSupprimeLivraison implements Commande {
 				
 	}
 
-	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointLivraison l, Map<String, Map<String, Chemin>> ch, Controleur controleur) {
+	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointLivraison l, Map<String, Map<String, Chemin>> ch) {
 		this.contraintes = c;
 		this.tournee = t;
 		this.livraison = l;
@@ -168,7 +167,7 @@ public class CmdSupprimeLivraison implements Commande {
 		Controleur c = new Controleur();
 		try {
 			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandePetit2.xml");
+			c.chargerTournee("fichiersXML2019/demandePetit1.xml");
 		} catch(Exception e) {
 			System.out.println();
 		}
@@ -182,7 +181,7 @@ public class CmdSupprimeLivraison implements Commande {
 		System.out.println(e.getId() + "    yeet    " + e.getIdLivraison());
 		
 		
-		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), e, c.getPlusCourtsChemins(), c);
+		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), e, c.getPlusCourtsChemins());
 		cmd.doCode();
 
 		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {

@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -46,7 +47,9 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private Controleur controleur;
 	private Fenetre fenetre;
 	
-	public ModificationTournee(Fenetre fenetre) {
+	public ModificationTournee(Fenetre fenetre, Controleur controleur) {
+		this.controleur = controleur;
+		this.fenetre = fenetre;
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
 
@@ -55,7 +58,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
         this.fenetre = fenetre;
-
+        
         JPanel panelAll = new JPanel();
         panelAll.setBackground(Color.red);
         panelAll.setLayout(layout);
@@ -66,16 +69,25 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
         JButton validerModif = new JButton("Valider les modifications");
+        JButton supprLivr = new JButton("Supprimer la livraison associée");
+        JButton modifAdresse = new JButton("Modifier l'emplacement de ce pick-up/delivery");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
-        validerModif.setBounds(30, 45, 40, 20);
+        modifAdresse.setBounds(30, 45, 40, 20);
+        validerModif.setBounds(30, 60, 40, 20);
+        
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
         validerModif.addActionListener(this);
+        supprLivr.addActionListener(this);
+        modifAdresse.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
         panelDetail.add(validerModif);
+        panelDetail.add(supprLivr);
+        panelDetail.add(modifAdresse);
+        
         
         JPanel separation = new JPanel();
         separation.setBackground(Color.black);
@@ -134,9 +146,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         textArea.add(scrollpane, BorderLayout.CENTER);
     }
     
-    public void ajouterTournee(Plan plan, Controleur controleur) {
+    public void ajouterTournee(Plan plan) {
     	ordrePassage.clear();
-    	this.controleur = controleur;
     	Tournee tournee = controleur.getTournee();
     	this.plan = plan;
         //Retirer la dernière étape du parcours, qui est arrive sur le point de dépôt
@@ -240,11 +251,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     		precedentLabelSelectionne = labelSelectionne;
     		precedentLabelSelectionne.setForeground(Color.CYAN);
     	}
-    	
     	labelSelectionne = labelClique;
     	labelSelectionne.setForeground(Color.BLUE);
-	    	
-
     }
 
 	@Override
@@ -353,6 +361,58 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				fenetre.apresModifOrdre();
 				fenetre.afficherInfos();
 				break;
+			case "Supprimer la livraison associée":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					Map<String, String> elemSelect = ordrePassage.get(index);
+					
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associés à cette livraison ?") == JOptionPane.OK_OPTION) {
+						ordrePassage.remove(index);
+						Intersection elemSuppr = null;
+						PointEnlevement enlevement = null;
+						PointLivraison livraison = null;
+						boolean isSuppr = false;
+			        	for(String etapeId: elemSelect.keySet() ) {
+			        		elemSuppr = plan.getIntersections().get(etapeId);
+			        	}
+			        	
+						for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
+							if(pl.equals(elemSuppr)) {
+								isSuppr = true;
+								for(ListIterator<Map<String, String>> it = ordrePassage.listIterator(); it.hasNext();) {
+									Map<String, String> elem = it.next();
+									if(elem.containsKey(pl.getIdEnlevement())) {
+										it.remove();
+										break;
+									}
+								}
+								controleur.supprimerLivraison(pl);
+								break;
+							}
+						}
+						if(!isSuppr) {
+							for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
+								if(pe.equals(elemSuppr)) {
+									for(ListIterator<Map<String, String>> it = ordrePassage.listIterator(); it.hasNext();) {
+										Map<String, String> elem = it.next();
+										if(elem.containsKey(pe.getIdLivraison())) {
+											it.remove();
+											break;
+										}
+									}
+									controleur.supprimerLivraison(pe);
+									break;
+								}
+							}
+						}
+						this.afficherTournee();
+				        updateUI();
+			        fenetre.setTournee(controleur.getTournee());
+					}
+				}
+				break;
+			//case "Modifier l'emplacement de ce pick-up/delivery":
+				
 		}
 	}
 	
