@@ -68,6 +68,9 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		} 
 		else{
 			affichagePlan.setIntersectionSelectionne(interLaPlusProche);
+			fenetre.getAffichageTournee().setIntersectionClique(interLaPlusProche);
+			//fenetre.getAffichageTournee().repaint();
+			fenetre.apresModifOrdre();
 		}
 
 	}
