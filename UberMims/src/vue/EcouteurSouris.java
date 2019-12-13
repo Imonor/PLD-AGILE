@@ -96,7 +96,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	}
 
 	/**
-     * Méthode surchargé qui gère un clic de souris
+     * Méthode surchargé qui gère la pression sur le clic de la souris
      * 
      * @param e
      * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
@@ -108,7 +108,13 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		affichagePlan.setRelease(false);
 	}
 
-
+	
+	/**
+     * Méthode surchargé qui gère le relachement d'un clic de souris
+     * 
+     * @param e
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub

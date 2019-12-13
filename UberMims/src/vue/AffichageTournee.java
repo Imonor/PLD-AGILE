@@ -97,6 +97,16 @@ public class AffichageTournee extends JPanel {
 	
 
 	private List<Color> listColors = new ArrayList();
+	
+	
+	/**
+     * Constructeur de la classe AffichageTournee
+     * 
+     * @param plan
+     * 		Représente le plan associé à l'affichage
+     * @param fenetre
+     * 		représente la fenêtre sur lequel va s'afficher l'instance de cette clasee
+     */
 	public AffichageTournee(Plan plan, Fenetre fenetre) {
 		this.fenetre = fenetre;
 		this.plan = plan;
@@ -121,7 +131,16 @@ public class AffichageTournee extends JPanel {
 		listColors.add(Color.decode("#9400D3"));
 		listColors.add(Color.decode("#6365ff"));
 	}
-
+	
+	
+	/**
+     * Affiche les détails d'une tournée sous forme de composants textuels
+     * 
+     * @param tournee
+     * 		Représente la tournée à effectuer
+     * @param contraintestournee
+     * 		Représente les contraintes associées à la tournée (ordre de passage...)
+     */
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
         this.setFont(new Font("Avenir",1,15));
         this.tournee = tournee;
@@ -179,14 +198,6 @@ public class AffichageTournee extends JPanel {
         
         //----------------------
         
-        /*JPanel topMargin = new JPanel();
-        panelAll.setBackground(Color.pink);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty=0.0;
-        gbc.weightx=0.0;
-        panelAll.add(topMargin, gbc);
-        */
         JPanel textArea = new JPanel();
         textArea.setLayout(new BorderLayout());
         textArea.setBackground(backgroundTurquoiseClair);
@@ -195,17 +206,6 @@ public class AffichageTournee extends JPanel {
         gbc.weighty= 1.5;
         gbc.weightx= 1.5;
         panelAll.add(textArea, gbc);
-        
-        
-        
-        /*JPanel bottomMargin = new JPanel();
-        panelAll.setBackground(Color.magenta);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty=0.0;
-        gbc.weightx= 0.0;
-        panelAll.add(bottomMargin, gbc);
-        */
         
         resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
@@ -381,17 +381,18 @@ public class AffichageTournee extends JPanel {
 			duree = (int) duree/60;
 			JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 			resultsPanel.add(time);
-			
-			/*for (int extra = 0; extra < 4 ; extra++) {
-	        	JLabel j = new JLabel("");
-	        	j.setPreferredSize(new Dimension(400, 100));
-	            resultsPanel.add(j);
-	        }*/
         }
         
 	}
 	
-	
+	/**
+     * Déterminer le temps de traitement d'une livraison
+     * 
+     * @param livraison
+     * 		Livraison à effectuer
+     * 
+     * @return un tableau représentant l'heure, les minutes et les secondes
+     */
 	public int[] traitementTempsLivraison(int livraison) {
 		int livraisonHeure = (int) livraison / 3600;
 	    int remainder1 = (int) livraison - livraisonHeure * 3600;
@@ -404,6 +405,14 @@ public class AffichageTournee extends JPanel {
 	    return ret;
 	}
 	
+	/**
+     * Détermine le temps de parcours d'un chemin
+     * 
+     * @param duree
+     * 		duree de parcours d'un chemin
+     * 
+     * @return un tableau représentant l'heure, les minutes et les secondes
+     */
 	public int[] traitementTempsChemin(int duree) {
 		int trajetHeure = (int) duree / 3600;
 	    int remainder = (int) duree - trajetHeure * 3600;
@@ -416,7 +425,9 @@ public class AffichageTournee extends JPanel {
 	    return ret;
 	}
 	
-	
+	/**
+     * Change les détails textuelles de la tournée affichée
+     */
 	public void setdDetailsTournee(){
 		boolean trouve = false;
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {			
@@ -479,6 +490,13 @@ public class AffichageTournee extends JPanel {
 				}
 		}
 	}
+	
+	/**
+     * Méthode surchargé qui redessine les éléments graphiques de la classe.
+     * 
+     * @param g
+     * 		Paramètre par défaut de la méthode surchargé
+     */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

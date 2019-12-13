@@ -75,7 +75,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private Color oldColor;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
-
 	
 	private int nouveauTemps=0;
 	private int deplacementEtape;
@@ -84,6 +83,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private Controleur controleur;
 	private Fenetre fenetre;
 	
+	/**
+     * Constructeur de la classe ModificationTournee
+     * 
+     * @param fenetre
+     * 		représente la fenêtre sur lequel va s'afficher l'instance de cette clasee
+     * @param controleur
+     * 		Représente le controleur du projet
+     */
 	public ModificationTournee(Fenetre fenetre, Controleur controleur) {
 		listColors.add(Color.decode("#2F4F4F"));
 		listColors.add(Color.decode("#808080"));
@@ -270,6 +277,13 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         
     }
     
+	
+	/**
+     * Ajoute une tournee au plan
+     * 
+     * @param plan
+     * 		représente le plan sur lequel ajouter la tournee
+     */
     public void ajouterTournee(Plan plan) {
     	ordrePassage.clear();
     	Tournee tournee = controleur.getTournee();
@@ -293,6 +307,9 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         }
     }
     
+	/**
+     * Affiche les détails de la tournee sur le panneau de droite
+     */
     public void afficherTournee() {
 
     	listeLabels.clear();
@@ -357,6 +374,16 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         repaint();
     }
     
+	/**
+     * Créer un label correspondant à une étape de la tournée
+     * 
+     * @param etape
+     * 		Intersection correspondant à l'étape actuelle
+     * @param position
+     * 		Position de l'étape dans le parcours de la tournée.
+     * @param type
+     * 		Type de l'étape ( Livraison ou Enlevement)
+     */
     private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {
     	JLabel label = new JLabel("<html> ");
     	if(type.equals("enlevement")) {
@@ -371,6 +398,12 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		return label;
     }
     
+	/**
+     * Méthode surchargé qui gère un clic de souris
+     * 
+     * @param m
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
     public void mouseClicked(MouseEvent m) {
     	
     	JLabel labelClique = (JLabel) m.getSource();
@@ -407,7 +440,13 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	/**
+     * Méthode surchargé qui gère les actions associées à un bouton
+     * 
+     * @param e
+     * 		Paramètre par défaut représentant l'évenement associé.
+     */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
@@ -655,6 +694,16 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	}
 	
 	
+	/**
+     * Vérifie la précédence entre un point de livraison et son point d'enlèvement
+     * 
+     * @param elemSelect
+     * 		Intersection selectionne
+     * @param autreElem
+     * 		Autre intersection associe
+     * @param deplacement
+     * 		Deplacement entre les deux intersections
+     */
 	private void verifierPrecedencePickupDelivery(Intersection elemSelect, Intersection autreElem, String deplacement){
 		if(deplacement.equals("^")) {
 			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
@@ -673,11 +722,16 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		}
 	}
 	
-	
+	/**
+     * Affiche le panneau de Validation de la modification de l'adresse
+     */
 	public void afficherValidationModifAdresse() {
 		panelValiderModifAdresse.setVisible(true);
 	}
 	
+	/**
+     * Modifie l'adresse de l'étape
+     */
 	private void modifierAdresse() {
 		Intersection nouvelleAdresse = fenetre.getAffichagePlan().getNouvelleAdresse();
 		int index = Integer.parseInt(labelSelectionne.getName());
