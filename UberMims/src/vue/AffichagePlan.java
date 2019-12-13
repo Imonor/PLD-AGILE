@@ -49,7 +49,7 @@ public class AffichagePlan extends JScrollPane {
 	 * Page d'accueil : chargement du plan
 	 */
 	public enum Etat {
-		LIVRAISON, ENLEVEMENT, MODIF_ADRESSE;
+		LIVRAISON, ENLEVEMENT, MODIF_ADRESSE, MODIF_TEMPS;
 	}
 
 	private Etat etat;
@@ -79,7 +79,7 @@ public class AffichagePlan extends JScrollPane {
 	private Intersection nouvelleAdresse;
 	
 
-	// InterSection du chemin à mettre en surbrillance
+	// InterSection du chemin ï¿½ mettre en surbrillance
 	private Intersection intersectionSelectionne;
 
 	private int nouveauTempsPickUp;
@@ -120,13 +120,13 @@ public class AffichagePlan extends JScrollPane {
 		this.planClickable = false;
 		this.etat = etat.LIVRAISON;
 		
-		//Ajout des écouteurs souris
+		//Ajout des ï¿½couteurs souris
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
 		this.addMouseMotionListener(ecouteurSouris);
 		
-		//Initialisation des variables liées au zoom et au drag & drop
+		//Initialisation des variables liï¿½es au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
 		zoomIn = false;
@@ -332,7 +332,7 @@ public class AffichagePlan extends JScrollPane {
 	}
 
 	
-	// Le code de la fonction ci-dessous a été fortement inspiré par le lien suivant
+	// Le code de la fonction ci-dessous a ï¿½tï¿½ fortement inspirï¿½ par le lien suivant
 	// https://stackoverflow.com/questions/6543453/zooming-in-and-zooming-out-within-a-panel
 	
 	public void ajusterZoom(Graphics2D g2d) {
