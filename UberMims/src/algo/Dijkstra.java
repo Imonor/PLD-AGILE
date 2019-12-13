@@ -13,10 +13,10 @@ import model.Troncon;
 
 public class Dijkstra {
 	
-	private final double vitesse = 1.0;//15.0/3.6; //Vitesse en m/s
+	private final double vitesse = 15.0/3.6; //Vitesse en m/s
 	
-	//Retourne une map dont la clé est l'id de l'intersection considérée, et la valeur est une 
-	//map qui contient en clé l'id de l'intersection vers laquelle on souhaite calculer le +
+	//Retourne une map dont la clï¿½ est l'id de l'intersection considï¿½rï¿½e, et la valeur est une 
+	//map qui contient en clï¿½ l'id de l'intersection vers laquelle on souhaite calculer le +
 	//court chemin, et en valeur le chemin correspondant
 	public Map<String, Map<String, Chemin>> plusCourtsCheminsPlan(Map<String, Intersection> plan, Map<String, Intersection> intersectionsAVisiter) {
 		Map<String, Map<String, Chemin>> plusCourtsChemins = new HashMap<>();
@@ -31,17 +31,17 @@ public class Dijkstra {
 		//On applique l'algo de Dikstra au depart de l'intersection "intersectionId"
 		for(String intersectionId: intersectionsAVisiter.keySet()) { 
 					
-			//Tous les sommets sont blancs, les précédences sont initialisées à null et les distances à +infini
+			//Tous les sommets sont blancs, les prï¿½cï¿½dences sont initialisï¿½es ï¿½ null et les distances ï¿½ +infini
 			initialiserMaps(plan, precedence, distance, couleurSommet);
 			
-			//Initialisation du sommet de départ (distance nulle, couleur grise)
+			//Initialisation du sommet de dï¿½part (distance nulle, couleur grise)
 			distance.put(intersectionId, 0.0);
 			couleurSommet.put(intersectionId, 1);
 			sommetsGris.add(intersectionId);
 			
 			//Parcours du graphe
 			while(!sommetsGris.isEmpty()) {
-				//Récupérer le sommet gris avec la + courte distance. Il s'agira du sommet à étudier
+				//Rï¿½cupï¿½rer le sommet gris avec la + courte distance. Il s'agira du sommet ï¿½ ï¿½tudier
 				double distanceMin = Double.MAX_VALUE; 
 				for(String sommetGris: sommetsGris) {
 					if(distance.get(sommetGris) < distanceMin) {
@@ -49,9 +49,9 @@ public class Dijkstra {
 						distanceMin = distance.get(sommetGris);
 					}
 				}
-				//Récupérer la liste des troncons sortant du sommet étudié
+				//Rï¿½cupï¿½rer la liste des troncons sortant du sommet ï¿½tudiï¿½
 				Map<String, Troncon> troncons = plan.get(sommetAEtudier).getTronconsSortants();
-				//Procédure de relâchement pour chaque arc partant du sommet étudié
+				//Procï¿½dure de relï¿½chement pour chaque arc partant du sommet ï¿½tudiï¿½
 				for(String idDestination: troncons.keySet()) {
 					if(couleurSommet.containsKey(idDestination) && (couleurSommet.get(idDestination) == 0 ||couleurSommet.get(idDestination) == 1)) {
 						this.relacher(sommetAEtudier, idDestination, troncons.get(idDestination).getLongueur(), precedence, distance);
@@ -61,25 +61,25 @@ public class Dijkstra {
 						}
 					}
 				}
-				//On colorie le sommet qui a été étudié en noir, et on le retire de la liste des gris
+				//On colorie le sommet qui a ï¿½tï¿½ ï¿½tudiï¿½ en noir, et on le retire de la liste des gris
 				couleurSommet.put(sommetAEtudier, 2); 
 				sommetsGris.remove(sommetAEtudier);
 			}
 			
-			//On crée la liste des + courts chemins depuis intersectionId vers les autres intersections
+			//On crï¿½e la liste des + courts chemins depuis intersectionId vers les autres intersections
 			Map<String, Chemin> chemins = new HashMap<>();
 			for(String intersectionArrivee: intersectionsAVisiter.keySet()) {
 				Chemin chemin = this.creerChemin(intersectionId, intersectionArrivee, precedence, plan);
 				chemins.put(intersectionArrivee, chemin);
 			}
-			//On ajoute cette liste à la liste globale des + courts chemins
+			//On ajoute cette liste ï¿½ la liste globale des + courts chemins
 			plusCourtsChemins.put(intersectionId, chemins); 
 		}
 		return plusCourtsChemins;
 	}
 	
 	
-	//Procédure de relachement d'un arc
+	//Procï¿½dure de relachement d'un arc
 	private void relacher(String debutArc, String finArc, double coutArc, Map<String, String> precedence, Map<String, Double> distance){
 
 		if(distance.get(finArc) > distance.get(debutArc) + coutArc) {
@@ -89,7 +89,7 @@ public class Dijkstra {
 	}
 	
 	
-	//Initialisation des précédences, des couleurs et des distances
+	//Initialisation des prï¿½cï¿½dences, des couleurs et des distances
 	private void initialiserMaps(Map<String, Intersection> intersections, Map<String, String> precedence, Map<String, Double> distance, Map<String, Integer> couleurSommet) {
 		precedence.clear();
 		distance.clear();
@@ -102,16 +102,16 @@ public class Dijkstra {
 	}
 	
 	
-	//Procédure de création d'un chemin à partir d'une intersection de départ vers une intersection d'arrivee
-	//en fonction d'un tableau donnant les précédences entre intersections
+	//Procï¿½dure de crï¿½ation d'un chemin ï¿½ partir d'une intersection de dï¿½part vers une intersection d'arrivee
+	//en fonction d'un tableau donnant les prï¿½cï¿½dences entre intersections
 	private Chemin creerChemin(String interDepart, String interArrivee, Map<String, String> precedence, Map<String, Intersection> intersections) {
 		
-		//Liste ordonnée des intersections qui composeront le chemin, si elle existe
+		//Liste ordonnï¿½e des intersections qui composeront le chemin, si elle existe
 		List<Intersection> cheminement = new ArrayList<>();
 		//Distance totale du chemin
 		double distance = 0;
 		
-		//Cas où  l'intersection de départ et d'arrivée sont les mêmes
+		//Cas oï¿½  l'intersection de dï¿½part et d'arrivï¿½e sont les mï¿½mes
 		if(interDepart.equals(interArrivee)) {
 			cheminement = null;
 
@@ -120,12 +120,12 @@ public class Dijkstra {
 			String idIntersectionActuelle = interArrivee;
 			String idIntersectionPrecedente;
 			
-			//Test qui vérifie si l'intersection d'arrivée est atteignable depuis l'intersection de départ
-			//(si ce n'est pas le cas l'intersection précédente a pour valeur "null)
+			//Test qui vï¿½rifie si l'intersection d'arrivï¿½e est atteignable depuis l'intersection de dï¿½part
+			//(si ce n'est pas le cas l'intersection prï¿½cï¿½dente a pour valeur "null)
 			if(!precedence.get(idIntersectionActuelle).equals("null")) {
 				Intersection intersectionActuelle = intersections.get(idIntersectionActuelle);
 				
-				//On remonte le cheminement jusqu'à trouver l'intersection de départ
+				//On remonte le cheminement jusqu'ï¿½ trouver l'intersection de dï¿½part
 				while(idIntersectionActuelle != interDepart) {
 					cheminement.add(intersectionActuelle);
 					idIntersectionPrecedente = precedence.get(idIntersectionActuelle);
@@ -134,24 +134,24 @@ public class Dijkstra {
 				}
 				cheminement.add(intersections.get(interDepart));
 				
-				//Le cheminement est inversé pour bien partir de l'intersection de départ et non pas de 
-				//l'intersection d'arrivée
+				//Le cheminement est inversï¿½ pour bien partir de l'intersection de dï¿½part et non pas de 
+				//l'intersection d'arrivï¿½e
 				Collections.reverse(cheminement);
 				
 				//Calcul de la distance du chemin
 				int indexDepart = 0;
 				while(indexDepart < cheminement.size() - 1) {
-					//Récupérer le troncon correspondant à l'étape actuelle du cheminement
+					//Rï¿½cupï¿½rer le troncon correspondant ï¿½ l'ï¿½tape actuelle du cheminement
 					Intersection iDepart = cheminement.get(indexDepart);
 					Intersection iNext = cheminement.get(indexDepart + 1);
 					Troncon troncon = iDepart.getTronconsSortants().get(iNext.getId());
-					//Ajouter la longueur du troncon à la distance totale du chemin
+					//Ajouter la longueur du troncon ï¿½ la distance totale du chemin
 					distance += troncon.getLongueur();
 					indexDepart++;
 				}
 				
-			//Cas où l'intersection n'est pas atteignable: on considère que la distance depuis
-			//l'intersection de départ est infinie
+			//Cas oï¿½ l'intersection n'est pas atteignable: on considï¿½re que la distance depuis
+			//l'intersection de dï¿½part est infinie
 			} else {
 				cheminement = null;
 				distance = Double.MAX_VALUE;
