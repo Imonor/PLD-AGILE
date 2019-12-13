@@ -64,17 +64,12 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				affichagePlan.setNouvelleAdresse(interLaPlusProche);
 				fenetre.getPanModificationTournee().afficherValidationModifAdresse();
 			}
-			
-
 			affichagePlan.repaint();
-			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude()+ " "
-					+ interLaPlusProche.getLatitude());
 		} 
 		else{
 			affichagePlan.setIntersectionSelectionne(interLaPlusProche);
 			fenetre.getAffichageTournee().setIntersectionClique(interLaPlusProche);
 			fenetre.getAffichageTournee().repaint();
-			//fenetre.apresModifOrdre();
 		}
 	}
 
@@ -121,7 +116,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		if (affichagePlan.getZoom() > 1) {
 			double clicX = e.getX() - xOffset;
 			double clicY = e.getY() - yOffset;
-			System.out.println(" X depart : " +pointDepart.x);
 
 			double deplacementX = clicX - pointDepart.x;
 			double deplacementY = clicY - pointDepart.y;
