@@ -21,11 +21,6 @@ public class TSP2 extends TemplateTSP{
 	}
 
 	@Override
-	protected int bound() {
-		return 0;
-	}
-
-	@Override
 	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins) {
 		// TODO Auto-generated method stub
 		return super.chercheSolution(tpsLimite, contraintes, plusCourtsChemins);

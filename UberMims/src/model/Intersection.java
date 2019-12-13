@@ -1,10 +1,11 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
+/**
+ * Classe representant une Intersection sur le plan, et la liste des troncons partant de cette intersection
+ *
+ */
 public class Intersection {
 
 	private String id;

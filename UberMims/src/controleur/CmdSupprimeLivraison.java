@@ -13,6 +13,10 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Commande de suppression d'une Livraison d'une tournée
+ *
+ */
 public class CmdSupprimeLivraison implements Commande {
 	
 	private ContraintesTournee contraintes;
@@ -21,18 +25,6 @@ public class CmdSupprimeLivraison implements Commande {
 	private PointLivraison livraison;
 	private Intersection ePrec, eSuiv, lPrec, lSuiv;
 	private Map<String, Map<String, Chemin>> plusCourtsChemins;
-	
-	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointEnlevement e, PointLivraison l, Map<String, Map<String, Chemin>> ch) {
-		this.contraintes = c;
-		this.tournee = t;
-		this.enlevement = e;
-		this.livraison = l;
-		this.plusCourtsChemins = ch;
-		this.ePrec = null;
-		this.eSuiv = null;
-		this.lPrec = null;
-		this.lSuiv = null;
-	}
 	
 	public CmdSupprimeLivraison(ContraintesTournee c, Tournee t, PointEnlevement e, Map<String, Map<String, Chemin>> ch) {
 		this.contraintes = c;
@@ -182,51 +174,5 @@ public class CmdSupprimeLivraison implements Commande {
 		}
 
 	}
-	
-	
-	public static void main(String[] args) {
-		Controleur c = new Controleur();
-		try {
-			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandePetit2.xml");
-		} catch(Exception e) {
-			System.out.println();
-		}
-		c.calculerTournee();
-		System.out.println("\n\n\n\n\n\n");
-		for(Chemin ch : c.getTournee().getPlusCourteTournee())
-			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
-		
-		System.out.println();
-		PointLivraison l = c.getContraintes().getPointsLivraison().get(1);
-		System.out.println(l.getId() + "    yeet    " + l.getIdEnlevement());
-		
-		
-		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), l, c.getPlusCourtsChemins());
-		cmd.doCode();
 
-		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
-			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
-		}
-		System.out.println();
-		cmd.undoCode();
-		
-		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
-			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
-		}
-		System.out.println();		
-		cmd.doCode();
-
-		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
-			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
-		}
-		System.out.println();
-		cmd.undoCode();
-		
-		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {
-			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
-		}
-	}	
-	
-	
 }
