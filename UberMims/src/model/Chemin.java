@@ -2,7 +2,10 @@ package model;
 
 import java.util.List;
 import java.util.LinkedList;
-
+/**
+ * Classe representant un chemin, soit une liste ordonnee d'intersection.
+ *
+ */
 public class Chemin {
 	
 	private int duree;
