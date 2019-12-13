@@ -6,18 +6,25 @@ public class CmdListe {
 
 	private Commande liste[];
 	private int i;
+	private int iLast;
 	
 	public CmdListe () {
 		liste = new Commande[20];
 		i = -1;
+		iLast = -1;
 	}
 	
 	public boolean isEmpty() {
 		return (i < 0);
 	}
 	
+	public boolean redoPossible() {
+		return i < iLast;
+	}
+	
 	public void addCommande(Commande commande) {
 		liste[++i] = commande;
+		iLast = i;
 		commande.doCode();
 	}
 	

@@ -154,8 +154,8 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Ajouter une livraison");
 					fenetre.afficherAjoutLivraison();
 					fenetre.getAffichagePlan().setPlanClickable(true);
-					
-					
+					fenetre.getAffichagePlan().setIntersectionSelectionne(null);
+					fenetre.getAffichagePlan().repaint();
 			break;
 			
 			case "Annuler l'ajout d'une livraison":
@@ -199,6 +199,13 @@ public class EcouteurBoutons implements ActionListener{
 			case "⟲":
 				System.out.println("Annuler derniere modification");
 				controleur.undo();
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
+				fenetre.afficherInfos();
+				
+			break;
+			case "redo":
+				System.out.println("Refaire la derniere modification");
+				controleur.redo();
 				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 				fenetre.afficherInfos();
 				

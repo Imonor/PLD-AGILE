@@ -1,9 +1,12 @@
 package vue;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -38,13 +42,17 @@ import vue.AffichagePlan.Etat;
 
 public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
 
-	
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
 	private Color backgroundTurquoise = new Color(25, 174, 186);
 	private Color backgroundJaune = new Color(226, 179, 72);
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
+
+	private Font police = new Font("Avenir", 0, 15);
+	private List<Color> listColors = new ArrayList();
+	Map<String, Color> colorPointsE =  new HashMap<>();
+	Map<String, Color> colorPointsL =  new HashMap<>();
 	
 	private JPanel panelAll;
 	private JPanel resultsPanel;
@@ -72,11 +80,34 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private Fenetre fenetre;
 	
 	public ModificationTournee(Fenetre fenetre, Controleur controleur) {
+		listColors.add(Color.decode("#2F4F4F"));
+		listColors.add(Color.decode("#808080"));
+		listColors.add(Color.decode("#800000"));
+		listColors.add(Color.decode("#8B4513"));
+		listColors.add(Color.decode("#D2691E"));
+		listColors.add(Color.decode("#191970"));
+		listColors.add(Color.decode("#4169E1"));
+		listColors.add(Color.decode("#556B2F"));
+		listColors.add(Color.decode("#006400"));
+		listColors.add(Color.decode("#3CB371"));
+		listColors.add(Color.decode("#32CD32"));
+		listColors.add(Color.decode("#BDB76B"));
+		listColors.add(Color.decode("#FF4500"));
+		listColors.add(Color.decode("#DC143C"));
+		listColors.add(Color.decode("#FA8072"));
+		listColors.add(Color.decode("#4B0082"));
+		listColors.add(Color.decode("#8B008B"));
+		listColors.add(Color.decode("#C71585"));
+		listColors.add(Color.decode("#9400D3"));
+		listColors.add(Color.decode("#6365ff"));
+		
+		
 		this.controleur = controleur;
 		this.fenetre = fenetre;
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
-
+    	
+		
     	//--------------------LAYOUT-----------------------------//
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
@@ -125,6 +156,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         panelDetail.add(modifAdresse);
         panelDetail.add(modifTemps);
 
+        panelDetail.setBackground(backgroundTurquoiseClair);
+        
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0.5;
@@ -220,8 +253,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollpane = new JScrollPane(resultsPanel);
-        
+        scrollpane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollpane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+        resultsPanel.setBackground(backgroundBleuCiel);
+        scrollpane.setBackground(backgroundBleuCiel);
+        scrollpane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         textArea.add(scrollpane, BorderLayout.CENTER);
+        
     }
     
     public void ajouterTournee(Plan plan) {
@@ -260,9 +299,11 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		int i = 1;
 		for(PointEnlevement crntPointE: controleur.getContraintes().getPointsEnlevement() ) {
 			indexationPointsE.put(crntPointE.getId(), i);
+			colorPointsE.put(crntPointE.getId(), listColors.get(i));
 			for(PointLivraison crntPointL: controleur.getContraintes().getPointsLivraison() ) {
 				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
 					indexationPointsL.put(crntPointL.getId(), i);
+					colorPointsL.put(crntPointL.getId(), listColors.get(i));
 				}
 	    	}
 			i++;
@@ -298,7 +339,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         		l = creerLabelEtape(etape, indexationPointsL.get(etape.getId()), adresse, "livraison");
         		compteurPointsLivraison ++;
         	}
-        	l.setForeground(Color.CYAN);
         	l.setName(Integer.toString(compteur));
         	l.addMouseListener(this);
         	l.setPreferredSize(new Dimension(100, 35));
@@ -315,22 +355,25 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	JLabel label = new JLabel("<html> ");
     	if(type.equals("enlevement")) {
     		label.setText(label.getText() + "Pick Up numero " + position + " :   <br>");
+        	label.setForeground(colorPointsE.get(etape.getId()));
     	} else {
     		label.setText(label.getText() + "Delivery numero " + position + " :   <br>");
+        	label.setForeground(colorPointsL.get(etape.getId()));
     	}
 			
-		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br>");	
+		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br><br>");	
 		return label;
     }
     
     public void mouseClicked(MouseEvent m) {
     	JLabel labelClique = (JLabel) m.getSource();
     	if(labelSelectionne != null) {
+    		Color c = labelSelectionne.getForeground();
     		precedentLabelSelectionne = labelSelectionne;
-    		precedentLabelSelectionne.setForeground(Color.CYAN);
+    		precedentLabelSelectionne.setForeground(c);
     	}
     	labelSelectionne = labelClique;
-    	labelSelectionne.setForeground(Color.BLUE);
+    	labelSelectionne.setForeground(Color.RED);
     }
 
 	@Override
@@ -388,7 +431,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						
 						this.afficherTournee();
 				        labelSelectionne = listeLabels.get(index-1);
-				        labelSelectionne.setForeground(Color.BLUE);
+				        labelSelectionne.setForeground(Color.RED);
 				        repaint();
 				        updateUI();
 
@@ -426,7 +469,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						
 						this.afficherTournee();
 				        labelSelectionne = listeLabels.get(index+1);
-				        labelSelectionne.setForeground(Color.BLUE);
+				        labelSelectionne.setForeground(Color.RED);
 				        repaint();
 				        updateUI();
 			        controleur.modifierOrdrePassage(modif, prec, suiv);
