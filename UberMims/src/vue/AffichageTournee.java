@@ -123,7 +123,7 @@ public class AffichageTournee extends JPanel {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-		System.out.println("OK------------------" + contraintestournee.getPointsEnlevement().get(contraintestournee.getPointsEnlevement().size()-1).getTempsEnlevement());
+		//System.out.println("OK------------------" + contraintestournee.getPointsEnlevement().get(contraintestournee.getPointsEnlevement().size()-1).getTempsEnlevement());
         this.tournee = tournee;
         this.contraintestournee = contraintestournee;
 		

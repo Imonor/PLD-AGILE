@@ -140,44 +140,46 @@ public class CmdSupprimeLivraison implements Commande {
 	public void undoCode() {
 		CmdAjoutLivraison cmdA = new CmdAjoutLivraison(tournee, contraintes, enlevement, livraison, plusCourtsChemins);
 		cmdA.doCode();
-		Intersection ePrecCmd = null, eSuivCmd = null, lPrecCmd = null, lSuivCmd = null;
-		if(ePrec.equals(contraintes.getDepot())) {
-			ePrecCmd = null;
-		}else{
-			ePrecCmd = new Intersection(ePrec);
-		}
-		
-		if(lSuiv.equals(contraintes.getDepot())) {
-			lSuivCmd = null;
-		} else {
-			lSuivCmd = new Intersection(lSuiv);
-		}
-		
-		if(eSuiv.equals(livraison)) {
-			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getPremiere().equals(ePrec)) {
-					eSuivCmd = c.getDerniere();
-				}
+		tournee.getPlusCourteTournee().removeIf(Objects::isNull);
+		if(tournee.getPlusCourteTournee().size() > 3) {
+			Intersection ePrecCmd = null, eSuivCmd = null, lPrecCmd = null, lSuivCmd = null;
+			if(ePrec.equals(contraintes.getDepot())) {
+				ePrecCmd = null;
+			}else{
+				ePrecCmd = new Intersection(ePrec);
 			}
-			if(eSuivCmd.equals(contraintes.getDepot())) {
-				eSuivCmd = null;
-			}
-			lSuivCmd = eSuivCmd;
 			
-		} else {
-			eSuivCmd = new Intersection(eSuiv);
+			if(lSuiv.equals(contraintes.getDepot())) {
+				lSuivCmd = null;
+			} else {
+				lSuivCmd = new Intersection(lSuiv);
+			}
+			
+			if(eSuiv.equals(livraison)) {
+				for(Chemin c : tournee.getPlusCourteTournee()) {
+					if(c.getPremiere().equals(ePrec)) {
+						eSuivCmd = c.getDerniere();
+					}
+				}
+				if(eSuivCmd.equals(contraintes.getDepot())) {
+					eSuivCmd = null;
+				}
+				lSuivCmd = eSuivCmd;
+				
+			} else {
+				eSuivCmd = new Intersection(eSuiv);
+			}
+	
+			lPrecCmd = new Intersection(lPrec);
+			
+			
+			
+			CmdModifOrdre cmdMO1 = new CmdModifOrdre(tournee, enlevement, ePrecCmd, eSuivCmd, plusCourtsChemins);
+			cmdMO1.doCode();
+	
+			CmdModifOrdre cmdMO2 = new CmdModifOrdre(tournee, livraison, lPrecCmd, lSuivCmd, plusCourtsChemins);
+			cmdMO2.doCode();
 		}
-
-		lPrecCmd = new Intersection(lPrec);
-		
-		
-		
-		CmdModifOrdre cmdMO1 = new CmdModifOrdre(tournee, enlevement, ePrecCmd, eSuivCmd, plusCourtsChemins);
-		cmdMO1.doCode();
-
-		CmdModifOrdre cmdMO2 = new CmdModifOrdre(tournee, livraison, lPrecCmd, lSuivCmd, plusCourtsChemins);
-		cmdMO2.doCode();
-		
 
 	}
 	
