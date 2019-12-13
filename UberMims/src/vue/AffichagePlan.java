@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import javax.sound.sampled.Line;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -380,7 +381,8 @@ public class AffichagePlan extends JScrollPane {
 		Graphics2D g2d = (Graphics2D) g;
 
 		ajusterZoom(g2d);		
-
+		
+		// AFFiCHAGE DU PLAN
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
 				for (Troncon troncon : intersection.getTronconsSortants().values()) {
@@ -389,17 +391,20 @@ public class AffichagePlan extends JScrollPane {
 							(int) destination.getLongitude(), (int) destination.getLatitude());
 				}
 			}
-
+			
+			//AFFICHAGE DE LA TOURNEE
 			if (tournee != null) {
 				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
 				int cptColor = 0;
 				Color couleurLigne;
+				boolean trouve = false;
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
 					int epaisseur = 2;
-					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne)){
+					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne) && !trouve){
 						couleurLigne = Color.RED;
 						epaisseur = 4;
+						trouve = true;
 					}else{
 						couleurLigne = getArrowColor(cptColor);
 					}
@@ -425,7 +430,8 @@ public class AffichagePlan extends JScrollPane {
 					cptColor++;
 				}
 			}
-
+			
+			//AFFICHAGE DES CONTRAINTES
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
 				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,
