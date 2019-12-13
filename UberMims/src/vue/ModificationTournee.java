@@ -615,16 +615,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					int duree = ((Number) champTemps.getValue()).intValue();;
 					for(PointEnlevement ptE: controleur.getContraintes().getPointsEnlevement()) {
 						if(ptE.equals(intersection)) {
-							duree=duree*60;
-							ptE.setTempsEnlevement(duree);
+							controleur.modifierTemps(ptE, duree);
 							break;
 						}
 					}
 					for(PointLivraison ptL: controleur.getContraintes().getPointsLivraison()) {
 						if(ptL.equals(intersection)) {
 							System.out.println(ptL.getId() +"    "+duree*60);
-							duree=duree*60;
-							ptL.setTempsLivraison(duree);
+							controleur.modifierTemps(ptL, duree);
 							break;
 						}
 					}

@@ -147,7 +147,16 @@ public class Controleur {
 		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, l, newI, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}
-
+	
+	public void modifierTemps(PointEnlevement e, int duree) {
+		CmdModifTemps cmd = new CmdModifTemps(e, duree);
+		cmdListe.addCommande(cmd);
+	}
+	
+	public void modifierTemps(PointLivraison l, int duree) {
+		CmdModifTemps cmd = new CmdModifTemps(l, duree);
+		cmdListe.addCommande(cmd);
+	}
 	public void undo() {
 		cmdListe.undo();
 	}
