@@ -1,17 +1,17 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-import java.util.List;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class ContraintesTourneeTest {
-	
+
 	@Test
-	void TestContructeur() {
+	public void TestContructeur() {
 		Intersection depot = new Intersection ("depot", 0.0,0.0);
 		
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
@@ -52,7 +52,7 @@ public class ContraintesTourneeTest {
 	
 	
 	@Test
-	void TestsAddLivraison() {
+	public void TestsAddLivraison() {
 		Intersection depot = new Intersection ("depot", 0.0,0.0);
 		
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
@@ -105,7 +105,7 @@ public class ContraintesTourneeTest {
 	}
 	
 	@Test
-	void TestRemoveLivrasons() {
+	public void TestRemoveLivrasons() {
 		Intersection depot = new Intersection ("depot", 0.0,0.0);
 		
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
@@ -144,7 +144,7 @@ public class ContraintesTourneeTest {
 	
 	
 	@Test
-	void TestEquals() { //Chaque test verifiera la commutativite du la fonction equals
+	public void TestEquals() { //Chaque test verifiera la commutativite du la fonction equals
 		
 		Intersection depot1 = new Intersection ("depot1", 0.0,0.0);
 		Intersection depot2 = new Intersection ("depot2", 0.0,0.0);
@@ -241,5 +241,5 @@ public class ContraintesTourneeTest {
 		}		
 		return false;
 	}
-	
+
 }

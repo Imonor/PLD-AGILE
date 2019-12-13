@@ -1,18 +1,18 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class TourneeTest {
 	
 	@Test
-	void TestContructeur() {
+	public void TestContructeur() {
 		Intersection depot = new Intersection ("depot", 0.0,0.0);
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
@@ -101,7 +101,7 @@ public class TourneeTest {
 	}
 	
 	@Test
-	void TestGetHeureDePassage() {
+	public void TestGetHeureDePassage() {
 		Intersection depot = new Intersection ("depot", 0.0,0.0);
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);

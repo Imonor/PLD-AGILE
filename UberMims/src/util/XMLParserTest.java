@@ -1,13 +1,12 @@
 package util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import model.ContraintesTournee;
 import model.Plan;
@@ -16,7 +15,7 @@ import model.Troncon;
 class XMLParserTest {
 
 	@Test
-	void testChargerPlanNormal() {
+	public void testChargerPlanNormal() {
 		Plan plan = new Plan();
 		try {
 		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
@@ -42,7 +41,7 @@ class XMLParserTest {
 	}
 	
 	@Test
-	void testChargerPlanUNOWKN() {
+	public void testChargerPlanUNOWKN() {
 		Plan plan = new Plan();
 		try {
 		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
@@ -73,7 +72,7 @@ class XMLParserTest {
 	}*/
 	
 	@Test
-	void testChargerContraintesTourneeNormal() {
+	public void testChargerContraintesTourneeNormal() {
 		Plan plan = new Plan();
 		try {
 		plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
@@ -104,7 +103,7 @@ class XMLParserTest {
 	}
 	
 	@Test
-	void testChargerTourneeSansDepot() {
+	public void testChargerTourneeSansDepot() {
 		Plan plan = new Plan();
 		try {
 			plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
@@ -117,7 +116,7 @@ class XMLParserTest {
 	}
 	
 	@Test
-	void testChargerTourneeIncoherenteAvecPlan() {
+	public void testChargerTourneeIncoherenteAvecPlan() {
 		Plan plan = new Plan();
 		try {
 			plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
@@ -131,7 +130,7 @@ class XMLParserTest {
 	}
 	
 	@Test
-	void testChargerFichiersAutresQueXML() {
+	public void testChargerFichiersAutresQueXML() {
 		Plan plan = new Plan();
 		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerPlan("test/Random.csv", 1600, 1900));
 		final Plan p = plan;
@@ -140,7 +139,7 @@ class XMLParserTest {
 	}
 	
 	@Test
-	void testChargerFichierInexistant() {
+	public void testChargerFichierInexistant() {
 		Plan plan = new Plan();
 		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerPlan("test/Unknown.xml", 1600, 1900));
 		final Plan p = plan;
