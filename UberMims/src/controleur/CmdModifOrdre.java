@@ -2,9 +2,11 @@ package controleur;
 
 import model.Tournee;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import model.Chemin;
 import model.Intersection;
@@ -27,6 +29,7 @@ public class CmdModifOrdre implements Commande {
 		this.newSuiv = suiv;
 		this.newPrec = prec;
 		this.plusCourtsChemins = plusCourtsChemins;
+		tournee.getPlusCourteTournee().removeIf(Objects::isNull);
 		for (Chemin c : tournee.getPlusCourteTournee()) {
 			if (c.getDerniere().equals(pointModif)) {
 				this.actuelPrec = c.getPremiere();
@@ -169,7 +172,8 @@ public class CmdModifOrdre implements Commande {
 				}
 			}
 			
-		}		
+		}
+		newChemins.removeAll(Collections.singleton(null));
 		tournee.setPlusCourteTournee(newChemins);
 	}
 }

@@ -48,6 +48,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		
 		if (affichagePlan.getPlanClickable()) {
 			affichagePlan.setIntersectionSelectionne(null);
+			fenetre.getAffichageTournee().setIntersectionClique(null);
 			switch (affichagePlan.getEtat()) {
 			case LIVRAISON:
 				affichagePlan.setNouvelleLivraison(interLaPlusProche);
@@ -63,14 +64,12 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 				affichagePlan.setNouvelleAdresse(interLaPlusProche);
 				fenetre.getPanModificationTournee().afficherValidationModifAdresse();
 			}
-			
-
 			affichagePlan.repaint();
-			System.out.println("Intersection la plus proche: " + interLaPlusProche.getLongitude()+ " "
-					+ interLaPlusProche.getLatitude());
 		} 
 		else{
 			affichagePlan.setIntersectionSelectionne(interLaPlusProche);
+			fenetre.getAffichageTournee().setIntersectionClique(interLaPlusProche);
+			fenetre.getAffichageTournee().repaint();
 		}
 	}
 
@@ -117,12 +116,9 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		if (affichagePlan.getZoom() > 1) {
 			double clicX = e.getX() - xOffset;
 			double clicY = e.getY() - yOffset;
-			System.out.println(" X depart : " +pointDepart.x);
 
 			double deplacementX = clicX - pointDepart.x;
 			double deplacementY = clicY - pointDepart.y;
-			System.out.println("deplacement x : " + deplacementX);
-			System.out.println( );
 
 			if( (Math.abs(deplacementX) <= Math.abs(xOffset) && deplacementX > 0) ||
 				(Math.abs(deplacementX) <= largeurPlan + xOffset - Fenetre.LARGEUR_PLAN) && deplacementX <0){
@@ -181,7 +177,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			double longitude = i.getLongitude();
 			double latitude = i.getLatitude();	
 			double distance = Point2D.distanceSq(xPos, yPos, longitude, latitude);
-
+	
 			if (distance < distanceMin) {
 				distanceMin = distance;
 				interLaPlusProche = i;
@@ -189,4 +185,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		}
 		return interLaPlusProche;
 	}
+	
+	
 }

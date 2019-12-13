@@ -1,23 +1,29 @@
 package vue;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,7 +42,17 @@ import vue.AffichagePlan.Etat;
 
 public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
 
-	
+	private Color backgroundBleuCiel = new Color(191, 252, 251);
+	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
+	private Color backgroundTurquoise = new Color(25, 174, 186);
+	private Color backgroundJaune = new Color(226, 179, 72);
+	private Color backgroundOrange = new Color(229, 138, 86);
+	private Color backgroundRougeClair = new Color(184, 64, 57);
+
+	private Font police = new Font("Avenir", 0, 15);
+	private List<Color> listColors = new ArrayList();
+	Map<String, Color> colorPointsE =  new HashMap<>();
+	Map<String, Color> colorPointsL =  new HashMap<>();
 	
 	private JPanel panelAll;
 	private JPanel resultsPanel;
@@ -44,13 +60,19 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private JPanel panelDetail;
 	
 	private JPanel panelModifAdresse;
+	private JPanel panelModifTemps;
 	private JPanel panelInfoModifAdresse;
+	private JPanel panelInfoModifTemps;
 	private JPanel panelValiderModifAdresse;
-	
+	private JPanel panelValiderModifTemps;
+	private JFormattedTextField champTemps = new JFormattedTextField(NumberFormat.getIntegerInstance());
+
 	private JLabel labelSelectionne;
-	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on s�lectionne un autre bouton
+	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 
+	
+	private int nouveauTemps=0;
 	private int deplacementEtape;
 	private List<JLabel> listeLabels;
 	private Plan plan;
@@ -58,11 +80,34 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private Fenetre fenetre;
 	
 	public ModificationTournee(Fenetre fenetre, Controleur controleur) {
+		listColors.add(Color.decode("#2F4F4F"));
+		listColors.add(Color.decode("#808080"));
+		listColors.add(Color.decode("#800000"));
+		listColors.add(Color.decode("#8B4513"));
+		listColors.add(Color.decode("#D2691E"));
+		listColors.add(Color.decode("#191970"));
+		listColors.add(Color.decode("#4169E1"));
+		listColors.add(Color.decode("#556B2F"));
+		listColors.add(Color.decode("#006400"));
+		listColors.add(Color.decode("#3CB371"));
+		listColors.add(Color.decode("#32CD32"));
+		listColors.add(Color.decode("#BDB76B"));
+		listColors.add(Color.decode("#FF4500"));
+		listColors.add(Color.decode("#DC143C"));
+		listColors.add(Color.decode("#FA8072"));
+		listColors.add(Color.decode("#4B0082"));
+		listColors.add(Color.decode("#8B008B"));
+		listColors.add(Color.decode("#C71585"));
+		listColors.add(Color.decode("#9400D3"));
+		listColors.add(Color.decode("#6365ff"));
+		
+		
 		this.controleur = controleur;
 		this.fenetre = fenetre;
     	ordrePassage = new ArrayList<>();
     	listeLabels = new ArrayList<>();
-
+    	
+		
     	//--------------------LAYOUT-----------------------------//
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
@@ -89,10 +134,12 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         JButton boutonBas = new JButton("v");
         JButton validerModif = new JButton("Valider les modifications");
         JButton supprLivr = new JButton("Supprimer la livraison associee");
-        JButton modifAdresse = new JButton("Modifier l'emplacement de ce pick-up/delivery");
+        JButton modifAdresse = new JButton("Modifier l'emplacement de ce point");
+        JButton modifTemps = new JButton("Modifier le temps de passage a ce point");
         boutonHaut.setBounds(15, 5, 20, 20);
         boutonBas.setBounds(15, 30, 20, 20);
         modifAdresse.setBounds(30, 45, 40, 20);
+        modifTemps.setBounds(30, 70, 40, 20);
         validerModif.setBounds(30, 60, 40, 20);
         
         boutonHaut.addActionListener(this);
@@ -100,12 +147,16 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         validerModif.addActionListener(this);
         supprLivr.addActionListener(this);
         modifAdresse.addActionListener(this);
+        modifTemps.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
         panelDetail.add(validerModif);
         panelDetail.add(supprLivr);
         panelDetail.add(modifAdresse);
+        panelDetail.add(modifTemps);
+
+        panelDetail.setBackground(backgroundTurquoiseClair);
         
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -147,6 +198,47 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         
         this.add(panelModifAdresse, gbc);
         
+        //--------------------PANEL MODIF TEMPS-----------------------------//
+        panelModifTemps = new JPanel();
+        panelModifTemps.setBackground(backgroundTurquoiseClair);
+        panelModifTemps.setVisible(false);
+        
+        JButton annulerModifTemps = new JButton("Annuler la modification de la duree");
+        annulerModifTemps.addActionListener(this);
+
+    	
+		
+		panelInfoModifTemps = new JPanel();
+        JLabel infoModifTemps = new JLabel("Veuillez entrer la duree a changer (en minutes)");
+        //infoModifTemps.setBounds());
+        panelInfoModifTemps.add(infoModifTemps);
+		
+        panelValiderModifTemps = new JPanel();
+        panelValiderModifTemps.setVisible(true);
+        JButton validerModifTemps = new JButton("Valider la modification de la duree");
+        validerModifTemps.addActionListener(this);
+        panelValiderModifTemps.add(validerModifTemps);
+        // Champ Temps
+     		champTemps.setVisible(true);
+
+             
+     	//champTemps.setFont(police);
+     	champTemps.setSize(100, 30);;
+     	champTemps.setBackground(Color.white);
+        
+        panelModifTemps.add(panelInfoModifTemps);
+ 		panelModifTemps.add(champTemps);
+ 		panelModifTemps.add(panelValiderModifTemps);
+        panelModifTemps.add(annulerModifTemps);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+        gbc.weighty=1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        
+        this.add(panelModifTemps, gbc);
+        
       //--------------------AFFICHAGE DES ETAPES-----------------------------//
         JPanel textArea = new JPanel();
         textArea.setLayout(new BorderLayout());
@@ -161,8 +253,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollpane = new JScrollPane(resultsPanel);
-        
+        scrollpane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollpane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+        resultsPanel.setBackground(backgroundBleuCiel);
+        scrollpane.setBackground(backgroundBleuCiel);
+        scrollpane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         textArea.add(scrollpane, BorderLayout.CENTER);
+        
     }
     
     public void ajouterTournee(Plan plan) {
@@ -201,9 +299,11 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		int i = 1;
 		for(PointEnlevement crntPointE: controleur.getContraintes().getPointsEnlevement() ) {
 			indexationPointsE.put(crntPointE.getId(), i);
+			colorPointsE.put(crntPointE.getId(), listColors.get(i));
 			for(PointLivraison crntPointL: controleur.getContraintes().getPointsLivraison() ) {
 				if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
 					indexationPointsL.put(crntPointL.getId(), i);
+					colorPointsL.put(crntPointL.getId(), listColors.get(i));
 				}
 	    	}
 			i++;
@@ -239,7 +339,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         		l = creerLabelEtape(etape, indexationPointsL.get(etape.getId()), adresse, "livraison");
         		compteurPointsLivraison ++;
         	}
-        	l.setForeground(Color.CYAN);
         	l.setName(Integer.toString(compteur));
         	l.addMouseListener(this);
         	l.setPreferredSize(new Dimension(100, 35));
@@ -256,22 +355,25 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	JLabel label = new JLabel("<html> ");
     	if(type.equals("enlevement")) {
     		label.setText(label.getText() + "Pick Up numero " + position + " :   <br>");
+        	label.setForeground(colorPointsE.get(etape.getId()));
     	} else {
     		label.setText(label.getText() + "Delivery numero " + position + " :   <br>");
+        	label.setForeground(colorPointsL.get(etape.getId()));
     	}
 			
-		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br>");	
+		label.setText(label.getText() + "&rarr; Adresse : " + adresse +"<br><br>");	
 		return label;
     }
     
     public void mouseClicked(MouseEvent m) {
     	JLabel labelClique = (JLabel) m.getSource();
     	if(labelSelectionne != null) {
+    		Color c = labelSelectionne.getForeground();
     		precedentLabelSelectionne = labelSelectionne;
-    		precedentLabelSelectionne.setForeground(Color.CYAN);
+    		precedentLabelSelectionne.setForeground(c);
     	}
     	labelSelectionne = labelClique;
-    	labelSelectionne.setForeground(Color.BLUE);
+    	labelSelectionne.setForeground(Color.RED);
     }
 
 	@Override
@@ -329,7 +431,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						
 						this.afficherTournee();
 				        labelSelectionne = listeLabels.get(index-1);
-				        labelSelectionne.setForeground(Color.BLUE);
+				        labelSelectionne.setForeground(Color.RED);
 				        repaint();
 				        updateUI();
 
@@ -367,7 +469,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						
 						this.afficherTournee();
 				        labelSelectionne = listeLabels.get(index+1);
-				        labelSelectionne.setForeground(Color.BLUE);
+				        labelSelectionne.setForeground(Color.RED);
 				        repaint();
 				        updateUI();
 			        controleur.modifierOrdrePassage(modif, prec, suiv);
@@ -385,7 +487,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					int index = Integer.parseInt(labelSelectionne.getName());
 					Map<String, String> elemSelect = ordrePassage.get(index);
 					
-					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associ�s � cette livraison ?") == JOptionPane.OK_OPTION) {
+					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associes a cette livraison ?") == JOptionPane.OK_OPTION) {
 						ordrePassage.remove(index);
 						Intersection elemSuppr = null;
 						PointEnlevement enlevement = null;
@@ -427,10 +529,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 						this.afficherTournee();
 				        updateUI();
 				        fenetre.setTournee(controleur.getTournee());
+						labelSelectionne=null;
+
 					}
+					labelSelectionne = null;
 				}
+				
 				break;
-			case "Modifier l'emplacement de ce pick-up/delivery":
+			case "Modifier l'emplacement de ce point":
 				this.panelValiderModifAdresse.setVisible(false);
 				if(labelSelectionne != null) {
 					fenetre.getAffichagePlan().setPlanClickable(true);
@@ -438,7 +544,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					panelModifAdresse.setVisible(true);
 					fenetre.getAffichagePlan().setEtat(Etat.MODIF_ADRESSE);
 				} else {
-					JOptionPane.showMessageDialog(null, "Veuillez saisir un point de pick-up/delivery !");
+					JOptionPane.showMessageDialog(null, "Veuillez saisir un point de pick-up ou delivery !");
 				}
 				break;
 				
@@ -461,6 +567,82 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				panelModifAdresse.setVisible(false);
 				ajouterTournee(fenetre.getPlan());
 				afficherTournee();
+				break;
+				
+			case "Modifier le temps de passage a ce point":
+				this.panelValiderModifTemps.setVisible(true);
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					Map<String, String> elemSelect = ordrePassage.get(index);
+					String intersectionId = elemSelect.keySet().iterator().next();
+					Intersection intersection = plan.getIntersections().get(intersectionId);
+					int duree = 0;
+					for(PointEnlevement ptE: controleur.getContraintes().getPointsEnlevement()) {
+						if(ptE.equals(intersection)) {
+							duree = ptE.getTempsEnlevement();
+							break;
+						}
+					}
+					for(PointLivraison ptL: controleur.getContraintes().getPointsLivraison()) {
+						if(ptL.equals(intersection)) {
+							duree = ptL.getTempsLivraison();
+							break;
+						}
+					}
+					champTemps.setText(String.valueOf((int)duree/60));
+					panelDetail.setVisible(false);
+					panelModifTemps.setVisible(true);
+					fenetre.getAffichagePlan().setEtat(Etat.MODIF_TEMPS);
+				} else {
+					JOptionPane.showMessageDialog(null, "Veuillez saisir un point de pick-up ou delivery !");
+				}
+				break;	
+				
+			
+			case "Annuler la modification de la duree":
+				fenetre.getAffichagePlan().repaint();
+				labelSelectionne = null;
+				panelDetail.setVisible(true);
+				panelModifTemps.setVisible(false);
+				break;
+				
+			case "Valider la modification de la duree":
+				if(labelSelectionne != null) {
+					int index = Integer.parseInt(labelSelectionne.getName());
+					Map<String, String> elemSelect = ordrePassage.get(index);
+					String intersectionId = elemSelect.keySet().iterator().next();
+					Intersection intersection = plan.getIntersections().get(intersectionId);
+					int duree = ((Number) champTemps.getValue()).intValue();;
+					for(PointEnlevement ptE: controleur.getContraintes().getPointsEnlevement()) {
+						if(ptE.equals(intersection)) {
+							duree=duree*60;
+							ptE.setTempsEnlevement(duree);
+							break;
+						}
+					}
+					for(PointLivraison ptL: controleur.getContraintes().getPointsLivraison()) {
+						if(ptL.equals(intersection)) {
+							System.out.println(ptL.getId() +"    "+duree*60);
+							duree=duree*60;
+							ptL.setTempsLivraison(duree);
+							break;
+						}
+					}
+					champTemps.setText(String.valueOf(duree));
+					panelDetail.setVisible(false);
+					panelModifTemps.setVisible(true);
+					fenetre.getAffichagePlan().setEtat(Etat.MODIF_TEMPS);
+				} else {
+					JOptionPane.showMessageDialog(null, "Veuillez saisir un point de pick-up ou delivery !");
+				}
+				
+				fenetre.getAffichagePlan().repaint();
+				labelSelectionne = null;
+				panelDetail.setVisible(true);
+				panelModifTemps.setVisible(false);
+				ajouterTournee(fenetre.getPlan());
+				afficherTournee();
+				break;
 		}
 	}
 	
@@ -469,14 +651,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 		if(deplacement.equals("^")) {
 			for(PointLivraison pl : controleur.getContraintes().getPointsLivraison()) {
 				if(pl.equals(elemSelect) && autreElem.getId().equals(pl.getIdEnlevement())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enl�vement !");
+					JOptionPane.showMessageDialog(null, "Attention, le point de livraison est avant le point d'enlevement !");
 					break;
 				}
 			}
 		} else {
 			for(PointEnlevement pe : controleur.getContraintes().getPointsEnlevement()) {
 				if(pe.equals(elemSelect) && autreElem.getId().equals(pe.getIdLivraison())) {
-					JOptionPane.showMessageDialog(null, "Attention, le point d'enl�vement est apr�s le point de livraison !");
+					JOptionPane.showMessageDialog(null, "Attention, le point d'enlevement est apres le point de livraison !");
 					break;
 				}
 			}

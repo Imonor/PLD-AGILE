@@ -39,6 +39,7 @@ public class EcouteurBoutons implements ActionListener{
 	private String nomFichierPlan2;
 	private String cheminFichierTournee ;
 	private String nomFichierTournee;
+	
 	//Constructeur
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
@@ -160,8 +161,8 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Ajouter une livraison");
 					fenetre.afficherAjoutLivraison();
 					fenetre.getAffichagePlan().setPlanClickable(true);
-					
-					
+					fenetre.getAffichagePlan().setIntersectionSelectionne(null);
+					fenetre.getAffichagePlan().repaint();
 			break;
 			
 			case "Annuler l'ajout d'une livraison":
@@ -175,8 +176,8 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Valider l'ajout d'une livraison":
 				System.out.println("Valider ajout d'une livraison");
-				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue();
-				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue();
+				int nouveauTempsPickUp = ((Number) fenetre.getChampPickUp().getValue()).intValue() * 60;
+				int nouveauTempsDelivery = ((Number) fenetre.getChampDelivery().getValue()).intValue() * 60;
 				System.out.println(nouveauTempsPickUp);
 				System.out.println(nouveauTempsDelivery);
 
@@ -184,8 +185,8 @@ public class EcouteurBoutons implements ActionListener{
 				Intersection nouveauPointLivraison = fenetre.getAffichagePlan().getNouvelleLivraison();
 				PointEnlevement pointEnlevement = new PointEnlevement(nouveauPointPickUp, nouveauPointLivraison.getId(), nouveauTempsPickUp);
 				PointLivraison pointLivraison = new PointLivraison(nouveauPointLivraison, nouveauPointPickUp.getId(), nouveauTempsDelivery);
-				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associé: " + pointEnlevement.getIdLivraison());
-				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associé: " + pointLivraison.getIdEnlevement());
+				System.out.println("id enlevement: " + pointEnlevement.getId() + "id livraison associé: " + pointEnlevement.getIdLivraison() + "temps" + pointEnlevement.getTempsEnlevement());
+				System.out.println("id livraison: " + pointLivraison.getId() + "id enlevement associé: " + pointLivraison.getIdEnlevement() + "temps" + pointLivraison.getTempsLivraison());
 
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
@@ -194,16 +195,24 @@ public class EcouteurBoutons implements ActionListener{
 				//System.out.println(pointLivraison.getId());
 
 				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
+				System.out.println(controleur.getContraintes().getPointsEnlevement().get(controleur.getContraintes().getPointsEnlevement().size()-1).getTempsEnlevement());
 				fenetre.setTournee(controleur.getTournee());
+				fenetre.setContraintes(controleur.getContraintes());
 				fenetre.apresAjoutLivraison();
-				fenetre.afficherInfos();
 				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(),controleur.getContraintes());
-				
+				fenetre.afficherInfos();
 			break;
 
 			case "⟲":
 				System.out.println("Annuler derniere modification");
 				controleur.undo();
+				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
+				fenetre.afficherInfos();
+				
+			break;
+			case "redo":
+				System.out.println("Refaire la derniere modification");
+				controleur.redo();
 				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 				fenetre.afficherInfos();
 				

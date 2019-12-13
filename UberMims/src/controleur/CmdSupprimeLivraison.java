@@ -7,9 +7,11 @@ import model.PointLivraison;
 import model.Tournee;
 import model.Chemin;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class CmdSupprimeLivraison implements Commande {
 	
@@ -70,7 +72,8 @@ public class CmdSupprimeLivraison implements Commande {
 		contraintes.removeLivraison(enlevement, livraison);
 		
 		List<Chemin> chemins = tournee.getPlusCourteTournee();
-		
+
+		chemins.removeAll(Collections.singleton(null));
 		Chemin newPrec = null, newSuiv = null;
 		for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
 			Chemin c = it.next();
@@ -102,64 +105,82 @@ public class CmdSupprimeLivraison implements Commande {
 				break;
 			}
 		}
-		
-		
-		for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
-			Chemin c = it.next();
-			if(c.getDerniere().equals(newPrec.getPremiere())) {
-				it.add(newPrec);
-				if(newSuiv == null)
-					break;
+		chemins.removeIf(Objects::isNull);
+		if(!chemins.isEmpty()) {
+			if(ePrec.equals(contraintes.getDepot())) {
+				chemins.add(0, newPrec);
 			}
-			if(c.getDerniere().equals(newSuiv.getPremiere())) {
-				it.add(newSuiv);
-				break;
+			for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
+				Chemin c = it.next();
+				if(c != null && c.getDerniere().equals(newPrec.getPremiere())) {
+					it.add(newPrec);
+					if(newSuiv == null)
+						break;
+				}
+				if(c != null  && newSuiv != null && !lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
+					it.add(newSuiv);
+					break;
+				}
+			}
+			
+			if(lSuiv.equals(contraintes.getDepot())) {
+				chemins.add(newSuiv);
 			}
 		}
+		
+		chemins.removeAll(Collections.singleton(null));
+		tournee.setPlusCourteTournee(chemins);
+		for(Chemin c : tournee.getPlusCourteTournee()) {
+			System.out.println(c);
+		}
+		
 	}
 
 	@Override
 	public void undoCode() {
 		CmdAjoutLivraison cmdA = new CmdAjoutLivraison(tournee, contraintes, enlevement, livraison, plusCourtsChemins);
 		cmdA.doCode();
-		Intersection ePrecCmd = null, eSuivCmd = null, lPrecCmd = null, lSuivCmd = null;
-		if(ePrec.equals(contraintes.getDepot())) {
-			ePrecCmd = null;
-		}else{
-			ePrecCmd = new Intersection(ePrec);
-		}
-		
-		if(lSuiv.equals(contraintes.getDepot())) {
-			lSuivCmd = null;
-		} else {
-			lSuivCmd = new Intersection(lSuiv);
-		}
-		
-		if(eSuiv.equals(livraison)) {
-			for(Chemin c : tournee.getPlusCourteTournee()) {
-				if(c.getPremiere().equals(ePrec)) {
-					eSuivCmd = c.getDerniere();
-				}
+		tournee.getPlusCourteTournee().removeIf(Objects::isNull);
+		if(tournee.getPlusCourteTournee().size() > 3) {
+			Intersection ePrecCmd = null, eSuivCmd = null, lPrecCmd = null, lSuivCmd = null;
+			if(ePrec.equals(contraintes.getDepot())) {
+				ePrecCmd = null;
+			}else{
+				ePrecCmd = new Intersection(ePrec);
 			}
-			if(eSuivCmd.equals(contraintes.getDepot())) {
-				eSuivCmd = null;
-			}
-			lSuivCmd = eSuivCmd;
 			
-		} else {
-			eSuivCmd = new Intersection(eSuiv);
+			if(lSuiv.equals(contraintes.getDepot())) {
+				lSuivCmd = null;
+			} else {
+				lSuivCmd = new Intersection(lSuiv);
+			}
+			
+			if(eSuiv.equals(livraison)) {
+				for(Chemin c : tournee.getPlusCourteTournee()) {
+					if(c.getPremiere().equals(ePrec)) {
+						eSuivCmd = c.getDerniere();
+					}
+				}
+				if(eSuivCmd.equals(contraintes.getDepot())) {
+					eSuivCmd = null;
+				}
+				lSuivCmd = eSuivCmd;
+				
+			} else {
+				eSuivCmd = new Intersection(eSuiv);
+			}
+	
+			lPrecCmd = new Intersection(lPrec);
+			
+			
+			
+			CmdModifOrdre cmdMO1 = new CmdModifOrdre(tournee, enlevement, ePrecCmd, eSuivCmd, plusCourtsChemins);
+			cmdMO1.doCode();
+	
+			CmdModifOrdre cmdMO2 = new CmdModifOrdre(tournee, livraison, lPrecCmd, lSuivCmd, plusCourtsChemins);
+			cmdMO2.doCode();
 		}
 
-		lPrecCmd = new Intersection(lPrec);
-		
-		
-		
-		CmdModifOrdre cmdMO1 = new CmdModifOrdre(tournee, enlevement, ePrecCmd, eSuivCmd, plusCourtsChemins);
-		cmdMO1.doCode();
-
-		CmdModifOrdre cmdMO2 = new CmdModifOrdre(tournee, livraison, lPrecCmd, lSuivCmd, plusCourtsChemins);
-		cmdMO2.doCode();
-		
 	}
 	
 	
@@ -167,7 +188,7 @@ public class CmdSupprimeLivraison implements Commande {
 		Controleur c = new Controleur();
 		try {
 			c.chargerPlan("fichiersXML2019/petitPlan.xml", 600, 800);
-			c.chargerTournee("fichiersXML2019/demandePetit1.xml");
+			c.chargerTournee("fichiersXML2019/demandePetit2.xml");
 		} catch(Exception e) {
 			System.out.println();
 		}
@@ -177,11 +198,11 @@ public class CmdSupprimeLivraison implements Commande {
 			System.out.print(ch.getPremiere().getId() + " -> " + ch.getDerniere().getId() +", ");
 		
 		System.out.println();
-		PointEnlevement e = c.getContraintes().getPointsEnlevement().get(0);
-		System.out.println(e.getId() + "    yeet    " + e.getIdLivraison());
+		PointLivraison l = c.getContraintes().getPointsLivraison().get(1);
+		System.out.println(l.getId() + "    yeet    " + l.getIdEnlevement());
 		
 		
-		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), e, c.getPlusCourtsChemins());
+		CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(c.getContraintes(), c.getTournee(), l, c.getPlusCourtsChemins());
 		cmd.doCode();
 
 		for(Chemin ch : c.getTournee().getPlusCourteTournee()) {

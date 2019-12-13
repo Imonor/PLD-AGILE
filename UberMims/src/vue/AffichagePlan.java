@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import javax.sound.sampled.Line;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -48,7 +49,7 @@ public class AffichagePlan extends JScrollPane {
 	 * Page d'accueil : chargement du plan
 	 */
 	public enum Etat {
-		LIVRAISON, ENLEVEMENT, MODIF_ADRESSE;
+		LIVRAISON, ENLEVEMENT, MODIF_ADRESSE, MODIF_TEMPS;
 	}
 
 	private Etat etat;
@@ -78,7 +79,7 @@ public class AffichagePlan extends JScrollPane {
 	private Intersection nouvelleAdresse;
 	
 
-	// InterSection du chemin à mettre en surbrillance
+	// InterSection du chemin ï¿½ mettre en surbrillance
 	private Intersection intersectionSelectionne;
 
 	private int nouveauTempsPickUp;
@@ -119,13 +120,13 @@ public class AffichagePlan extends JScrollPane {
 		this.planClickable = false;
 		this.etat = etat.LIVRAISON;
 		
-		//Ajout des écouteurs souris
+		//Ajout des ï¿½couteurs souris
 		this.ecouteurSouris = new EcouteurSouris(this, fenetre);
 		this.addMouseListener(ecouteurSouris);
 		this.addMouseWheelListener(ecouteurSouris);
 		this.addMouseMotionListener(ecouteurSouris);
 		
-		//Initialisation des variables liées au zoom et au drag & drop
+		//Initialisation des variables liï¿½es au zoom et au drag & drop
 		this.zoom = 1f;
 		this.zoomPrecedent = 1f;
 		zoomIn = false;
@@ -331,7 +332,7 @@ public class AffichagePlan extends JScrollPane {
 	}
 
 	
-	// Le code de la fonction ci-dessous a été fortement inspiré par le lien suivant
+	// Le code de la fonction ci-dessous a ï¿½tï¿½ fortement inspirï¿½ par le lien suivant
 	// https://stackoverflow.com/questions/6543453/zooming-in-and-zooming-out-within-a-panel
 	
 	public void ajusterZoom(Graphics2D g2d) {
@@ -345,8 +346,8 @@ public class AffichagePlan extends JScrollPane {
 			yOldMouseY.push(mouseY);
 
 		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
-			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
-			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * yOldMouseY.pop();
+			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * (xOldMouseX.pop() - xDiff);
+			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * (yOldMouseY.pop() - yDiff);
 		}
 		if (zoom == 1f) {
 			xOffset = 0;
@@ -380,7 +381,8 @@ public class AffichagePlan extends JScrollPane {
 		Graphics2D g2d = (Graphics2D) g;
 
 		ajusterZoom(g2d);		
-
+		
+		// AFFiCHAGE DU PLAN
 		if (plan != null) {
 			for (Intersection intersection : plan.getIntersections().values()) {
 				for (Troncon troncon : intersection.getTronconsSortants().values()) {
@@ -389,17 +391,20 @@ public class AffichagePlan extends JScrollPane {
 							(int) destination.getLongitude(), (int) destination.getLatitude());
 				}
 			}
-
+			
+			//AFFICHAGE DE LA TOURNEE
 			if (tournee != null) {
 				List<Chemin> plusCourtChemin = tournee.getPlusCourteTournee();
 				int cptColor = 0;
 				Color couleurLigne;
+				boolean trouve = false;
 				for (Chemin c : plusCourtChemin) {
 					List<Intersection> inters = c.getIntersections();
 					int epaisseur = 2;
-					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne)){
+					if(intersectionSelectionne != null && inters.contains(intersectionSelectionne) && !trouve){
 						couleurLigne = Color.RED;
 						epaisseur = 4;
+						trouve = true;
 					}else{
 						couleurLigne = getArrowColor(cptColor);
 					}
@@ -425,7 +430,8 @@ public class AffichagePlan extends JScrollPane {
 					cptColor++;
 				}
 			}
-
+			
+			//AFFICHAGE DES CONTRAINTES
 			if (contraintes != null) {
 				Intersection depot = contraintes.getDepot();
 				Rectangle2D.Double depotg = new Rectangle2D.Double(depot.getLongitude() - 5, depot.getLatitude() - 5,

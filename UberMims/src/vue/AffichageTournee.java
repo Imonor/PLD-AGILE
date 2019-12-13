@@ -49,7 +49,8 @@ import util.XMLParser;
 import vue.AffichagePlan.LineArrow;
 
 public class AffichageTournee extends JPanel {
-
+	
+	private Fenetre fenetre;
 	private Plan plan;
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
@@ -58,22 +59,85 @@ public class AffichageTournee extends JPanel {
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 	private Font police = new Font("Avenir", 0, 15);
+	
+	private Intersection intersectionClique;
+	
+	private Tournee tournee;
+	private ContraintesTournee contraintestournee;
+	
+	List<JLabel> jlabels;
+	JLabel textInfo; 
+	JPanel resultsPanel;
+	
+	private List<String> idPointsEnlevement;
+	private List<String> idPointsLivraison;
+	
+	Map<String, PointEnlevement> ptEnlevement;
+	Map<String, PointLivraison> ptLivraison;
+	
+	Map<String, Integer> indexationPointsE = new HashMap<>();
+	Map<String, Integer> indexationPointsL = new HashMap<>();
 
-	public AffichageTournee(Plan plan) {
+	Map<String, Color> colorPointsE = new HashMap<>();
+	Map<String, Color> colorPointsL = new HashMap<>();
+	
+	int heure; 
+	int minute;
+	int seconde;
+
+
+	public Intersection getIntersectionClique() {
+		return intersectionClique;
+	}
+
+	public void setIntersectionClique(Intersection intersectionClique) {
+		this.intersectionClique = intersectionClique;
+	}
+	
+	
+
+	private List<Color> listColors = new ArrayList();
+	public AffichageTournee(Plan plan, Fenetre fenetre) {
+		this.fenetre = fenetre;
 		this.plan = plan;
+		listColors.add(Color.decode("#2F4F4F"));
+		listColors.add(Color.decode("#808080"));
+		listColors.add(Color.decode("#800000"));
+		listColors.add(Color.decode("#8B4513"));
+		listColors.add(Color.decode("#D2691E"));
+		listColors.add(Color.decode("#191970"));
+		listColors.add(Color.decode("#4169E1"));
+		listColors.add(Color.decode("#556B2F"));
+		listColors.add(Color.decode("#006400"));
+		listColors.add(Color.decode("#3CB371"));
+		listColors.add(Color.decode("#32CD32"));
+		listColors.add(Color.decode("#BDB76B"));
+		listColors.add(Color.decode("#FF4500"));
+		listColors.add(Color.decode("#DC143C"));
+		listColors.add(Color.decode("#FA8072"));
+		listColors.add(Color.decode("#4B0082"));
+		listColors.add(Color.decode("#8B008B"));
+		listColors.add(Color.decode("#C71585"));
+		listColors.add(Color.decode("#9400D3"));
+		listColors.add(Color.decode("#6365ff"));
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-		System.out.println("OK");
         this.setFont(new Font("Avenir",1,15));
-
+        this.tournee = tournee;
+        this.contraintestournee = contraintestournee;
+		
+		this.setFont(new Font("Avenir",1,15));
+		
+		jlabels = new ArrayList<JLabel>();
+		
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         this.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
- 
+        		
         JPanel panelAll = new JPanel();
-        panelAll.setBackground(Color.red);
+        panelAll.setBackground(backgroundTurquoiseClair);
         panelAll.setLayout(layout);
         
         JPanel panelDetail = new JPanel();
@@ -109,7 +173,7 @@ public class AffichageTournee extends JPanel {
         
         this.add(panelDetail, gbc);
         
-        JLabel textInfo = new JLabel();
+        textInfo = new JLabel();
         textInfo.setBounds(10,-20,400,200);
  		panelDetail.add(textInfo);
         
@@ -142,7 +206,8 @@ public class AffichageTournee extends JPanel {
         gbc.weightx= 0.0;
         panelAll.add(bottomMargin, gbc);
         */
-        JPanel resultsPanel = new JPanel();
+        
+        resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         resultsPanel.setBackground(backgroundTurquoiseClair);
 
@@ -169,47 +234,47 @@ public class AffichageTournee extends JPanel {
 			LocalTime tempsDepart = contraintestournee.getHeureDepart();
 			infoGeneral.setText(infoGeneral.getText() + "<b>Heure de depart : </b>" + tempsDepart + "<br> <br> </left>");
 			
-			List<String> idPointsEnlevement = new ArrayList<>();
-			List<String> idPointsLivraison = new ArrayList<>();
+			idPointsEnlevement = new ArrayList<>();
+			idPointsLivraison = new ArrayList<>();
 	
 			
-			Map<String, PointEnlevement> ptEnlevement =  new HashMap<>();
-			Map<String, PointLivraison> ptLivraison =  new HashMap<>();
+			ptEnlevement =  new HashMap<>();
+			ptLivraison =  new HashMap<>();
 			
 			for(int i = 0; i < contraintestournee.getPointsEnlevement().size(); i++) {
 				idPointsEnlevement.add(contraintestournee.getPointsEnlevement().get(i).getId());
-				System.out.println(contraintestournee.getPointsEnlevement().get(i).getId());
 				ptEnlevement.put(contraintestournee.getPointsEnlevement().get(i).getId(), contraintestournee.getPointsEnlevement().get(i));
 			}
 			
-			for(int j = 0; j < contraintestournee.getPointsEnlevement().size(); j++) {
+			for(int j = 0; j < contraintestournee.getPointsLivraison().size(); j++) {
 				idPointsLivraison.add(contraintestournee.getPointsLivraison().get(j).getId());
-				System.out.println(contraintestournee.getPointsLivraison().get(j).getId());
 				ptLivraison.put(contraintestournee.getPointsLivraison().get(j).getId(), contraintestournee.getPointsLivraison().get(j));
 			}
 			
-			Map<String, Integer> indexationPointsE =  new HashMap<>();
-			Map<String, Integer> indexationPointsL =  new HashMap<>();
+			indexationPointsE =  new HashMap<>();
+			indexationPointsL =  new HashMap<>();
 			
-			Map<String, Color> colorPointsE =  new HashMap<>();
-			Map<String, Color> colorPointsL =  new HashMap<>();
+			colorPointsE =  new HashMap<>();
+			colorPointsL =  new HashMap<>();
 			Random rand = new Random();
+
 	
 			int i = 1;
 			for(PointEnlevement crntPointE: contraintestournee.getPointsEnlevement() ) {
-				Color randomColor = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 				indexationPointsE.put(crntPointE.getId(), i);
-				colorPointsE.put(crntPointE.getId(), randomColor);
+				colorPointsE.put(crntPointE.getId(), listColors.get(i));
 				for(PointLivraison crntPointL: contraintestournee.getPointsLivraison() ) {
 					if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
 						indexationPointsL.put(crntPointL.getId(), i);
-						colorPointsL.put(crntPointL.getId(), randomColor);
+						colorPointsL.put(crntPointL.getId(), listColors.get(i));
 					}
 		    	}
 				i++;
 	    	}
 			
 			resultsPanel.add(infoGeneral);
+			
+			//setdDetailsTournee();
 	        
 			for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
 				JLabel jlabel = new JLabel("<html> ");
@@ -221,16 +286,16 @@ public class AffichageTournee extends JPanel {
 					 	textInfo.removeAll();
 					 	String lab = (String) e.getSource().toString();
 
-				    	System.out.println("///////////ok///////////" + lab);
 				    	String indBeforeTest = lab.substring(19, 21);
 				    	if (indBeforeTest.contains(",")) {
 				    		indBeforeTest = indBeforeTest.substring(0, 1);
 				    	}
 					 	int index = Integer.parseInt(indBeforeTest);
-					 	System.out.println(index);
+
 					 	Chemin current = tournee.getPlusCourteTournee().get(index);
-					 	System.out.println(current.getPremiere().getId());
 					 	
+					 	intersectionClique = current.getIntersections().get(1);
+					 	fenetre.getAffichagePlan().setIntersectionSelectionne(intersectionClique);
 					 	int tailleC = current.getIntersections().size();
 					 	Chemin previous;
 					 	String depart;
@@ -255,18 +320,13 @@ public class AffichageTournee extends JPanel {
 						 	}
 					 		tmp = crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue();     	
 					 	}
-					 	System.out.println(arrivee);
-					 	System.out.println(depart);
-					 	System.out.println(itineraire);
-					 		        
 					 	itineraire = itineraire.substring(0, itineraire.length()-7);
 					 	textInfo.setText(("<html> <b> <font color=\"424242\"> Pour acceder a " + arrivee + " a partir de " + depart + " : </b><br> " + itineraire + "</font> </html>"));
-				 		        
+				 		AffichageTournee.this.repaint();
+				 		fenetre.getAffichagePlan().repaint();
 				    }
 				});
 			 		
-			     
-				System.out.println(k);
 				Chemin c = tournee.getPlusCourteTournee().get(k);
 				List<Intersection> inters =  c.getIntersections();
 				int taille = inters.size();
@@ -274,10 +334,6 @@ public class AffichageTournee extends JPanel {
 				Intersection interPrevious = inters.get(taille-2);
 	
 				Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
-				System.out.println(tronc.getNomRue());
-				System.out.println(inter.getId());
-	
-				
 				
 					if (idPointsEnlevement.contains(inter.getId())) {
 						int duree = c.getDuree();
@@ -295,10 +351,9 @@ public class AffichageTournee extends JPanel {
 						jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
 
-					}else if (idPointsLivraison.contains(inter.getId())) {
+					} else if (idPointsLivraison.contains(inter.getId())) {
 						int duree = c.getDuree();
 						int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
-						
 						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
 						
@@ -314,6 +369,7 @@ public class AffichageTournee extends JPanel {
 					} 
 		        	jlabel.setPreferredSize(new Dimension(400, 100));
 		            resultsPanel.add(jlabel);
+		            jlabels.add(jlabel);
 			}
 	        tournee.calculDuree();
 			int duree = tournee.getDuree() ;
@@ -321,11 +377,11 @@ public class AffichageTournee extends JPanel {
 			JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 			resultsPanel.add(time);
 			
-			for (int extra = 0; extra < 4 ; extra++) {
+			/*for (int extra = 0; extra < 4 ; extra++) {
 	        	JLabel j = new JLabel("");
 	        	j.setPreferredSize(new Dimension(400, 100));
 	            resultsPanel.add(j);
-	        }
+	        }*/
         }
         
 	}
@@ -355,6 +411,76 @@ public class AffichageTournee extends JPanel {
 	    return ret;
 	}
 	
+	
+	public void setdDetailsTournee(){
+		boolean trouve = false;
+		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {			
+			JLabel jlabel = jlabels.get(k);
+			
+		    boolean miseEnAvant = false; 
+			Chemin c = tournee.getPlusCourteTournee().get(k);
+			List<Intersection> inters =  c.getIntersections();
+			
+			if( intersectionClique != null && inters.contains(intersectionClique) && !trouve ){
+				miseEnAvant = true;
+				trouve = true;
+			}
+			int taille = inters.size();
+			Intersection inter = inters.get(taille-1);
+			Intersection interPrevious = inters.get(taille-2);
 
+			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
+				
+			if(miseEnAvant){
+				jlabel.setText("<html> <div style=\"color:Red;\">");
+			}
+			else{
+				jlabel.setText("<html>");
+			}
+				if (idPointsEnlevement.contains(inter.getId())) {
+					int duree = c.getDuree();
+					int livraison = ptEnlevement.get(inter.getId()).getTempsEnlevement();
+					
+					int tempsChemin[] = traitementTempsChemin(duree);
+					int tempsLivraison[] = traitementTempsLivraison(livraison);
 
+					LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());
+					
+				    int indexation = indexationPointsE.get(inter.getId());
+				    jlabel.setForeground(colorPointsE.get(inter.getId()));
+					jlabel.setText(jlabel.getText() + "Pick Up numero " + indexation + " :   <br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
+					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
+
+				} else if (idPointsLivraison.contains(inter.getId())) {
+					int duree = c.getDuree();
+					int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
+					int tempsChemin[] = traitementTempsChemin(duree);
+					int tempsLivraison[] = traitementTempsLivraison(livraison);
+					
+					LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());						
+				    int indexation = indexationPointsL.get(inter.getId());
+				    jlabel.setForeground(colorPointsL.get(inter.getId()));
+					jlabel.setText(jlabel.getText() + "Delivery numero " + indexation + " :   <br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Adresse : " + tronc.getNomRue() +"<br>");	
+					jlabel.setText(jlabel.getText() + "&rarr; Heure de passage : " + heurePassage +"<br>");
+					jlabel.setText(jlabel.getText() + "&rarr; Temps de delivery : " + tempsLivraison[1] + " minutes.<br><br>");
+					
+					
+				}
+				if(miseEnAvant){
+					jlabel.setText(jlabel.getText() + "</div>");
+				}
+		}
+	}
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
+		if(intersectionClique != null){
+			setdDetailsTournee();
+		}
+		
+	}
 }
