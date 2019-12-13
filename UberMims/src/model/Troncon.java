@@ -1,5 +1,8 @@
 package model;
-
+/**
+ * Classe representant un Troncon, soit un lien entre deux intersections
+ *
+ */
 public class Troncon {
 
 	private Intersection destination;

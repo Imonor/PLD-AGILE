@@ -3,7 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalTime;
-
+/**
+ * Classe representant les contraintes d'une tournee, soit les points d'enlevement et de livraison, et le depot
+ *
+ */
 public class ContraintesTournee {
 
 	private LocalTime heureDepart;
@@ -65,7 +68,7 @@ public class ContraintesTournee {
 	public void setPointsLivraison(List<PointLivraison> pointsLivraison) {
 		this.pointsLivraison = pointsLivraison;
 	}
-	
+
 	public boolean addLivraison(PointEnlevement e, PointLivraison l) {
 		if(e.getIdLivraison() == l.getId() && l.getIdEnlevement() == e.getId()) {
 			boolean livraisonExists = false;

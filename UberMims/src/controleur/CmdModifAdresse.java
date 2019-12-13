@@ -1,7 +1,6 @@
 package controleur;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import algo.Dijkstra;
@@ -12,6 +11,11 @@ import model.Tournee;
 import model.Intersection;
 import model.Chemin;
 
+
+/**
+ * Commande de modification d'adresse d'un point (d'enlèvement ou de livraison)
+ *
+ */
 public class CmdModifAdresse implements Commande {
 	private ContraintesTournee contraintes;
 	private Tournee tournee;

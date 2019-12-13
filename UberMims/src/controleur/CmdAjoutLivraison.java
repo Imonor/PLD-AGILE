@@ -10,6 +10,10 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 
+/**
+ * Commande d'ajout de Livraison à une tournée
+ *
+ */
 public class CmdAjoutLivraison implements Commande {
 	
 	private Tournee tournee;

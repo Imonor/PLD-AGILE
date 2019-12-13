@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Classe heritant de la classe Intersection, representant un point de livraison
+ *
+ */
 public class PointLivraison extends Intersection {
 	
 	private String idEnlevement;
