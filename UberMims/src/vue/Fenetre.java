@@ -72,10 +72,11 @@ public class Fenetre extends JFrame {
 	private ModificationTournee panModificationTournee;
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
-	private Font police = new Font("Verdana", 0, 15);
+	private Font police = new Font("Avenir", 0, 15);
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
+	private JButton boutonAnnulerModification = new JButton("⟲");
 
 
 
@@ -107,7 +108,6 @@ public class Fenetre extends JFrame {
 		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 		JButton boutonModifierTournee = new JButton("Modifier la tournee");
-		JButton boutonAnnulerModification = new JButton("Annuler la dernière modification");
 
 //************** ACCUEIL ****************//
 		// Panel Accueil : affichage du bouton "Chargement plan"
@@ -157,7 +157,6 @@ public class Fenetre extends JFrame {
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		//bouton annuler la derniere modification
 		boutonAnnulerModification.setVisible(true);
-		boutonAnnulerModification.setEnabled(false);
 		boutonAnnulerModification.setBounds(95, 71, 260, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
@@ -185,8 +184,8 @@ public class Fenetre extends JFrame {
 		// Panel INFORMATIONS : partie à droite qui contient les infos de la Tournee, apparait quand bouton calul de tournee cliqué
 		affichageTournee.setVisible(false);
 		affichageTournee.setLayout(null);
-		affichageTournee.setBounds(0, 100, 435, 660);
-		affichageTournee.setBackground(Color.blue);
+		affichageTournee.setBounds(22, 120, 410, 638);
+		affichageTournee.setBackground(backgroundTurquoiseClair);
 		panDroite.add(affichageTournee);
 
 		// Panel AJOUT LIVRAISON
@@ -217,7 +216,7 @@ public class Fenetre extends JFrame {
 		// Texte Ajout Livraison Debut
 		JLabel CliquezSurCarte1 = new JLabel(
 				"<html> <center> Cliquez sur la carte pour selectionner le point d'<b>enlevement </b> de la nouvelle livraison<br>");
-		CliquezSurCarte1.setFont(new Font("Verdana", 0, 15));
+		CliquezSurCarte1.setFont(police);
 		CliquezSurCarte1.setBounds(75, 200, 300, 200);
 		panAjoutLivraison1.add(CliquezSurCarte1);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
@@ -230,7 +229,7 @@ public class Fenetre extends JFrame {
 		// Texte Ajout Livraison 2
 		JLabel CliquezSurCarte2 = new JLabel(
 				"<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
-		CliquezSurCarte2.setFont(new Font("Verdana", 0, 15));
+		CliquezSurCarte2.setFont(police);
 		CliquezSurCarte2.setBounds(75, 200, 300, 200);
 		panAjoutLivraison2.add(CliquezSurCarte2);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison2);
@@ -245,13 +244,13 @@ public class Fenetre extends JFrame {
 
 		JLabel texteMinutes1 = new JLabel("<html> minutes<br> ");
 		texteMinutes1.setVisible(true);
-		texteMinutes1.setFont(new Font("Verdana", 0, 15));
+		texteMinutes1.setFont(police);
 		texteMinutes1.setBounds(205, 155, 100, 30);
 		panAjoutLivraison3.add(texteMinutes1);
 
 		JLabel texteMinutes2 = new JLabel("<html> minutes<br> ");
 		texteMinutes2.setVisible(true);
-		texteMinutes2.setFont(new Font("Verdana", 0, 15));
+		texteMinutes2.setFont(police);
 		texteMinutes2.setBounds(205, 405, 100, 30);
 		panAjoutLivraison3.add(texteMinutes2);
 		// bouton Valider
@@ -365,6 +364,12 @@ public class Fenetre extends JFrame {
 			panCalculTournee.setVisible(false);
 			panModificationTournee.setVisible(false);
 			panHautDroite.setVisible(true);
+			if(controleur.getCmdListe().isEmpty()) {
+				boutonAnnulerModification.setEnabled(false);
+			} else {
+				boutonAnnulerModification.setEnabled(true);
+			}
+
 			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
 			this.setContentPane(panPrincipal);
@@ -420,7 +425,7 @@ public class Fenetre extends JFrame {
 		texteDelivery.removeAll();
 		textePickUp.setText("<html><center><b>Point d'enlevement : </b></center><br> ");
 		textePickUp.setVisible(true);
-		textePickUp.setFont(new Font("Verdana", 0, 15));
+		textePickUp.setFont(police);
 		textePickUp.setBounds(75, 0, 350, 200);
 		textePickUp.setText(textePickUp.getText() + "<font color=\"B84039\"> &rarr; Adresse : "
 				+ tronconNouveauPickUp.getNomRue() + "</font><br><br>Duree au point d'enlevement : <br>");
@@ -446,7 +451,7 @@ public class Fenetre extends JFrame {
 		Troncon tronconNouveauDelivery = nouveauDelivery.getTronconsSortants().get(idTronconNouveauDelivery);
 		texteDelivery.setText("<html><center><b>Point de livraison : </b> </center><br> ");
 		texteDelivery.setVisible(true);
-		texteDelivery.setFont(new Font("Verdana", 0, 15));
+		texteDelivery.setFont(police);
 		texteDelivery.setBounds(75, 250, 350, 200);
 		// textePickUp.setForeground(new Color(69, 73, 74));
 		texteDelivery.setText(texteDelivery.getText() + "<font color=\"B84039\"> &rarr; Adresse : "
