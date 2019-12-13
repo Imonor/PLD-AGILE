@@ -123,7 +123,6 @@ public class AffichageTournee extends JPanel {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
-
         this.setFont(new Font("Avenir",1,15));
         this.tournee = tournee;
         this.contraintestournee = contraintestournee;
