@@ -11,6 +11,11 @@ import java.util.Objects;
 import model.Chemin;
 import model.Intersection;
 
+
+/**
+ * Commande de modification d'ordre des livraisons dans une tournée
+ *
+ */
 public class CmdModifOrdre implements Commande {
 
 	private Tournee tournee;

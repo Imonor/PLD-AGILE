@@ -1,7 +1,10 @@
 package model;
 
 import java.util.Map;
-
+/**
+ * Classe representant le plan, soit la liste des intersections
+ *
+ */
 public class Plan {
 
 	private Map<String, Intersection> intersections;

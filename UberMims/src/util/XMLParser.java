@@ -2,14 +2,11 @@ package util;
 
 import org.w3c.dom.*;
 
-import algo.TSP1;
 import model.PointEnlevement;
 import model.Intersection;
 import model.Troncon;
 import model.Plan;
 import model.PointLivraison;
-import model.Tournee;
-import model.Chemin;
 import model.ContraintesTournee;
 
 import javax.xml.parsers.*;
@@ -21,11 +18,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class XMLParser {
 
-	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement{
+	/**
+	 * Fonction permettant de charger les informations du plan, soit les intersections et les troncons, a partir d'un fichier xml conforme
+	 * @param filePathPlan Le chemin vers le fichier xml
+	 * @param screenHeight La hauteur de l'ecran
+	 * @param screenWidth La largeur de l'ecran
+	 * @return Retourne un objet Plan
+	 * @throws ExceptionChargement
+	 */
+	public static Plan chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement {
 		Map<String, Intersection> intersections = new HashMap<>();
 		Plan plan = new Plan();
 		try {
@@ -108,6 +112,13 @@ public class XMLParser {
 		return plan;
 	}
 
+	/**
+	 * Fonction permettant de charger les contraintes d'une tournee, soit les points d'enlevement et de livraison, et le depot, a partir d'un fichier xml conforme
+	 * @param filePathTournee Le chemin vers le fichier xml
+	 * @param plan Le plan actuellement charge
+	 * @return Retourne un objet ContraintesTournee
+	 * @throws ExceptionChargement
+	 */
 	public static ContraintesTournee chargerContraintesTournee(String filePathTournee, Plan plan) throws ExceptionChargement {
 		List<PointEnlevement> enlevements = new ArrayList<>();
 		List<PointLivraison> livraisons = new ArrayList<>();
@@ -154,8 +165,5 @@ public class XMLParser {
 
 		return tournee;
 	}
-	
-//	public static void main(String[] args) {
-//		
-//	}
+
 }
