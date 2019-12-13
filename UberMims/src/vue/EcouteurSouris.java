@@ -1,21 +1,17 @@
 package vue;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 import model.Intersection;
 import java.awt.geom.Point2D;
 
 public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseMotionListener {
 
 	private AffichagePlan affichagePlan;
-	private AffichageTournee affichageTournee;
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
@@ -44,7 +40,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
      * 		Instance de la fenêtre principale
      */
 	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
-		this.affichageTournee = affichageTournee;
 		this.fenetre = fenetre;
 	}
 	
@@ -145,9 +140,6 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 
-		int xDiff = affichagePlan.getxDiff();
-		int yDiff = affichagePlan.getyDiff();
-		
 		double xOffset = affichagePlan.getxOffset();
 		double yOffset = affichagePlan.getyOffset();
 		
