@@ -26,6 +26,10 @@ public class Fenetre extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Page principale qui regroupe tous les panels et les informations.
+	 */
+	
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
 	private Color backgroundTurquoise = new Color(25, 174, 186);
@@ -48,6 +52,7 @@ public class Fenetre extends JFrame {
 	private ContraintesTournee contraintes;
 
 	private Controleur controleur;
+	
 	// Panels
 	private JPanel panAccueil = new JPanel();
 	private JComboBox c1;
@@ -61,14 +66,13 @@ public class Fenetre extends JFrame {
 	private JPanel panChargeTournee = new JPanel();
 	private JPanel panInfoLivraison = new JPanel();
 	private JPanel panHautGauche = new JPanel();
-	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
-	private AffichageTournee affichageTournee = new AffichageTournee(plan, this);
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panRetourAccueil = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
-
+	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
+	private AffichageTournee affichageTournee = new AffichageTournee(plan, this);
 	private ModificationTournee panModificationTournee;
 	private JFormattedTextField champDelivery = new JFormattedTextField(NumberFormat.getIntegerInstance());
 	private JFormattedTextField champPickUp = new JFormattedTextField(NumberFormat.getIntegerInstance());
@@ -80,7 +84,9 @@ public class Fenetre extends JFrame {
 	private JButton boutonRefaireModification = new JButton("redo");
 
 
-
+	/**
+     * Constructeur de la classe Fenetre
+     */
 	public Fenetre() {
 
 		controleur = new Controleur();
@@ -338,31 +344,42 @@ public class Fenetre extends JFrame {
 		return this.plan;
 	}
 
-	// Passage a la page principale apres le chargement d'un plan
+	/**
+     * Méthode qui permet le passage à la page principale après le chargement d'un plan.
+     * 
+     */
 	public void afficherPanPrincipal() {
 		panAjoutLivraisonGlobal.setVisible(false);
 		affichageTournee.setVisible(false);
 		affichageTournee.removeAll();
 		panAccueil.setVisible(false);
 		panPrincipal.setVisible(true);
+		
 		this.setContentPane(panPrincipal);
 
 		this.repaint();
 	}
 
-	// Affichage du bouton calculer tournee apres le chargement d'une tournee
+	/**
+     * Méthode qui permet l'affichage du bouton calculer tournée apres le chargement d'une tournée.
+     * 
+     */
 	public void afficherBoutonCalcul() {
 		texteBienvenue.setVisible(false);
 		panAjoutLivraisonGlobal.setVisible(false);
 		affichageTournee.setVisible(false);
 		affichageTournee.removeAll();
 		panCalculTournee.setVisible(true);
+		
 		this.setContentPane(panPrincipal);
+		
 		this.repaint();
 	}
 
-		// Affichage des informations apres avoir clique sur bouton calculer tournee
-
+	/**
+     * Méthode qui permet l'affichage des informations après avoir cliqué sur le bouton "Calculer Tournée".
+     * 
+     */
 		public void afficherInfos() {
 			panAjoutLivraison1.setVisible(false);
 			panAjoutLivraison2.setVisible(false);
@@ -389,13 +406,13 @@ public class Fenetre extends JFrame {
 				boutonRefaireModification.setEnabled(false);
 			}
 
-			//panInformation.setVisible(true);
 			affichageTournee.setVisible(true);
 			this.setContentPane(panPrincipal);
-			// this.repaint();
 		}
 
-	// Affichage des champs d'ajout de livraison
+		/**
+	     * Méthode qui permet l'affichage des des champs d'ajout de livraison.
+	     */
 	public void afficherAjoutLivraison() {
 		affichageTournee.setVisible(false);
 		panHautDroite.setVisible(false);
@@ -404,10 +421,11 @@ public class Fenetre extends JFrame {
 		affichagePlan.setEtat(Etat.ENLEVEMENT);
 		panRetourAccueil.setVisible(true);
 		this.setContentPane(panPrincipal);
-		// this.repaint();
 	}
 
-	// Passage aux details d'ajout de livraison 2
+	/**
+     * Méthode qui permet le passage aux détails d'ajout de la livraison 2.
+     */
 	public void afficherAjoutLivraison2() {
 		panAjoutLivraison1.setVisible(false);
 		panAjoutLivraison2.setVisible(true);
@@ -415,7 +433,9 @@ public class Fenetre extends JFrame {
 		this.setContentPane(panPrincipal);
 	}
 
-	// Passage aux details d'ajout de livraison 3
+	/**
+     * Méthode qui permet le passage aux détails d'ajout de la livraison 3.
+     */
 	public void afficherAjoutLivraison3() {
 		panAjoutLivraison2.setVisible(false);
 		infosPointsAjout();
@@ -424,16 +444,24 @@ public class Fenetre extends JFrame {
 		this.setContentPane(panPrincipal);
 	}
 
+	/**
+     * Méthode qui permet l'affichage des informations après l'ajout de la livraison.
+     */
 	public void apresAjoutLivraison() {
 		panAjoutLivraison3.setVisible(false);
 		this.setContentPane(panPrincipal);
 	}
 	
+	/**
+     * Méthode qui met à jour les informations affichées avec les nouvelles tournée et contrainte.
+     */
 	public void apresModifOrdre() {
 		affichageTournee.afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
 	}
 
-	// Affichage Infos du point ajoute avant clic sur bouton valider ajout
+	/**
+     * Méthode qui permet l'affichage des informations de l'emplacement ajouté avant le clic sur le bouton "Valider Ajout".
+     */
 	public void infosPointsAjout() {
 		System.out.println("Infos points Ajout");
 		// Infos pick-up
@@ -479,7 +507,9 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison3.add(texteDelivery);
 	}
 
-	
+	/**
+     * Méthode qui permet l'affichage des panels qui permettent de modifier une tournée.
+     */
 	public void afficherModificationTournee() {
 		panHautDroite.setVisible(false);
 		panRetourAccueil.setVisible(true);
@@ -493,7 +523,9 @@ public class Fenetre extends JFrame {
 	// ***** INFOS TOURNEE *****
 	// Passage a la page principale apres le chargement d'un plan
 
-	
+	/**
+     * Main de la classe mais du projet aussi.
+     */
 	public static void main(String[] args) {
 		Fenetre fen = new Fenetre();
 	}

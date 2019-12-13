@@ -59,18 +59,17 @@ public class AffichageTournee extends JPanel {
 	private Color backgroundOrange = new Color(229, 138, 86);
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 	private Font police = new Font("Avenir", 0, 15);
-	
+	private List<Color> listColors = new ArrayList();
 	private Intersection intersectionClique;
-	
 	private Tournee tournee;
 	private ContraintesTournee contraintestournee;
+	private List<String> idPointsEnlevement;
+	private List<String> idPointsLivraison;
 	
 	List<JLabel> jlabels;
 	JLabel textInfo; 
 	JPanel resultsPanel;
 	
-	private List<String> idPointsEnlevement;
-	private List<String> idPointsLivraison;
 	
 	Map<String, PointEnlevement> ptEnlevement;
 	Map<String, PointLivraison> ptLivraison;
@@ -93,10 +92,6 @@ public class AffichageTournee extends JPanel {
 	public void setIntersectionClique(Intersection intersectionClique) {
 		this.intersectionClique = intersectionClique;
 	}
-	
-	
-
-	private List<Color> listColors = new ArrayList();
 	
 	
 	/**
