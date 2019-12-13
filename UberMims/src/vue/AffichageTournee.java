@@ -123,6 +123,8 @@ public class AffichageTournee extends JPanel {
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
+
+        this.setFont(new Font("Avenir",1,15));
         this.tournee = tournee;
         this.contraintestournee = contraintestournee;
 		
@@ -134,9 +136,9 @@ public class AffichageTournee extends JPanel {
         this.setLayout(layout);
         this.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
- 
+        		
         JPanel panelAll = new JPanel();
-        panelAll.setBackground(Color.red);
+        panelAll.setBackground(backgroundTurquoiseClair);
         panelAll.setLayout(layout);
         
         JPanel panelDetail = new JPanel();
@@ -290,6 +292,7 @@ public class AffichageTournee extends JPanel {
 				    		indBeforeTest = indBeforeTest.substring(0, 1);
 				    	}
 					 	int index = Integer.parseInt(indBeforeTest);
+
 					 	Chemin current = tournee.getPlusCourteTournee().get(index);
 					 	
 					 	intersectionClique = current.getIntersections().get(1);
@@ -318,7 +321,6 @@ public class AffichageTournee extends JPanel {
 						 	}
 					 		tmp = crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue();     	
 					 	}
-					 		        
 					 	itineraire = itineraire.substring(0, itineraire.length()-7);
 					 	textInfo.setText(("<html> <b> <font color=\"424242\"> Pour acceder a " + arrivee + " a partir de " + depart + " : </b><br> " + itineraire + "</font> </html>"));
 				 		AffichageTournee.this.repaint();
@@ -376,11 +378,11 @@ public class AffichageTournee extends JPanel {
 			JLabel time = new JLabel("<html> Duree totale : " + duree + " minutes. </center> </html>");
 			resultsPanel.add(time);
 			
-			for (int extra = 0; extra < 4 ; extra++) {
+			/*for (int extra = 0; extra < 4 ; extra++) {
 	        	JLabel j = new JLabel("");
 	        	j.setPreferredSize(new Dimension(400, 100));
 	            resultsPanel.add(j);
-	        }
+	        }*/
         }
         
 	}

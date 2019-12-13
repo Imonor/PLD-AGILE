@@ -39,6 +39,7 @@ public class EcouteurBoutons implements ActionListener{
 	private String nomFichierPlan2;
 	private String cheminFichierTournee ;
 	private String nomFichierTournee;
+	
 	//Constructeur
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
@@ -153,8 +154,8 @@ public class EcouteurBoutons implements ActionListener{
 				System.out.println("Ajouter une livraison");
 					fenetre.afficherAjoutLivraison();
 					fenetre.getAffichagePlan().setPlanClickable(true);
-					
-					
+					fenetre.getAffichagePlan().setIntersectionSelectionne(null);
+					fenetre.getAffichagePlan().repaint();
 			break;
 			
 			case "Annuler l'ajout d'une livraison":
