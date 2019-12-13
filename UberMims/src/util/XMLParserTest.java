@@ -2,11 +2,9 @@ package util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import model.ContraintesTournee;
@@ -146,7 +144,7 @@ class XMLParserTest {
 		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerPlan("test/Unknown.xml", 1600, 1900));
 		final Plan p = plan;
 		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerContraintesTournee("test/Unknown.xml", p));
-
+		
 	}
 	
 	
