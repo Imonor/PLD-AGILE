@@ -1,16 +1,16 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class PlanTest {
 	
 	@Test
-	void TestContructeurs() {
+	public void TestContructeurs() {
 		
 		Intersection i1 = new Intersection("i1", 0.0,0.0);
 		Intersection i2 = new Intersection("i2", 0.0,0.0);
@@ -35,7 +35,7 @@ public class PlanTest {
 	}
 	
 	@Test
-	void TestSetIntersections() {
+	public void TestSetIntersections() {
 		
 		Intersection i1 = new Intersection("i1", 0.0,0.0);
 		Intersection i2 = new Intersection("i2", 0.0,0.0);
