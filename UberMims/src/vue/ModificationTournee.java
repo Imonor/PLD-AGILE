@@ -72,6 +72,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 
 
 	private JLabel labelSelectionne;
+	private Color oldColor;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 
@@ -345,14 +346,13 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	}
         	l.setName(Integer.toString(compteur));
         	l.addMouseListener(this);
-        	l.setPreferredSize(new Dimension(100, 35));
+        	l.setPreferredSize(new Dimension(400, 150));
             resultsPanel.add(l);
             listeLabels.add(l);
             compteur++;
 
         }
         repaint();
-
     }
     
     private JLabel creerLabelEtape(Intersection etape, int position, String adresse, String type) {
@@ -370,13 +370,14 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     }
     
     public void mouseClicked(MouseEvent m) {
+    	
     	JLabel labelClique = (JLabel) m.getSource();
     	if(labelSelectionne != null) {
-    		Color c = labelSelectionne.getForeground();
     		precedentLabelSelectionne = labelSelectionne;
-    		precedentLabelSelectionne.setForeground(c);
+    		precedentLabelSelectionne.setForeground(oldColor);
     	}
     	labelSelectionne = labelClique;
+    	oldColor = labelClique.getForeground();
     	labelSelectionne.setForeground(Color.RED);
     }
 
