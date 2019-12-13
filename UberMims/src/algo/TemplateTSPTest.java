@@ -9,8 +9,14 @@ import org.junit.Test;
 import controleur.Controleur;
 import util.ExceptionChargement;
 
+/**
+ * Classe qui teste la classe TemplateTSP 
+ */
 public class TemplateTSPTest {
-
+	
+	/**
+	 * Methode qui teste le fait que chaque noeuds est visite une seule fois
+	 */
 	@Test
 	public void testerVisteUniqueNormal() {
 		

@@ -15,12 +15,23 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 
+/**
+ * Classe qui calcule la tournee
+ */
 public abstract class TemplateTSP implements TSP{
 	
-	//Constructeur par defaut
+	/**
+	 * Constructeur par defaut
+	 */
 	public TemplateTSP() {
 	}
 	
+	/**
+	 * Methode qui donne la solution finale - la tournee
+	 * @param tpsLimite - temps accorde a l'algorithme
+	 * @param contraintes - la liste des points de livraison et d'enlevement
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
+	 */
 	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		//HashMap avec l'id et le point pour pouvoir recuperer le point a partir de l'id
 		HashMap<String, Intersection> intersections = new HashMap<String, Intersection>();
@@ -55,7 +66,16 @@ public abstract class TemplateTSP implements TSP{
 		return tournee;
 	}
 	
-	
+	/**
+	 * Methode qui donne la solution finale - la tournee
+	 * @param tournee - objet aui va representer la tournee finale
+	 * @param restants - nb de noeuds restants a visiter
+	 * @param first - premier noeud a visiter
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * @param vuDispo - map de id et objet=(vu, dispo)
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
+	 * 
+	 */
 	protected void calculerSimplementTournee(Tournee tournee, String first, int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins) {
 		
 		Iterator<String> it = iterator(restants, intersections, vuDispo, plusCourtsChemins);
@@ -95,6 +115,15 @@ public abstract class TemplateTSP implements TSP{
 		tournee.addChemin(chemin);
 	}
 	
+	/**
+	 * Methode qui donne la solution finale - la tournee
+	 * @param tournee - objet aui va representer la tournee finale
+	 * @param tpsLimite - temps accorde a l'algorithme
+	 * @param tpsDebut - moment du debut de l'appel de l'algo
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
+	 * 
+	 */
 	protected void twoOpt(int tpsLimite, long tpsDebut, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins, HashMap<String, Intersection> intersections) {
 		int nbChemins = tournee.getPlusCourteTournee().size();
 		
@@ -175,6 +204,19 @@ public abstract class TemplateTSP implements TSP{
 		}
 	}
 	
+	/**
+	 * Methode qui fait le swap de 2 noeuds et des chemins
+	 * qui sont entre eux d'un cote
+	 * @param i - l'index de debut du swap
+	 * @param j - l'index de fin du swap
+	 * @param chemin - le premier chemin du swap
+	 * @param chemin2 - le dernier chemin du swap
+	 * @param noeudsUpdate - list des noeuds qu'on devra change
+	 * @param ordreNoeuds - map avec la map contenant l'ordre de passage de chaque noeud
+	 * @param tournee - objet aui va representer la tournee finale
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
+	 * 
+	 */
 	private void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, HashMap<String, Integer> ordreNoeuds, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
 		//On mets les chemins compris entre i et j dans l'ordre inverse de parcours pour connecter la tournee
 		//On met aussi les 2 chemins avec les noeuds extremes inter-changes
@@ -200,6 +242,12 @@ public abstract class TemplateTSP implements TSP{
 		ordreNoeuds.replace(chemin.getDerniere().getId(), j);
 	}
 	
+	/**
+	 * Methode qui initialise la map VuDispo
+	 * @param contraintes - la liste des points de livraison et d'enlevement
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * 
+	 */
 	private HashMap<String, Paire> initVuDispo(ContraintesTournee contraintes, HashMap<String, Intersection> intersections){
 		HashMap<String, Paire> vuDispo = new HashMap<String, Paire>();
 		for (HashMap.Entry<String, Intersection> iterator : intersections.entrySet()) {
@@ -218,12 +266,12 @@ public abstract class TemplateTSP implements TSP{
 	}
 	
 	/**
-	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
-	 * @param sommetCrt
-	 * @param nonVus : tableau des sommets restant a visiter
-	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
-	 * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
+	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
+	 * type - prochain neouds dans l'ordre de la liste initiale
+	 * @param restants - nb de noeuds restants a visiter
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * @param vuDispo - map de id et objet=(vu, dispo)
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
 	 */
 	protected abstract Iterator<String> iterator(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins);
 	

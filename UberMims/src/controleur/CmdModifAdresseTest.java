@@ -9,9 +9,14 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import util.ExceptionChargement;
 
-
+/**
+ * Classe qui teste la classe CmdModifAdresse
+ */
 public class CmdModifAdresseTest {
 
+	/**
+	 * methode qui test la modification de l'adresse d'un point d'nelevement
+	 */
 	@Test
 	public void testerModifAdresseEnlevementNormal() {
 		
@@ -51,7 +56,9 @@ public class CmdModifAdresseTest {
 		assertEquals("55474924", controleur.getTournee().getPlusCourteTournee().get(posEstArrivee).getDerniere().getId());	
 	}
 	
-	
+	/**
+	 * methode qui test la modification de l'adresse d'un point de livraison
+	 */
 	@Test
 	public void testerModifAdresseLivraisonNormal() {
 		

@@ -10,8 +10,15 @@ import model.PointLivraison;
 import model.Tournee;
 import util.ExceptionChargement;
 
+/**
+ * Classe qui teste la classe CmdAjoutLivraison 
+ */
 public class CmdAjoutLivraisonTest {
 
+	/**
+	 * Methode qui test l'ajout d'une livraison dans une tournee avec
+	 * une taille normale
+	 */
 	@Test
 	public void testerAjoutLivraisonNormal() {
 		

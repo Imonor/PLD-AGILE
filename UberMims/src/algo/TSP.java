@@ -7,6 +7,10 @@ import model.Chemin;
 import model.ContraintesTournee;
 import model.Tournee;
 
+/**
+ * Interface pour les classes qui vont implementer differents iterateurs et type d'algo
+ *
+ */
 public interface TSP {
 	
 	/**
