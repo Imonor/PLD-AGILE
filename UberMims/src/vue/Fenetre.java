@@ -40,13 +40,6 @@ public class Fenetre extends JFrame {
 	public static final int LARGEUR_PLAN = 750;
 	public static final int HAUTEUR_PLAN = 750;
 
-	private double coefX;
-	private double coefY;
-	private final int LARGEUR_FENETRE = 1200;
-	private final int HAUTEUR_FENETRE = 800;
-	private int nouveauTempsPickUp=0;
-	private int nouveauTempsDelivery=0 ;
-
 	private Plan plan;
 	private Tournee tournee;
 	private ContraintesTournee contraintes;
@@ -58,14 +51,11 @@ public class Fenetre extends JFrame {
 	private JComboBox c1;
 	private JPanel panPrincipal = new JPanel();
 	private JPanel panGauche = new JPanel();
-	private JLabel textInfo = new JLabel();
 	private JPanel panDroite = new JPanel();
 	private JPanel panCalculTournee = new JPanel();
 	private JPanel panHautDroite = new JPanel();
 	private JPanel panChargePlan = new JPanel();
 	private JPanel panChargeTournee = new JPanel();
-	private JPanel panInfoLivraison = new JPanel();
-	private JPanel panHautGauche = new JPanel();
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
 	private JPanel panRetourAccueil = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
@@ -488,7 +478,7 @@ public class Fenetre extends JFrame {
 		champPickUp.setBounds(100, 155, 100, 30);
 		champPickUp.setBackground(Color.white);
 		panAjoutLivraison3.add(champPickUp);
-		nouveauTempsPickUp = ((Number) champPickUp.getValue()).intValue();
+		((Number) champPickUp.getValue()).intValue();
 		// Champ livraison
 		champDelivery.setVisible(true);
 		champDelivery.setText("0");
