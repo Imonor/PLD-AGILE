@@ -133,11 +133,17 @@ public class Controleur {
 	}
 	
 	public void modifierAdresse(PointLivraison l, Intersection newI) {
-		Map<String, Intersection> intersectionAVisiter = new HashMap<>();
-		Map<String, Chemin> newChemins = new HashMap<String, Chemin>();
-		intersectionAVisiter.put(newI.getId(), newI);
-		newChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionAVisiter).get(newI.getId());
-		plusCourtsChemins.put(newI.getId(), newChemins);
+		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
+		
+		intersectionsAVisiter.put(contraintes.getDepot().getId(), contraintes.getDepot());
+		for(Intersection i: contraintes.getPointsEnlevement()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		for(Intersection i: contraintes.getPointsLivraison()) {
+			intersectionsAVisiter.put(i.getId(), i);
+		}
+		intersectionsAVisiter.put(newI.getId(), newI);
+		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);
 		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, l, newI, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}
