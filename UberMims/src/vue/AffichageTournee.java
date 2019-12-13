@@ -403,15 +403,7 @@ public class AffichageTournee extends JPanel {
 	
 	
 	public void setdDetailsTournee(){
-		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
-//			JLabel jlabel;
-//			if(jlabels.isEmpty()){
-//				jlabel = new JLabel("<html> ");
-//				jlabel.setName(Integer.toString(k));
-//			}else{
-//				jlabel = jlabels.get(k);
-//			}
-			
+		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {			
 			JLabel jlabel = jlabels.get(k);
 			jlabel.addMouseListener(new MouseAdapter() {
 			    public void mouseClicked(MouseEvent e) {
@@ -477,7 +469,10 @@ public class AffichageTournee extends JPanel {
 			Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
 				
 			if(miseEnAvant){
-				jlabel.setText(jlabel.getText() + "<div style=\"color:Red;\">");
+				jlabel.setText("<html> <div style=\"color:Red;\">");
+			}
+			else{
+				jlabel.setText("<html>");
 			}
 				if (idPointsEnlevement.contains(inter.getId())) {
 					int duree = c.getDuree();
@@ -514,26 +509,15 @@ public class AffichageTournee extends JPanel {
 				if(miseEnAvant){
 					jlabel.setText(jlabel.getText() + "</div>");
 				}
-	        	jlabel.setPreferredSize(new Dimension(400, 100));
-	            resultsPanel.add(jlabel);
-	            //jlabels.add(jlabel);
 		}
 	}
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-//		if(intersectionClique != null){
-//			for (JLabel jlabel : jlabels) {
-//				jlabel.setText("wolah ça marche");
-//			}
-//		}
-		
 		if(intersectionClique != null){
-				setdDetailsTournee();
+			setdDetailsTournee();
 		}
 		
 	}
-
-
 }
