@@ -3,10 +3,8 @@ package vue;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -30,8 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.MatteBorder;
-
 import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
@@ -46,13 +42,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
-	private Color backgroundTurquoise = new Color(25, 174, 186);
-	private Color backgroundJaune = new Color(226, 179, 72);
-	private Color backgroundOrange = new Color(229, 138, 86);
-	private Color backgroundRougeClair = new Color(184, 64, 57);
-
-	private Font police = new Font("Avenir", 0, 15);
-	private List<Color> listColors = new ArrayList();
+	private List<Color> listColors = new ArrayList<>();
 	Map<String, Color> colorPointsE =  new HashMap<>();
 	Map<String, Color> colorPointsL =  new HashMap<>();
 	
@@ -76,8 +66,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
 	private List<Map<String, String>> ordrePassage;
 	
-	private int nouveauTemps=0;
-	private int deplacementEtape;
 	private List<JLabel> listeLabels;
 	private Plan plan;
 	private Controleur controleur;
@@ -291,8 +279,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         //Retirer la derni�re �tape du parcours, qui est arrive sur le point de d�p�t
 
         for (int i = 0; i<tournee.getPlusCourteTournee().size() - 1; ++i) {
-        	JLabel l;
-
         	Chemin chemin = tournee.getPlusCourteTournee().get(i);
         	//R�cup�rer une intersection �tape du parcours et l'ajouter � la liste
         	Intersection etape = chemin.getDerniere();
@@ -300,7 +286,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	List<Intersection> cheminement = chemin.getIntersections();
         	Intersection interPrecedente = cheminement.get(cheminement.size() - 2);
         	String adresse = interPrecedente.getTronconsSortants().get(etape.getId()).getNomRue();
-        	Map<String, String> map = new HashMap();
+        	Map<String, String> map = new HashMap<>();
 
         	map.put(etape.getId(), adresse);
             ordrePassage.add(map);
@@ -314,8 +300,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 
     	listeLabels.clear();
     	resultsPanel.removeAll();
-        int compteurPointsEnlevement = 1;
-        int compteurPointsLivraison = 1;
         int compteur = 0;
         
         Map<String, Integer> indexationPointsE =  new HashMap<>();
@@ -358,10 +342,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         	//Cr�er le label correspondant
         	if(isPtEnlevement) {
         		l = creerLabelEtape(etape, indexationPointsE.get(etape.getId()), adresse, "enlevement");
-        		compteurPointsEnlevement ++;
         	} else {
         		l = creerLabelEtape(etape, indexationPointsL.get(etape.getId()), adresse, "livraison");
-        		compteurPointsLivraison ++;
         	}
         	l.setName(Integer.toString(compteur));
         	l.addMouseListener(this);
@@ -536,8 +518,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					if (JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer les deux points associes a cette livraison ?") == JOptionPane.OK_OPTION) {
 						ordrePassage.remove(index);
 						Intersection elemSuppr = null;
-						PointEnlevement enlevement = null;
-						PointLivraison livraison = null;
 						boolean isSuppr = false;
 			        	for(String etapeId: elemSelect.keySet() ) {
 			        		elemSuppr = plan.getIntersections().get(etapeId);
