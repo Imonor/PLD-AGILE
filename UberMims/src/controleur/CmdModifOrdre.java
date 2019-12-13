@@ -2,6 +2,7 @@ package controleur;
 
 import model.Tournee;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -169,7 +170,8 @@ public class CmdModifOrdre implements Commande {
 				}
 			}
 			
-		}		
+		}
+		newChemins.removeAll(Collections.singleton(null));
 		tournee.setPlusCourteTournee(newChemins);
 	}
 }

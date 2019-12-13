@@ -1,5 +1,6 @@
 package controleur;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,8 @@ public class CmdAjoutLivraison implements Commande {
 		chemins.add(newCheminPrec);
 		chemins.add(newCheminModif);
 		chemins.add(newCheminSuiv);
-		
+
+		chemins.removeAll(Collections.singleton(null));
 		tournee.setPlusCourteTournee(chemins);
 	}
 
@@ -64,7 +66,8 @@ public class CmdAjoutLivraison implements Commande {
 			
 			chemins.add(newCheminFin);
 		}
-		
+
+		chemins.removeAll(Collections.singleton(null));
 		tournee.setPlusCourteTournee(chemins);
 		
 	}
