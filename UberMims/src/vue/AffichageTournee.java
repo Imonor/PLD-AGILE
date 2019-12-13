@@ -59,8 +59,29 @@ public class AffichageTournee extends JPanel {
 	private Color backgroundRougeClair = new Color(184, 64, 57);
 	private Font police = new Font("Avenir", 0, 15);
 
+	private List<Color> listColors = new ArrayList();
 	public AffichageTournee(Plan plan) {
 		this.plan = plan;
+		listColors.add(Color.decode("#2F4F4F"));
+		listColors.add(Color.decode("#808080"));
+		listColors.add(Color.decode("#800000"));
+		listColors.add(Color.decode("#8B4513"));
+		listColors.add(Color.decode("#D2691E"));
+		listColors.add(Color.decode("#191970"));
+		listColors.add(Color.decode("#4169E1"));
+		listColors.add(Color.decode("#556B2F"));
+		listColors.add(Color.decode("#006400"));
+		listColors.add(Color.decode("#3CB371"));
+		listColors.add(Color.decode("#32CD32"));
+		listColors.add(Color.decode("#BDB76B"));
+		listColors.add(Color.decode("#FF4500"));
+		listColors.add(Color.decode("#DC143C"));
+		listColors.add(Color.decode("#FA8072"));
+		listColors.add(Color.decode("#4B0082"));
+		listColors.add(Color.decode("#8B008B"));
+		listColors.add(Color.decode("#C71585"));
+		listColors.add(Color.decode("#9400D3"));
+		listColors.add(Color.decode("#6365ff"));
 	}
 
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
@@ -195,17 +216,15 @@ public class AffichageTournee extends JPanel {
 			
 			Map<String, Color> colorPointsE =  new HashMap<>();
 			Map<String, Color> colorPointsL =  new HashMap<>();
-			Random rand = new Random();
 	
 			int i = 1;
 			for(PointEnlevement crntPointE: contraintestournee.getPointsEnlevement() ) {
-				Color randomColor = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 				indexationPointsE.put(crntPointE.getId(), i);
-				colorPointsE.put(crntPointE.getId(), randomColor);
+				colorPointsE.put(crntPointE.getId(), listColors.get(i));
 				for(PointLivraison crntPointL: contraintestournee.getPointsLivraison() ) {
 					if(crntPointL.getIdEnlevement().equals(crntPointE.getId())){
 						indexationPointsL.put(crntPointL.getId(), i);
-						colorPointsL.put(crntPointL.getId(), randomColor);
+						colorPointsL.put(crntPointL.getId(), listColors.get(i));
 					}
 		    	}
 				i++;
