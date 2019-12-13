@@ -379,6 +379,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	labelSelectionne = labelClique;
     	oldColor = labelClique.getForeground();
     	labelSelectionne.setForeground(Color.RED);
+    	//fenetre.getAffichagePlan().setIntersectionSelectionne();
     }
 
 	@Override

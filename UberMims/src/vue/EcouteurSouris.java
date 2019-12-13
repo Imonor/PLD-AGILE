@@ -19,19 +19,41 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 	private Fenetre fenetre;
 	private int cptZoom;
 	private Point pointDepart;
-
+	
+	/**
+     * Constructeur 1 de la classe EcouteurSouris
+     * 
+     * @param affichagePlan
+     * 		Instance de la classe associé à l'écouteur
+     * @param
+     * 		Instance de la fenêtre principale
+     */
 	public EcouteurSouris(AffichagePlan affichagePlan, Fenetre fenetre) {
 		this.affichagePlan = affichagePlan;
 		this.fenetre = fenetre;
 		cptZoom = 0;
 		pointDepart = new Point();
 	}
-
+	
+	/**
+     * Constructeur 2 de la classe EcouteurSouris
+     * 
+     * @param affichageTournee
+     * 		Instance de la classe associé à l'écouteur
+     * @param
+     * 		Instance de la fenêtre principale
+     */
 	public EcouteurSouris(AffichageTournee affichageTournee, Fenetre fenetre) {
 		this.affichageTournee = affichageTournee;
 		this.fenetre = fenetre;
 	}
-
+	
+	/**
+     * Méthode surchargé qui gère un clic de souris
+     * 
+     * @param e
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
@@ -73,13 +95,19 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		}
 	}
 
-
+	/**
+     * Méthode surchargé qui gère un clic de souris
+     * 
+     * @param e
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		pointDepart.setLocation(e.getX() - affichagePlan.getxOffset(), e.getY() - affichagePlan.getyOffset());
 		affichagePlan.setRelease(false);
 	}
+
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -99,7 +127,14 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	
+	/**
+     * Méthode surchargé qui gère le déplacement de la souris après un clic maintenu jusq'au relachement. 
+     * 
+     * @param e
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -133,13 +168,19 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			affichagePlan.repaint();
 		}
 	}
-
+	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	/**
+     * Méthode surchargé qui gère la rotation du scroll de la souris.
+     * 
+     * @param e
+     * 		Paramètre pas défaut de l'interface surchargé, qui représente l'évenement associé.
+     */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
@@ -168,6 +209,19 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 			}
 		}
 	}
+	
+	/**
+     * Méthode surchargé qui retourne l'intersection la plus proche du clic de souris.
+     * 
+     * @param xPos
+     * 		Position en x de la souris.
+     * 
+     * @param yPos
+     * 		Position en y de la souris.
+     * 
+     * @return une instance d'intersection correspondant à la plus proche du clic.
+     * 		
+     */
 	
 	public Intersection trouverIntersectionLaPlusProche(double xPos, double yPos){
 		Intersection interLaPlusProche = new Intersection();

@@ -114,6 +114,15 @@ public class AffichagePlan extends JScrollPane {
 	
 //////////////////////////// CONSTRUCTEURS ////////////////////////////
 	
+	
+	/**
+     * Constructeur de la classe Affichage Plan
+     * 
+     * @param plan
+     * 		Le plan à afficher
+     * @param
+     * 		La fenetre qui contient l'instance de la classe
+     */
 	public AffichagePlan(Plan plan, Fenetre fenetre) {
 		this.plan = plan;
 		chargementCouleurs();
@@ -265,24 +274,6 @@ public class AffichagePlan extends JScrollPane {
 		return zoomPrecedent;
 	}
 
-	public void ZoomIn() {
-		this.zoom = this.zoom * FACTEUR_ZOOM;
-		zoomIn = true;
-		zoomOut = false;
-		this.largeurPlan *= FACTEUR_ZOOM;
-		this.hauteurPlan *= FACTEUR_ZOOM;
-		this.repaint();
-	}
-
-	public void ZoomOut() {
-		this.zoom = this.zoom / FACTEUR_ZOOM;
-		zoomIn = false;
-		zoomOut = true;
-		this.largeurPlan /= FACTEUR_ZOOM;
-		this.hauteurPlan /= FACTEUR_ZOOM;
-		this.repaint();
-	}
-
 	public void setMouseX(double mouseX) {
 		this.mouseX = mouseX;
 	}
@@ -323,6 +314,38 @@ public class AffichagePlan extends JScrollPane {
 	
 //////////////////////////// METHODES DE LA CLASSE ////////////////////////////	
 	
+	/**
+     * Fonction qui applique un zoom vers l'avant en augmentant
+     * le zoom et les dimensions du plan.
+     * 
+     */	
+	public void ZoomIn() {
+		this.zoom = this.zoom * FACTEUR_ZOOM;
+		zoomIn = true;
+		zoomOut = false;
+		this.largeurPlan *= FACTEUR_ZOOM;
+		this.hauteurPlan *= FACTEUR_ZOOM;
+		this.repaint();
+	}
+	
+	/**
+     * Fonction qui applique un zoom vers l'arrière en diminuant
+     * le zoom et les dimensions du plan.
+     * 
+     */	
+	public void ZoomOut() {
+		this.zoom = this.zoom / FACTEUR_ZOOM;
+		zoomIn = false;
+		zoomOut = true;
+		this.largeurPlan /= FACTEUR_ZOOM;
+		this.hauteurPlan /= FACTEUR_ZOOM;
+		this.repaint();
+	}
+	
+	/**
+     * Charge les couleurs aléatoires à utiliser pour attribuer
+     * des couleurs aux points de livraison et d'enlèvement.
+     */
 	public void chargementCouleurs() {
 		couleurs = new ArrayList<Color>();
 		Random rand = new Random();
@@ -335,6 +358,12 @@ public class AffichagePlan extends JScrollPane {
 	// Le code de la fonction ci-dessous a ï¿½tï¿½ fortement inspirï¿½ par le lien suivant
 	// https://stackoverflow.com/questions/6543453/zooming-in-and-zooming-out-within-a-panel
 	
+	/**
+     * Ajuste la position du plan en fonction du zoom et du déplacement à la souris
+     * 
+     * @param g2d
+     * 		Composant graphique sur lequel est dessiné le plan
+     */
 	public void ajusterZoom(Graphics2D g2d) {
 		AffineTransform at = new AffineTransform();
 
@@ -373,7 +402,14 @@ public class AffichagePlan extends JScrollPane {
 		zoomPrecedent = zoom;
 		g2d.transform(at);
 	}
-
+	
+	
+	/**
+     * Méthode surchargé qui redessine les éléments graphiques de la classe.
+     * 
+     * @param g
+     * 		Paramètre par défaut de la méthode surchargé
+     */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -477,7 +513,16 @@ public class AffichagePlan extends JScrollPane {
 			}
 		}
 	}
-
+	
+	/**
+     * Retourne la couleur du chemin à dessiner.
+     * 
+     * @param i
+     * 		Position du chemin sur la tournée.
+     * 
+     * @return une instance de classe Color
+     * 		Retourne la couleur du chemin
+     */
 	public Color getArrowColor(int i) {
 		int k = i % 3;
 		if (k == 0) {
