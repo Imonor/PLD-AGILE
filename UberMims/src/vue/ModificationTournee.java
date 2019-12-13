@@ -136,7 +136,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
-        JButton validerModif = new JButton("Valider les modifications");
+
         JButton supprLivr = new JButton("Supprimer la livraison associee");
         JButton modifAdresse = new JButton("Modifier l'emplacement de ce point");
         JButton modifTemps = new JButton("Modifier le temps de passage a ce point");
@@ -144,11 +144,9 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         boutonBas.setBounds(15, 30, 20, 20);
         modifAdresse.setBounds(30, 45, 40, 20);
         modifTemps.setBounds(30, 70, 40, 20);
-        validerModif.setBounds(30, 60, 40, 20);
         
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
-        validerModif.addActionListener(this);
         supprLivr.addActionListener(this);
         modifAdresse.addActionListener(this);
         modifTemps.addActionListener(this);
@@ -158,7 +156,6 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         panelDetail.add(supprLivr);
         panelDetail.add(modifAdresse);
         panelDetail.add(modifTemps);
-        panelDetail.add(validerModif);
 
         panelDetail.setBackground(backgroundTurquoiseClair);
         
