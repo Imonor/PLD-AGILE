@@ -41,6 +41,15 @@ public class EcouteurBoutons implements ActionListener{
 	private String nomFichierTournee;
 	
 	//Constructeur
+	
+	/**
+     * Constructeur de la classe écouteur bouton
+     * 
+     * @param controleur
+     * 		Controleur du projet
+     * @param
+     * 		Fenetre associée à cette classe
+     */
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
 		this.fenetre = fenetre;
@@ -49,6 +58,12 @@ public class EcouteurBoutons implements ActionListener{
 		panPlan = new JPanel();
 	}
 	
+	/**
+     * Méthode surchargé qui gère les actions associées à un bouton
+     * 
+     * @param e
+     * 		Paramètre par défaut représentant l'évenement associé.
+     */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
@@ -87,14 +102,11 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixPlan2 = new JFileChooser();
 				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
-				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
 				
 				if (boiteDialogue3 == JFileChooser.APPROVE_OPTION) { 
 					nomFichierPlan2 = choixPlan2.getSelectedFile().getName();
 					cheminFichierPlan2 = choixPlan2.getSelectedFile().getAbsolutePath();
-					//controleur.creerPlan(cheminFichierPlan)
-					//Plan plan = controleur.chargerPlan(cheminFichierPlan);
+
 					try {
 						controleur.chargerPlan(cheminFichierPlan2,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);						
 						fenetre.setPlan(Controleur.plan);
@@ -116,13 +128,11 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.getAffichageTournee().removeAll();
 				JFileChooser choixTournee = new JFileChooser();
 				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
-				// 2EME ITERATION : FILTRER LES FICHIERS XML
-				//NE MARCHE PAS : choixPlan.setFileFilter(new FileNameExtensionFilter("*.xml", "xml"));
 				
 				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
 					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
-					//controleur.creerPlan(cheminFichierPlan);
+
 					try {
 					controleur.chargerTournee(cheminFichierTournee);
 					fenetre.setTournee(null);
@@ -140,7 +150,6 @@ public class EcouteurBoutons implements ActionListener{
 			
 			case "Calculer une tournee":
 				System.out.println("Calculer une tournee");
-					//controleur.chargerTournee(cheminFichierTournee);
 					controleur.calculerTournee();
 					fenetre.setTournee(controleur.getTournee());
 					
@@ -183,9 +192,6 @@ public class EcouteurBoutons implements ActionListener{
 
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
-				
-				//System.out.println(pointEnlevement.getId());
-				//System.out.println(pointLivraison.getId());
 
 				controleur.ajouterLivraison(pointEnlevement, pointLivraison);
 				System.out.println(controleur.getContraintes().getPointsEnlevement().get(controleur.getContraintes().getPointsEnlevement().size()-1).getTempsEnlevement());

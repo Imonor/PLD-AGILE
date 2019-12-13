@@ -273,9 +273,7 @@ public class AffichageTournee extends JPanel {
 	    	}
 			
 			resultsPanel.add(infoGeneral);
-			
-			//setdDetailsTournee();
-	        
+
 			for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {
 				JLabel jlabel = new JLabel("<html> ");
 				jlabel.setName(Integer.toString(k));
@@ -294,8 +292,15 @@ public class AffichageTournee extends JPanel {
 
 					 	Chemin current = tournee.getPlusCourteTournee().get(index);
 					 	
-					 	intersectionClique = current.getIntersections().get(1);
+					 	int numIntersection = 1;
+					 	if( index >0 ){
+						 	while ( tournee.getPlusCourteTournee().get(index-1).getIntersections().contains(current.getIntersections().get(numIntersection))) {
+								numIntersection++;
+						 	}
+					 	}
+					 	intersectionClique = current.getIntersections().get(numIntersection);
 					 	fenetre.getAffichagePlan().setIntersectionSelectionne(intersectionClique);
+					 	
 					 	int tailleC = current.getIntersections().size();
 					 	Chemin previous;
 					 	String depart;
