@@ -144,7 +144,7 @@ public class XMLParser {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ExceptionChargement();
 		}
 		if(enlevements.isEmpty()) throw new ExceptionChargement("Aucune contraintes chargee");
 
