@@ -48,6 +48,7 @@ public class EcouteurSouris implements MouseListener, MouseWheelListener, MouseM
 		
 		if (affichagePlan.getPlanClickable()) {
 			affichagePlan.setIntersectionSelectionne(null);
+			fenetre.getAffichageTournee().setIntersectionClique(null);
 			switch (affichagePlan.getEtat()) {
 			case LIVRAISON:
 				affichagePlan.setNouvelleLivraison(interLaPlusProche);

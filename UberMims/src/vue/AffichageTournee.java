@@ -49,7 +49,8 @@ import util.XMLParser;
 import vue.AffichagePlan.LineArrow;
 
 public class AffichageTournee extends JPanel {
-
+	
+	private Fenetre fenetre;
 	private Plan plan;
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
@@ -96,7 +97,8 @@ public class AffichageTournee extends JPanel {
 	
 
 	private List<Color> listColors = new ArrayList();
-	public AffichageTournee(Plan plan) {
+	public AffichageTournee(Plan plan, Fenetre fenetre) {
+		this.fenetre = fenetre;
 		this.plan = plan;
 		listColors.add(Color.decode("#2F4F4F"));
 		listColors.add(Color.decode("#808080"));
@@ -294,10 +296,10 @@ public class AffichageTournee extends JPanel {
 				    		indBeforeTest = indBeforeTest.substring(0, 1);
 				    	}
 					 	int index = Integer.parseInt(indBeforeTest);
-					 	System.out.println(index);
 					 	Chemin current = tournee.getPlusCourteTournee().get(index);
-					 	System.out.println(current.getPremiere().getId());
 					 	
+					 	intersectionClique = current.getIntersections().get(1);
+					 	fenetre.getAffichagePlan().setIntersectionSelectionne(intersectionClique);
 					 	int tailleC = current.getIntersections().size();
 					 	Chemin previous;
 					 	String depart;
@@ -328,7 +330,8 @@ public class AffichageTournee extends JPanel {
 					 		        
 					 	itineraire = itineraire.substring(0, itineraire.length()-7);
 					 	textInfo.setText(("<html> <b> <font color=\"424242\"> Pour acceder a " + arrivee + " a partir de " + depart + " : </b><br> " + itineraire + "</font> </html>"));
-				 		        
+				 		AffichageTournee.this.repaint();
+				 		fenetre.getAffichagePlan().repaint();
 				    }
 				});
 			 		
@@ -424,64 +427,17 @@ public class AffichageTournee extends JPanel {
 	
 	
 	public void setdDetailsTournee(){
+		boolean trouve = false;
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {			
 			JLabel jlabel = jlabels.get(k);
-			jlabel.addMouseListener(new MouseAdapter() {
-			    public void mouseClicked(MouseEvent e) {
-			    	//Affichage Details Texte
-				 	textInfo.removeAll();
-				 	String lab = (String) e.getSource().toString();
-
-			    	System.out.println("///////////ok///////////" + lab);
-			    	String indBeforeTest = lab.substring(19, 21);
-			    	if (indBeforeTest.contains(",")) {
-			    		indBeforeTest = indBeforeTest.substring(0, 1);
-			    	}
-				 	int index = Integer.parseInt(indBeforeTest);
-				 	System.out.println(index);
-				 	Chemin current = tournee.getPlusCourteTournee().get(index);
-				 	System.out.println(current.getPremiere().getId());
-				 	
-				 	int tailleC = current.getIntersections().size();
-				 	Chemin previous;
-				 	String depart;
-				 	String arrivee = current.getIntersections().get(tailleC-2).getTronconsSortants().get(current.getIntersections().get(tailleC-1).getId()).getNomRue();
-				 	if(index != 0) {
-				 		previous = tournee.getPlusCourteTournee().get(index-1);
-				 		int tailleInters = previous.getIntersections().size();
-				 		depart = previous.getIntersections().get(tailleInters - 2).getTronconsSortants().get(previous.getIntersections().get(tailleInters - 1).getId()).getNomRue();
-				 	} else {
-				 		previous = null;
-				 		depart = tournee.getPlusCourteTournee().get(0).getIntersections().get(0).getTronconsSortants().get(tournee.getPlusCourteTournee().get(0).getIntersections().get(1).getId()).getNomRue();;
-				 	}
-				 	
-				 	String itineraire = "<html> <font color=\"424242\"> "+depart + " &rarr; ";
-				 	String tmp = depart;
-				 		        
-				 	for (int i = 0; i < current.getIntersections().size()-1; i++) {
-				 		Intersection crntInters = current.getIntersections().get(i);
-				 		Intersection nextInters = current.getIntersections().get(i+1);
-					 	if (!tmp.equals(crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue())) {
-					 		itineraire = itineraire + crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue() + " &rarr; ";
-					 	}
-				 		tmp = crntInters.getTronconsSortants().get(nextInters.getId()).getNomRue();     	
-				 	}
-				 	System.out.println(arrivee);
-				 	System.out.println(depart);
-				 	System.out.println(itineraire);
-				 		        
-				 	itineraire = itineraire.substring(0, itineraire.length()-7);
-				 	textInfo.setText(("<html> <b> <font color=\"424242\"> Pour acceder a " + arrivee + " a partir de " + depart + " : </b><br> " + itineraire + "</font> </html>"));
-			 		        
-			    }
-			});
-		 		
+			
 		    boolean miseEnAvant = false; 
 			Chemin c = tournee.getPlusCourteTournee().get(k);
 			List<Intersection> inters =  c.getIntersections();
 			
-			if( intersectionClique != null && inters.contains(intersectionClique) ){
+			if( intersectionClique != null && inters.contains(intersectionClique) && !trouve ){
 				miseEnAvant = true;
+				trouve = true;
 			}
 			int taille = inters.size();
 			Intersection inter = inters.get(taille-1);
