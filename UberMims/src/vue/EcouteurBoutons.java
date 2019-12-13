@@ -39,6 +39,7 @@ public class EcouteurBoutons implements ActionListener{
 	private String nomFichierPlan2;
 	private String cheminFichierTournee ;
 	private String nomFichierTournee;
+	
 	//Constructeur
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
