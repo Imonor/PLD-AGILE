@@ -1,15 +1,15 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class TronconTest {
 	
 	@Test
-	void TestContructeur() {
+	public void TestContructeur() {
 		Intersection i = new Intersection ("i", 0.0,0.0);
 		
 		Troncon t = new Troncon (i, "t", 10.0);

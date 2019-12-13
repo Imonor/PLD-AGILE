@@ -7,9 +7,6 @@ import java.util.HashMap;
 import org.junit.Test;
 
 import controleur.Controleur;
-import model.Intersection;
-import model.PointEnlevement;
-import model.PointLivraison;
 import util.ExceptionChargement;
 
 public class TemplateTSPTest {

@@ -1,17 +1,17 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.time.LocalTime;
 import java.util.LinkedList;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class CheminTest {
 	
 	@Test
-	void TestContructeur() {
+	public void TestContructeur() {
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
 		Intersection i3 = new Intersection ("e2", 0.0,0.0);
@@ -23,7 +23,7 @@ public class CheminTest {
 		i.add(i3);
 		i.add(i4);
 		
-		//Constructeur par dÃ©faut
+		//Constructeur par défaut
 		Chemin c1 = new Chemin();
 		assertTrue(c1.getIntersections().isEmpty());
 		assertEquals(0, c1.getDuree());
@@ -38,7 +38,7 @@ public class CheminTest {
 	}
 	
 	@Test
-	void TestGetExtremites () {
+	public void TestGetExtremites () {
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
 		Intersection i3 = new Intersection ("e2", 0.0,0.0);
@@ -57,7 +57,7 @@ public class CheminTest {
 	}
 	
 	@Test
-	void TestAddIntersection () {
+	public void TestAddIntersection () {
 		
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
@@ -88,7 +88,7 @@ public class CheminTest {
 	}
 	
 	@Test
-	void TestEquals() { //Chaque test verifie la commutitavite de la fonction
+	public void TestEquals() { //Chaque test verifie la commutitavite de la fonction
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
 		Intersection i3 = new Intersection ("e2", 0.0,0.0);

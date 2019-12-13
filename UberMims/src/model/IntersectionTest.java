@@ -1,15 +1,15 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class IntersectionTest {
 	
 	@Test
-	void TestContructeur() {
+	public void TestContructeur() {
 		Intersection i = new Intersection ("i", 0.0,0.0);
 		
 		assertEquals(i.getId(),"i");
@@ -18,7 +18,7 @@ public class IntersectionTest {
 	}
 	
 	@Test
-	void TestAddTroncon() {
+	public void TestAddTroncon() {
 		Intersection i1 = new Intersection ("i1", 0.0,0.0);
 		Intersection i2 = new Intersection ("i2", 0.0,0.0);
 		Intersection i3 = new Intersection ("i3", 0.0,0.0);

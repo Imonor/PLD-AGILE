@@ -1,15 +1,15 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class PointEnlevementTest {
 	
 	@Test
-	void TestContructeurs() {
+	public void TestContructeurs() {
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
 		
@@ -32,7 +32,7 @@ public class PointEnlevementTest {
 		}
 	
 	@Test
-	void TestTempsEnlevmentNegatif() {
+	public void TestTempsEnlevmentNegatif() {
 		Intersection i1 = new Intersection ("e1", 0.0,0.0);
 		Intersection i2 = new Intersection ("l1", 0.0,0.0);
 		
