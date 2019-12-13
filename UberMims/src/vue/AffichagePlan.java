@@ -346,8 +346,8 @@ public class AffichagePlan extends JScrollPane {
 			yOldMouseY.push(mouseY);
 
 		} else if (zoomOut && !xOldMouseX.isEmpty() && !yOldMouseY.isEmpty()) {
-			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * xOldMouseX.pop();
-			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * yOldMouseY.pop();
+			xOffset = (zoomDiv) * xOffset + (1 - zoomDiv) * (xOldMouseX.pop() - xDiff);
+			yOffset = (zoomDiv) * yOffset + (1 - zoomDiv) * (yOldMouseY.pop() - yDiff);
 		}
 		if (zoom == 1f) {
 			xOffset = 0;
