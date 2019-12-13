@@ -424,6 +424,7 @@ public class AffichageTournee extends JPanel {
 	
 	
 	public void setdDetailsTournee(){
+		boolean trouve = false;
 		for (int k = 0; k < tournee.getPlusCourteTournee().size(); k++) {			
 			JLabel jlabel = jlabels.get(k);
 			jlabel.addMouseListener(new MouseAdapter() {
@@ -480,8 +481,9 @@ public class AffichageTournee extends JPanel {
 			Chemin c = tournee.getPlusCourteTournee().get(k);
 			List<Intersection> inters =  c.getIntersections();
 			
-			if( intersectionClique != null && inters.contains(intersectionClique) ){
+			if( intersectionClique != null && inters.contains(intersectionClique) && !trouve ){
 				miseEnAvant = true;
+				trouve = true;
 			}
 			int taille = inters.size();
 			Intersection inter = inters.get(taille-1);
