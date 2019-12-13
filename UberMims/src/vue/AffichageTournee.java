@@ -1,42 +1,23 @@
 package vue;
 
-import java.awt.BasicStroke;
 import static javax.swing.ScrollPaneConstants.*;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
 import javax.swing.*;
 
-import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
 import model.Intersection;
@@ -45,24 +26,15 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
-import util.XMLParser;
-import vue.AffichagePlan.LineArrow;
 
 public class AffichageTournee extends JPanel {
 	
 	private Fenetre fenetre;
-	private Plan plan;
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
-	private Color backgroundTurquoise = new Color(25, 174, 186);
-	private Color backgroundJaune = new Color(226, 179, 72);
-	private Color backgroundOrange = new Color(229, 138, 86);
-	private Color backgroundRougeClair = new Color(184, 64, 57);
-	private Font police = new Font("Avenir", 0, 15);
-	private List<Color> listColors = new ArrayList();
+	private List<Color> listColors = new ArrayList<>();
 	private Intersection intersectionClique;
 	private Tournee tournee;
-	private ContraintesTournee contraintestournee;
 	private List<String> idPointsEnlevement;
 	private List<String> idPointsLivraison;
 	
@@ -104,7 +76,6 @@ public class AffichageTournee extends JPanel {
      */
 	public AffichageTournee(Plan plan, Fenetre fenetre) {
 		this.fenetre = fenetre;
-		this.plan = plan;
 		listColors.add(Color.decode("#2F4F4F"));
 		listColors.add(Color.decode("#808080"));
 		listColors.add(Color.decode("#800000"));
@@ -139,9 +110,7 @@ public class AffichageTournee extends JPanel {
 	public void afficherDetailTournee(Tournee tournee, ContraintesTournee contraintestournee) {
         this.setFont(new Font("Avenir",1,15));
         this.tournee = tournee;
-        this.contraintestournee = contraintestournee;
-		
-		this.setFont(new Font("Avenir",1,15));
+        this.setFont(new Font("Avenir",1,15));
 		
 		jlabels = new ArrayList<JLabel>();
 		
@@ -251,9 +220,6 @@ public class AffichageTournee extends JPanel {
 			
 			colorPointsE =  new HashMap<>();
 			colorPointsL =  new HashMap<>();
-			Random rand = new Random();
-
-	
 			int i = 1;
 			for(PointEnlevement crntPointE: contraintestournee.getPointsEnlevement() ) {
 				indexationPointsE.put(crntPointE.getId(), i);
@@ -336,10 +302,8 @@ public class AffichageTournee extends JPanel {
 				Troncon tronc = interPrevious.getTronconsSortants().get(inter.getId());
 				
 					if (idPointsEnlevement.contains(inter.getId())) {
-						int duree = c.getDuree();
 						int livraison = ptEnlevement.get(inter.getId()).getTempsEnlevement();
 						
-						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
 	
 						LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());
@@ -352,9 +316,7 @@ public class AffichageTournee extends JPanel {
 						jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
 
 					} else if (idPointsLivraison.contains(inter.getId())) {
-						int duree = c.getDuree();
 						int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
-						int tempsChemin[] = traitementTempsChemin(duree);
 						int tempsLivraison[] = traitementTempsLivraison(livraison);
 						
 						LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());						
@@ -449,10 +411,8 @@ public class AffichageTournee extends JPanel {
 				jlabel.setText("<html>");
 			}
 				if (idPointsEnlevement.contains(inter.getId())) {
-					int duree = c.getDuree();
 					int livraison = ptEnlevement.get(inter.getId()).getTempsEnlevement();
 					
-					int tempsChemin[] = traitementTempsChemin(duree);
 					int tempsLivraison[] = traitementTempsLivraison(livraison);
 
 					LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());
@@ -465,9 +425,7 @@ public class AffichageTournee extends JPanel {
 					jlabel.setText(jlabel.getText() + "&rarr; Temps de pick up : " + tempsLivraison[1] + " minutes.<br><br>");
 
 				} else if (idPointsLivraison.contains(inter.getId())) {
-					int duree = c.getDuree();
 					int livraison = ptLivraison.get(inter.getId()).getTempsLivraison();
-					int tempsChemin[] = traitementTempsChemin(duree);
 					int tempsLivraison[] = traitementTempsLivraison(livraison);
 					
 					LocalTime heurePassage = tournee.getHeureDePassage(inter.getId());						

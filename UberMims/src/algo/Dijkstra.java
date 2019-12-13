@@ -10,7 +10,10 @@ import model.Chemin;
 import model.Intersection;
 import model.Troncon;
 
-
+/**
+ * Classe de gestion de calcul des plus courts chemins par l'algorithme de Dijkstra
+ *
+ */
 public class Dijkstra {
 	
 	private final double vitesse = 15.0/3.6; //Vitesse en m/s
@@ -18,6 +21,14 @@ public class Dijkstra {
 	//Retourne une map dont la cl� est l'id de l'intersection consid�r�e, et la valeur est une 
 	//map qui contient en cl� l'id de l'intersection vers laquelle on souhaite calculer le +
 	//court chemin, et en valeur le chemin correspondant
+	/**
+	 * 								calcule les plus courts chemins entre les points que doit visiter le livreur
+	 * @param plan					le plan choisi par l'utilisateur
+	 * @param intersectionsAVisiter	la liste des intersections du plan qui doivent être visitées par le livreur (pick-ups, deliveries et depot)
+	 * @return						une map dont la clé est l'id de l'intersection d'où on calcule les plus courts chemins (une intersection à 
+	 * 								visiter) et la valeur est une map, dont la clé est l'id de intersection vers laquelle on a trouvé le plus court
+	 * 								chemin (une intersection à visiter), et la valeur le chemin pour y accéder
+	 */
 	public Map<String, Map<String, Chemin>> plusCourtsCheminsPlan(Map<String, Intersection> plan, Map<String, Intersection> intersectionsAVisiter) {
 		Map<String, Map<String, Chemin>> plusCourtsChemins = new HashMap<>();
 		
