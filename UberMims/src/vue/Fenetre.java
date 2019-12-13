@@ -77,6 +77,7 @@ public class Fenetre extends JFrame {
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
 	private JButton boutonAnnulerModification = new JButton("âŸ²");
+	private JButton boutonRefaireModification = new JButton("redo");
 
 
 
@@ -157,9 +158,14 @@ public class Fenetre extends JFrame {
 		boutonAjouterLivraison.addActionListener(ecouteurBoutons);
 		//bouton annuler la derniere modification
 		boutonAnnulerModification.setVisible(true);
-		boutonAnnulerModification.setBounds(95, 71, 260, 30);
+		boutonAnnulerModification.setBounds(95, 71, 125, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
+		//bouton refaire la dernière modification annulée
+		boutonRefaireModification.setVisible(true);
+		boutonRefaireModification.setBounds(230, 71, 125, 30);
+		panHautDroite.add(boutonRefaireModification);
+		boutonRefaireModification.addActionListener(ecouteurBoutons);
 		panDroite.add(panHautDroite);
 		// bouton modifier ordre livraison
 		boutonModifierTournee.setVisible(true);
@@ -368,6 +374,11 @@ public class Fenetre extends JFrame {
 				boutonAnnulerModification.setEnabled(false);
 			} else {
 				boutonAnnulerModification.setEnabled(true);
+			}
+			if(controleur.getCmdListe().redoPossible()) {
+				boutonRefaireModification.setEnabled(true);
+			} else {
+				boutonRefaireModification.setEnabled(false);
 			}
 
 			//panInformation.setVisible(true);
