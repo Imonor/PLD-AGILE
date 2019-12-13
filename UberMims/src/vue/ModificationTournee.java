@@ -177,18 +177,20 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         
       //--------------------PANEL MODIF ADRESSE-----------------------------//
         panelModifAdresse = new JPanel();
-        panelModifAdresse.setBackground(Color.red);
+        panelModifAdresse.setBackground(backgroundTurquoiseClair);
         panelModifAdresse.setVisible(false);
         
         JButton annulerModifAdresse = new JButton("Annuler la modification de l'adresse");
         annulerModifAdresse.addActionListener(this);
         
         panelInfoModifAdresse = new JPanel();
-        JLabel infoModifAdresse = new JLabel("Veuillez cliquer sur l'intersection ou vous souhaitez realiser le pick-up/delivery");
+        panelInfoModifAdresse.setBackground(backgroundTurquoiseClair);
+        JLabel infoModifAdresse = new JLabel("<html>Veuillez cliquer sur l'intersection<br>ou vous souhaitez realiser le pick-up/delivery</html>");
         panelInfoModifAdresse.add(infoModifAdresse);
         
         
         panelValiderModifAdresse = new JPanel();
+        panelValiderModifAdresse.setBackground(backgroundTurquoiseClair);
         panelValiderModifAdresse.setVisible(false);
         JButton validerModifAdresse = new JButton("Valider la modification de l'adresse");
         validerModifAdresse.addActionListener(this);
@@ -600,6 +602,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				labelSelectionne = null;
 				panelDetail.setVisible(true);
 				panelModifAdresse.setVisible(false);
+				afficherTournee();
 				break;
 				
 			case "Valider la modification de l'adresse":

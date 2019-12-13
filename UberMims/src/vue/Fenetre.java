@@ -367,6 +367,9 @@ public class Fenetre extends JFrame {
 			panAjoutLivraison1.setVisible(false);
 			panAjoutLivraison2.setVisible(false);
 			panAjoutLivraison3.setVisible(false);
+			this.affichagePlan.setNouveauPickUp(null);
+			this.affichagePlan.setNouvelleLivraison(null);
+			this.affichagePlan.setNouvelleAdresse(null);
 			panModificationTournee.getPanelModifAdresse().setVisible(false);
 			panModificationTournee.getPanelModifTemps().setVisible(false);
 			panModificationTournee.getPanelDetail().setVisible(true);
