@@ -9,6 +9,9 @@ import model.Chemin;
 import model.Intersection;
 import model.PointEnlevement;
 
+/**
+ * Classe implementant l'interface iterateur
+ */
 public class IteratorSeq implements Iterator<String>{
 	
 	private HashMap<String, Intersection> intersections;
@@ -16,9 +19,12 @@ public class IteratorSeq implements Iterator<String>{
 	private int restants;
 	
 	/**
-	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
-	 * @param nonVus
-	 * @param sommetCrt
+	 *  Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
+	 * type - prochain neouds dans l'ordre de la liste initiale
+	 * @param restants - nb de noeuds restants a visiter
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * @param vuDispo - map de id et objet=(vu, dispo)
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
 	 */
 	public IteratorSeq(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		this.intersections = intersections;
@@ -26,10 +32,17 @@ public class IteratorSeq implements Iterator<String>{
 		this.restants = restants;
 	}
 	
+	/**
+	 * Methode qui indique si c'est possible d'obtenir un iterateur suivant
+	 */
 	@Override
 	public boolean hasNext() {
 		return restants > 0;
 	}
+	
+	/**
+	 * Methode qui renvoit le noeud suivant (String)
+	 */
 	@Override
 	public String next() {
 		

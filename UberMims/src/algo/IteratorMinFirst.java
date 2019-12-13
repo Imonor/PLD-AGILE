@@ -8,6 +8,10 @@ import java.util.Map;
 import model.Chemin;
 import model.Intersection;
 
+/**
+ * Classe implementant l'interface iterateur
+ *
+ */
 public class IteratorMinFirst implements Iterator<String>{
 	
 	private HashMap<String, Intersection> intersections;
@@ -17,9 +21,11 @@ public class IteratorMinFirst implements Iterator<String>{
 	private String courant;
 	
 	/**
-	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
-	 * @param nonVus
-	 * @param sommetCrt
+	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus - type : minimum en premier
+	 * @param restants - nb de noeuds restants a visiter
+	 * @param intersections - map avec l'id et les intersections qu'on a a visiter
+	 * @param vuDispo - map de id et objet=(vu, dispo)
+	 * @param plusCourtsChemins - map des plus courts chemins calcules
 	 */
 	public IteratorMinFirst(int restants, HashMap<String, Intersection> intersections, HashMap<String, Paire> vuDispo, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		this.intersections = intersections;
@@ -29,11 +35,17 @@ public class IteratorMinFirst implements Iterator<String>{
 		courant = "";
 	}
 	
+	/**
+	 * Methode qui indique si c'est possible d'obtenir un iterateur suivant
+	 */
 	@Override
 	public boolean hasNext() {
 		return restants > 0;
 	}
 	
+	/**
+	 * Methode qui renvoit le noeud suivant (String)
+	 */
 	@Override
 	public String next() {
 		

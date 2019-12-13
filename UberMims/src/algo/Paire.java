@@ -1,10 +1,18 @@
 package algo;
 
+/**
+ * Classe qui stocke les etats vu et dispo
+ */
 public class Paire {
 	
 	private boolean dispo;
 	private boolean vu;
 	
+	/**
+	 * Constructeur
+	 * @param dispo - boolean
+	 * @param vu - boolean
+	 */
 	public Paire(boolean dispo, boolean vu) {
 		this.dispo = dispo;
 		this.vu = vu;
