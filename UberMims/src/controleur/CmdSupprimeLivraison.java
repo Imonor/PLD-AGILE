@@ -7,9 +7,11 @@ import model.PointLivraison;
 import model.Tournee;
 import model.Chemin;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class CmdSupprimeLivraison implements Commande {
 	
@@ -70,7 +72,8 @@ public class CmdSupprimeLivraison implements Commande {
 		contraintes.removeLivraison(enlevement, livraison);
 		
 		List<Chemin> chemins = tournee.getPlusCourteTournee();
-		
+
+		chemins.removeAll(Collections.singleton(null));
 		Chemin newPrec = null, newSuiv = null;
 		for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
 			Chemin c = it.next();
@@ -102,18 +105,19 @@ public class CmdSupprimeLivraison implements Commande {
 				break;
 			}
 		}
+		chemins.removeIf(Objects::isNull);
 		if(!chemins.isEmpty()) {
 			if(ePrec.equals(contraintes.getDepot())) {
 				chemins.add(0, newPrec);
 			}
 			for(ListIterator<Chemin> it = chemins.listIterator(); it.hasNext();) {
 				Chemin c = it.next();
-				if(c.getDerniere().equals(newPrec.getPremiere())) {
+				if(c != null && c.getDerniere().equals(newPrec.getPremiere())) {
 					it.add(newPrec);
 					if(newSuiv == null)
 						break;
 				}
-				if(!lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
+				if(c != null  && newSuiv != null && !lSuiv.equals(contraintes.getDepot()) && c.getDerniere().equals(newSuiv.getPremiere())) {
 					it.add(newSuiv);
 					break;
 				}
@@ -123,6 +127,13 @@ public class CmdSupprimeLivraison implements Commande {
 				chemins.add(newSuiv);
 			}
 		}
+		
+		chemins.removeAll(Collections.singleton(null));
+		tournee.setPlusCourteTournee(chemins);
+		for(Chemin c : tournee.getPlusCourteTournee()) {
+			System.out.println(c);
+		}
+		
 	}
 
 	@Override
@@ -167,6 +178,7 @@ public class CmdSupprimeLivraison implements Commande {
 		CmdModifOrdre cmdMO2 = new CmdModifOrdre(tournee, livraison, lPrecCmd, lSuivCmd, plusCourtsChemins);
 		cmdMO2.doCode();
 		
+
 	}
 	
 	
