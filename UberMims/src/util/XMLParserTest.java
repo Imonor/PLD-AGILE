@@ -105,45 +105,71 @@ class XMLParserTest {
 	@Test
 	public void testChargerTourneeSansDepot() {
 		Plan plan = new Plan();
+		boolean thrown = false;
 		try {
 			plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
-		} catch (Exception e)
+		} catch (ExceptionChargement e)
 		{
+			thrown = true;
 			e.printStackTrace();
 		}
-		final Plan p = plan;
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerContraintesTournee("fichiersXML2019/demandePetit1 (Sans Depot).xml", p));
+		assertTrue(thrown);
 	}
 	
 	@Test
 	public void testChargerTourneeIncoherenteAvecPlan() {
 		Plan plan = new Plan();
+		boolean thrown = false;
 		try {
 			plan = XMLParser.chargerPlan("fichiersXML2019/petitPlan.xml", 1600, 1900);
-		} catch (Exception e)
+		} catch (ExceptionChargement e)
 		{
+			thrown = true;
 			e.printStackTrace();
 		}
-		final Plan p = plan;
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerContraintesTournee("fichiersXML2019/demandeGrand9.xml (Sans Depot).xml", p));
-		
+		assertTrue(thrown);		
 	}
 	
 	@Test
 	public void testChargerFichiersAutresQueXML() {
 		Plan plan = new Plan();
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerPlan("test/Random.csv", 1600, 1900));
-		final Plan p = plan;
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerContraintesTournee("test/Random.csv", p));
-
+		boolean thrown = false;
+		try {
+			XMLParser.chargerPlan("test/Random.csv", 1600, 1900);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertTrue(thrown);
+		thrown = false;
+		try{
+			XMLParser.chargerContraintesTournee("test/Random.csv", plan);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertTrue(thrown);
 	}
 	
 	@Test
 	public void testChargerFichierInexistant() {
 		Plan plan = new Plan();
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerPlan("test/Unknown.xml", 1600, 1900));
-		final Plan p = plan;
-		assertThrows(ExceptionChargement.class, ()-> XMLParser.chargerContraintesTournee("test/Unknown.xml", p));
+		boolean thrown = false;
+		try {
+			XMLParser.chargerPlan("test/Unknown.xml", 1600, 1900);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertTrue(thrown);
+		thrown = false;
+		try{
+			XMLParser.chargerContraintesTournee("test/Unknown.xml", plan);
+		} catch (ExceptionChargement e) {
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertTrue(thrown);
 		
 	}
 
