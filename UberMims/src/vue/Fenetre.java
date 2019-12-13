@@ -344,6 +344,9 @@ public class Fenetre extends JFrame {
 		affichageTournee.setVisible(false);
 		affichageTournee.removeAll();
 		panAccueil.setVisible(false);
+		panHautDroite.setVisible(false);
+		panRetourAccueil.setVisible(false);
+		panModificationTournee.setVisible(false);
 		panPrincipal.setVisible(true);
 		this.setContentPane(panPrincipal);
 
