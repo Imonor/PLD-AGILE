@@ -182,7 +182,7 @@ public class EcouteurBoutons implements ActionListener{
 				fenetre.afficherInfos();
 			break;
 
-			case "⟲":
+			case "undo":
 				System.out.println("Annuler derniere modification");
 				controleur.undo();
 				fenetre.getAffichageTournee().afficherDetailTournee(controleur.getTournee(), controleur.getContraintes());
