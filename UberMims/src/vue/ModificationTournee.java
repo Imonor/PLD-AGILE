@@ -11,6 +11,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.NumberFormat;
@@ -40,7 +42,7 @@ import model.PointLivraison;
 import model.Tournee;
 import vue.AffichagePlan.Etat;
 
-public class ModificationTournee extends JPanel implements MouseListener, ActionListener{
+public class ModificationTournee extends JPanel implements MouseListener, ActionListener, KeyListener{
 
 	private Color backgroundBleuCiel = new Color(191, 252, 251);
 	private Color backgroundTurquoiseClair = new Color(135, 216, 217);
@@ -66,6 +68,8 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 	private JPanel panelValiderModifAdresse;
 	private JPanel panelValiderModifTemps;
 	private JFormattedTextField champTemps = new JFormattedTextField(NumberFormat.getIntegerInstance());
+
+
 
 	private JLabel labelSelectionne;
 	private JLabel precedentLabelSelectionne; //Permet de changer la couleur lorsqu'on selectionne un autre bouton
@@ -132,7 +136,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 
         JButton boutonHaut = new JButton("^");
         JButton boutonBas = new JButton("v");
-        JButton validerModif = new JButton("Valider les modifications");
+
         JButton supprLivr = new JButton("Supprimer la livraison associee");
         JButton modifAdresse = new JButton("Modifier l'emplacement de ce point");
         JButton modifTemps = new JButton("Modifier le temps de passage a ce point");
@@ -140,18 +144,15 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
         boutonBas.setBounds(15, 30, 20, 20);
         modifAdresse.setBounds(30, 45, 40, 20);
         modifTemps.setBounds(30, 70, 40, 20);
-        validerModif.setBounds(30, 60, 40, 20);
         
         boutonHaut.addActionListener(this);
         boutonBas.addActionListener(this);
-        validerModif.addActionListener(this);
         supprLivr.addActionListener(this);
         modifAdresse.addActionListener(this);
         modifTemps.addActionListener(this);
 
         panelDetail.add(boutonHaut);
         panelDetail.add(boutonBas);
-        panelDetail.add(validerModif);
         panelDetail.add(supprLivr);
         panelDetail.add(modifAdresse);
         panelDetail.add(modifTemps);
@@ -209,18 +210,21 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
     	
 		
 		panelInfoModifTemps = new JPanel();
-        JLabel infoModifTemps = new JLabel("Veuillez entrer la duree a changer (en minutes)");
+        panelInfoModifTemps.setBackground(backgroundTurquoiseClair);
+        JLabel infoModifTemps = new JLabel("Veuillez entrer la duree a changer (en minutes) :");
+        infoModifTemps.setBackground(backgroundTurquoiseClair);
         //infoModifTemps.setBounds());
         panelInfoModifTemps.add(infoModifTemps);
 		
         panelValiderModifTemps = new JPanel();
         panelValiderModifTemps.setVisible(true);
+        panelValiderModifTemps.setBackground(backgroundTurquoiseClair);
         JButton validerModifTemps = new JButton("Valider la modification de la duree");
         validerModifTemps.addActionListener(this);
-        panelValiderModifTemps.add(validerModifTemps);
+        panelModifTemps.add(validerModifTemps);
         // Champ Temps
      		champTemps.setVisible(true);
-
+     		champTemps.addKeyListener(this);
              
      	//champTemps.setFont(police);
      	champTemps.setSize(100, 30);;
@@ -612,19 +616,18 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 					Map<String, String> elemSelect = ordrePassage.get(index);
 					String intersectionId = elemSelect.keySet().iterator().next();
 					Intersection intersection = plan.getIntersections().get(intersectionId);
-					int duree = ((Number) champTemps.getValue()).intValue();;
+					int duree = ((Number) champTemps.getValue()).intValue();
+					duree=duree*60;
 					for(PointEnlevement ptE: controleur.getContraintes().getPointsEnlevement()) {
 						if(ptE.equals(intersection)) {
-							duree=duree*60;
-							ptE.setTempsEnlevement(duree);
+							controleur.modifierTemps(ptE, duree);
 							break;
 						}
 					}
 					for(PointLivraison ptL: controleur.getContraintes().getPointsLivraison()) {
 						if(ptL.equals(intersection)) {
 							System.out.println(ptL.getId() +"    "+duree*60);
-							duree=duree*60;
-							ptL.setTempsLivraison(duree);
+							controleur.modifierTemps(ptL, duree);
 							break;
 						}
 					}
@@ -691,4 +694,39 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 			}
 		}
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		System.out.println("keypressed");
+		repaint();
+		updateUI();
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public JPanel getPanelModifAdresse() {
+		return panelModifAdresse;
+	}
+
+	public JPanel getPanelModifTemps() {
+		return panelModifTemps;
+	}
+
+	public JPanel getPanelDetail() {
+		return panelDetail;
+	}
+	
+	
 }

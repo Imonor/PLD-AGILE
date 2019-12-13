@@ -158,8 +158,8 @@ public class EcouteurBoutons implements ActionListener{
 					fenetre.getAffichagePlan().repaint();
 			break;
 			
-			case "Annuler l'ajout d'une livraison":
-				System.out.println("Annuler ajout d'une livraison");
+			case "Retour a l'accueil":
+				System.out.println("Retour a l'accueil");
 				fenetre.getAffichagePlan().setNouveauPickUp(null);
 				fenetre.getAffichagePlan().setNouvelleLivraison(null);
 				fenetre.getAffichagePlan().setPlanClickable(false);
