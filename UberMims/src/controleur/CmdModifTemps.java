@@ -24,7 +24,6 @@ public class CmdModifTemps implements Commande {
 	
 	@Override
 	public void doCode() {
-		newDuree=newDuree*60;
 		if(enlevement!=null) {
 			enlevement.setTempsEnlevement(newDuree);
 		} else {

@@ -64,7 +64,7 @@ public class Fenetre extends JFrame {
 	private AffichagePlan affichagePlan = new AffichagePlan(plan, this);
 	private AffichageTournee affichageTournee = new AffichageTournee(plan, this);
 	private JPanel panAjoutLivraisonGlobal = new JPanel();
-	private JPanel panAnnulerAjoutLivraison = new JPanel();
+	private JPanel panRetourAccueil = new JPanel();
 	private JPanel panAjoutLivraison1 = new JPanel();
 	private JPanel panAjoutLivraison2 = new JPanel();
 	private JPanel panAjoutLivraison3 = new JPanel();
@@ -106,7 +106,7 @@ public class Fenetre extends JFrame {
 		JButton boutonChargementPlan2 = new JButton("Charger un autre plan de la ville");
 		JButton boutonCalculTournee = new JButton("Calculer une tournee");
 		JButton boutonAjouterLivraison = new JButton("Ajouter une livraison a la tournee");
-		JButton boutonAnnulerAjoutLivraison = new JButton("Annuler l'ajout d'une livraison");
+		JButton boutonRetourAccueil = new JButton("Retour a l'accueil");
 		JButton boutonValiderAjoutLivraison = new JButton("Valider l'ajout d'une livraison");
 		JButton boutonModifierTournee = new JButton("Modifier la tournee");
 
@@ -161,7 +161,7 @@ public class Fenetre extends JFrame {
 		boutonAnnulerModification.setBounds(95, 71, 125, 30);
 		panHautDroite.add(boutonAnnulerModification);
 		boutonAnnulerModification.addActionListener(ecouteurBoutons);
-		//bouton refaire la dernière modification annulée
+		//bouton refaire la derniï¿½re modification annulï¿½e
 		boutonRefaireModification.setVisible(true);
 		boutonRefaireModification.setBounds(230, 71, 125, 30);
 		panHautDroite.add(boutonRefaireModification);
@@ -198,26 +198,27 @@ public class Fenetre extends JFrame {
 		panAjoutLivraisonGlobal.setVisible(false);
 		panAjoutLivraisonGlobal.setLayout(null);
 		panAjoutLivraisonGlobal.setBackground(backgroundRougeClair);
-		panAjoutLivraisonGlobal.setBounds(0, 0, 450, 800);
+		panAjoutLivraisonGlobal.setBounds(0, 100, 450, 800);
 		panDroite.add(panAjoutLivraisonGlobal);
 		
 		// Panel Annuler livraison
-		panAnnulerAjoutLivraison.setVisible(true);
-		panAnnulerAjoutLivraison.setLayout(null);
-		panAnnulerAjoutLivraison.setBackground(backgroundRougeClair);
-		panAnnulerAjoutLivraison.setBounds(0, 0, 450, 100);
+		panRetourAccueil.setVisible(false);
+		panRetourAccueil.setLayout(null);
+		panRetourAccueil.setBackground(backgroundRougeClair);
+		panRetourAccueil.setBounds(0, 0, 450, 100);
 		// bouton annuler ajout de livraison
-		boutonAnnulerAjoutLivraison.setVisible(true);
-		boutonAnnulerAjoutLivraison.setBounds(95, 10, 260, 30);
-		boutonAnnulerAjoutLivraison.addActionListener(ecouteurBoutons);
-		panAnnulerAjoutLivraison.add(boutonAnnulerAjoutLivraison);
-		panAjoutLivraisonGlobal.add(panAnnulerAjoutLivraison);
-
+		boutonRetourAccueil.setVisible(true);
+		boutonRetourAccueil.setBounds(95, 25, 260, 30);
+		boutonRetourAccueil.addActionListener(ecouteurBoutons);
+		panRetourAccueil.add(boutonRetourAccueil);
+		//panAjoutLivraisonGlobal.add(panRetourAccueil);
+		panDroite.add(panRetourAccueil);
+		
 		// Panel DETAILS AJOUT LIVRAISON 1
 		panAjoutLivraison1.setVisible(true);
 		panAjoutLivraison1.setLayout(null);
 		panAjoutLivraison1.setBackground(backgroundTurquoiseClair);
-		panAjoutLivraison1.setBounds(0, 100, 450, 700);
+		panAjoutLivraison1.setBounds(0, 0, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison1);
 		// Texte Ajout Livraison Debut
 		JLabel CliquezSurCarte1 = new JLabel(
@@ -231,7 +232,7 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison2.setVisible(false);
 		panAjoutLivraison2.setLayout(null);
 		panAjoutLivraison2.setBackground(backgroundTurquoiseClair);
-		panAjoutLivraison2.setBounds(0, 100, 450, 700);
+		panAjoutLivraison2.setBounds(0, 0, 450, 700);
 		// Texte Ajout Livraison 2
 		JLabel CliquezSurCarte2 = new JLabel(
 				"<html> <center> Cliquez sur la carte pour selectionner le point de <b>livraison </b> de la nouvelle livraison<br>");
@@ -244,7 +245,7 @@ public class Fenetre extends JFrame {
 		panAjoutLivraison3.setVisible(false);
 		panAjoutLivraison3.setLayout(null);
 		panAjoutLivraison3.setBackground(backgroundTurquoiseClair);
-		panAjoutLivraison3.setBounds(0, 100, 450, 700);
+		panAjoutLivraison3.setBounds(0, 0, 450, 700);
 		panAjoutLivraisonGlobal.add(panAjoutLivraison3);
 		// CHAMP ENLEVEMENT
 
@@ -366,9 +367,13 @@ public class Fenetre extends JFrame {
 			panAjoutLivraison1.setVisible(false);
 			panAjoutLivraison2.setVisible(false);
 			panAjoutLivraison3.setVisible(false);
+			panModificationTournee.getPanelModifAdresse().setVisible(false);
+			panModificationTournee.getPanelModifTemps().setVisible(false);
+			panModificationTournee.getPanelDetail().setVisible(true);
 			panAjoutLivraisonGlobal.setVisible(false);
 			panCalculTournee.setVisible(false);
 			panModificationTournee.setVisible(false);
+			panRetourAccueil.setVisible(false);
 			panHautDroite.setVisible(true);
 			if(controleur.getCmdListe().isEmpty()) {
 				boutonAnnulerModification.setEnabled(false);
@@ -394,6 +399,7 @@ public class Fenetre extends JFrame {
 		panAjoutLivraisonGlobal.setVisible(true);
 		panAjoutLivraison1.setVisible(true);
 		affichagePlan.setEtat(Etat.ENLEVEMENT);
+		panRetourAccueil.setVisible(true);
 		this.setContentPane(panPrincipal);
 		// this.repaint();
 	}
@@ -472,6 +478,8 @@ public class Fenetre extends JFrame {
 
 	
 	public void afficherModificationTournee() {
+		panHautDroite.setVisible(false);
+		panRetourAccueil.setVisible(true);
 		panModificationTournee.ajouterTournee(plan);
 		panModificationTournee.afficherTournee();
 		affichageTournee.setVisible(false);
