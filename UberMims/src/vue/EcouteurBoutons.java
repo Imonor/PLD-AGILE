@@ -2,43 +2,24 @@ package vue;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Map;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JOptionPane;
 
-import algo.Dijkstra;
-import algo.TSP1;
-import algo.TemplateTSP;
 import controleur.Controleur;
-import model.Chemin;
-import model.ContraintesTournee;
 import model.Intersection;
-import model.Plan;
 import model.PointEnlevement;
 import model.PointLivraison;
-import model.Tournee;
 import util.ExceptionChargement;
-import util.XMLParser;
 
 
 public class EcouteurBoutons implements ActionListener{
 	private Controleur controleur;
 	private Fenetre fenetre;
-	private JPanel panAccueil;
-	private JPanel panPrincipal;
-	private JPanel panPlan;
 	private String cheminFichierPlan ;
-	private String nomFichierPlan;
 	private String cheminFichierPlan2 ;
-	private String nomFichierPlan2;
 	private String cheminFichierTournee ;
-	private String nomFichierTournee;
 	
 	//Constructeur
 	
@@ -53,9 +34,6 @@ public class EcouteurBoutons implements ActionListener{
 	public EcouteurBoutons(Controleur controleur, Fenetre fenetre) {
 		this.controleur = controleur;
 		this.fenetre = fenetre;
-		panAccueil = new JPanel();
-		panPrincipal = new JPanel();
-		panPlan = new JPanel();
 	}
 	
 	/**
@@ -67,7 +45,6 @@ public class EcouteurBoutons implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
-		panAccueil = fenetre.getPanAccueil();
 		
 		
 		//panPrincipal = fenetre.getPanPrincipal();
@@ -84,7 +61,6 @@ public class EcouteurBoutons implements ActionListener{
 				
 				
 				if (boiteDialogue == JFileChooser.APPROVE_OPTION) { 
-					nomFichierPlan = choixPlan.getSelectedFile().getName();
 					cheminFichierPlan = choixPlan.getSelectedFile().getAbsolutePath();
 					try {
 					controleur.chargerPlan(cheminFichierPlan,Fenetre.HAUTEUR_PLAN, Fenetre.LARGEUR_PLAN);
@@ -108,7 +84,6 @@ public class EcouteurBoutons implements ActionListener{
 				int boiteDialogue3 = choixPlan2.showOpenDialog(bouton);
 				
 				if (boiteDialogue3 == JFileChooser.APPROVE_OPTION) { 
-					nomFichierPlan2 = choixPlan2.getSelectedFile().getName();
 					cheminFichierPlan2 = choixPlan2.getSelectedFile().getAbsolutePath();
 
 					try {
@@ -136,7 +111,6 @@ public class EcouteurBoutons implements ActionListener{
 				int boiteDialogue2 = choixTournee.showOpenDialog(bouton);
 				
 				if (boiteDialogue2 == JFileChooser.APPROVE_OPTION) { 
-					nomFichierTournee = choixTournee.getSelectedFile().getName();
 					cheminFichierTournee = choixTournee.getSelectedFile().getAbsolutePath();
 
 					try {
