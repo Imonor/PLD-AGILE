@@ -17,9 +17,14 @@ import model.Tournee;
 
 public abstract class TemplateTSP implements TSP{
 	
-	private String[] meilleureSolution;
-	private int coutMeilleureSolution = 0;
+	private Tournee meilleureTournee;
+	private int coutMeilleureSol = -1;
 	private Boolean tempsLimiteAtteint;
+	private int tpsLimite = -1;
+	private long tpsDebut = -1;
+	private ContraintesTournee contraintes;
+	private Map<String, Map<String, Chemin>> plusCourtsChemins;
+	private HashMap<String, Intersection> intersections;
 	
 	//Constructeur par defaut
 	public TemplateTSP() {
@@ -31,9 +36,10 @@ public abstract class TemplateTSP implements TSP{
 	
 	public Tournee chercheSolution(int tpsLimite, ContraintesTournee contraintes, Map<String, Map<String, Chemin>> plusCourtsChemins){
 		
+		this.contraintes = contraintes;
+		this.plusCourtsChemins = plusCourtsChemins;
+		this.tpsLimite = tpsLimite; 
 		tempsLimiteAtteint = false;
-//		coutMeilleureSolution = Integer.MAX_VALUE;
-//		meilleureSolution = new String[nbSommets];
 
 		//HashMap avec l'id et le point pour pouvoir recuperer le point a partir de l'id
 		HashMap<String, Intersection> intersections = new HashMap<String, Intersection>();
@@ -53,6 +59,7 @@ public abstract class TemplateTSP implements TSP{
 			intersections.put(intersec.getId(), intersec);
 			nbSommets++;
 		}
+		this.intersections = intersections;
 		
 		//Initialisation de la HashMap vuDispo - contenant les attributs boolean vu et dispo
 		HashMap<String, Paire> vuDispo = initVuDispo(contraintes, intersections);
@@ -62,8 +69,21 @@ public abstract class TemplateTSP implements TSP{
 //		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
 		
 		//MinFirst + 2-Opt
-		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
-		twoOpt(tpsLimite, System.currentTimeMillis(), tournee, plusCourtsChemins, intersections);
+//		calculerSimplementTournee(tournee, contraintes.getDepot().getId(), (nbSommets-1), intersections, vuDispo, plusCourtsChemins);		
+//		this.tpsDebut = System.currentTimeMillis();
+//		twoOpt(tpsLimite, tpsDebut, tournee, plusCourtsChemins, intersections);
+		
+		//BranchAndBound
+		vuDispo.get(contraintes.getDepot().getId()).setVu(false);
+		this.tpsDebut = System.currentTimeMillis();
+		ArrayList<Intersection> vus = new ArrayList<Intersection>();
+		branchAndBound( 0, contraintes.getDepot().getId(), (nbSommets-1), 0, vuDispo, vus);
+		tournee = meilleureTournee;
+		
+		for(int i=0; i< meilleureTournee.getPlusCourteTournee().size(); ++i) {
+			Chemin cheminTmp = meilleureTournee.getPlusCourteTournee().get(i);
+			System.out.println("debut="+cheminTmp.getPremiere().getId()+"; arrive="+cheminTmp.getDerniere().getId()+"; duree="+cheminTmp.getDuree());
+		}
 		
 		return tournee;
 	}
@@ -211,7 +231,7 @@ public abstract class TemplateTSP implements TSP{
 		}
 	}
 	
-	private void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, HashMap<String, Integer> ordreNoeuds, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
+	protected void twoOptSwap(int i, int j, Chemin chemin, Chemin chemin2, ArrayList<String> noeudsUpdate, HashMap<String, Integer> ordreNoeuds, Tournee tournee, Map<String, Map<String, Chemin>> plusCourtsChemins ) {
 		
 		System.out.println("");
 		for(int count = 0; count < tournee.getPlusCourteTournee().size(); ++count) {
@@ -225,29 +245,11 @@ public abstract class TemplateTSP implements TSP{
 		System.out.println("###SWAP### i="+i+"; j="+j);
 		//On mets les chemins compris entre i et j dans l'ordre inverse de parcours pour connecter la tournee
 		//On met aussi les 2 chemins avec les noeuds extremes inter-changes
-//		for(int count = 0; count< (noeudsUpdate.size()-1)/2; ++count) {
-//			Collections.swap(tournee.getPlusCourteTournee(), count, noeudsUpdate.size()-2-count);
-//			Chemin cheminTmp = tournee.getPlusCourteTournee().get(count);
-//			tournee.getPlusCourteTournee().set(count, tournee.getPlusCourteTournee().get( noeudsUpdate.size()-2-count ));
-//			tournee.getPlusCourteTournee().set(noeudsUpdate.size()-2-count, cheminTmp);
-//		}
-		
 		List<Chemin> listeTmp = new ArrayList<Chemin>();
 		for(int count = 0; count < noeudsUpdate.size()-1; ++count) {
 			int ascending = i+count+1;
 			listeTmp.add(tournee.getPlusCourteTournee().get(ascending));
 		}
-//		for(int count = noeudsUpdate.size()-2; count>=0; --count) {
-//			int ascending = i+noeudsUpdate.size()-count-1;
-//			int descending = i+count+1;
-//			String premiere = tournee.getPlusCourteTournee().get(ascending).getPremiere().getId();
-//			String derniere = tournee.getPlusCourteTournee().get(ascending).getDerniere().getId();
-//			Chemin newChemin = plusCourtsChemins.get(derniere).get(premiere);
-//			tournee.getPlusCourteTournee().set(descending, newChemin);
-//			ordreNoeuds.replace(derniere, ascending);
-//			System.out.print(count+"."+tournee.getPlusCourteTournee().get(descending).getPremiere().getId()+"->"+tournee.getPlusCourteTournee().get(descending).getDerniere().getId()+" / ");
-//			System.out.print(count+"~"+premiere+"->"+derniere+" / ");
-//		}
 		for(int count = 0; count< noeudsUpdate.size()-1; ++count) {
 			int ascending = i+count+1;
 			int descending = i+noeudsUpdate.size()-count-1;
@@ -287,14 +289,79 @@ public abstract class TemplateTSP implements TSP{
 	}
 	
 	
-	public String getMeilleureSolution(int i){
-		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
-			return null;
-		return meilleureSolution[i];
+	protected void branchAndBound(int etape, String idInter, int restants, int coutVus, HashMap<String, Paire> vuDispo, ArrayList<Intersection> vus) {
+		if(System.currentTimeMillis() - tpsDebut < tpsLimite) return;
+		boolean tousVus = true;
+		for (HashMap.Entry<String, Paire> it : vuDispo.entrySet()) {
+			if(it.getValue().getVu() == false) {
+				tousVus = false;
+			}else {
+				++etape;
+			}
+		}
+		
+		if(tousVus) {
+			coutVus += plusCourtsChemins.get(idInter).get(contraintes.getDepot().getId()).getDuree();
+			if(coutVus < coutMeilleureSol || coutMeilleureSol == -1) {
+				ArrayList<Chemin> meilleureSol = new ArrayList<Chemin>();
+				for(int i = 0; i < vus.size()-1; ++i) {
+					Chemin cheminTmp = plusCourtsChemins.get(vus.get(i).getId()).get(vus.get(i+1).getId());
+					meilleureSol.add(i, cheminTmp);
+				}
+				coutMeilleureSol = coutVus;
+				this.meilleureTournee = new Tournee(meilleureSol, contraintes,coutMeilleureSol);
+			}
+		}else if(coutVus < coutMeilleureSol || coutMeilleureSol == -1){
+			Iterator<String> it = iterator(restants, intersections, vuDispo, plusCourtsChemins);
+			while(it.hasNext()) {
+				String noeudSuivant = it.next();
+				if(noeudSuivant.equals("")) {
+					noeudSuivant = contraintes.getDepot().getId();
+				}
+				System.out.println("noeudSuiv="+noeudSuivant);
+				vus.add(intersections.get(noeudSuivant));
+				vuDispo.get(noeudSuivant).setDispo(false);
+				vuDispo.get(noeudSuivant).setVu(true);
+				
+				
+				//Mettre dispo le pt de livraison si celui actuel est un pt d'enlevement
+				if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
+					String cleTmp = ((PointEnlevement)intersections.get(noeudSuivant)).getIdLivraison();
+					vuDispo.get(cleTmp).setDispo(true);
+				}
+				
+				branchAndBound(etape, noeudSuivant, restants, coutVus, vuDispo, vus);
+				
+				boolean found = false;
+				for(int i = 0; i<vus.size()&&!found; ++i) {
+					if( vus.get(i).getId().equals(noeudSuivant)) {
+						vus.remove(i);
+						vuDispo.get(vus.get(i).getId()).setDispo(true);
+						vuDispo.get(vus.get(i).getId()).setVu(false);
+						found = true;
+						etape--;
+						
+						//Mettre indispo le pt de livraison si celui actuel est un pt d'enlevement
+						if( intersections.get(noeudSuivant) instanceof PointEnlevement ) {
+							String cleTmp = ((PointEnlevement)intersections.get(noeudSuivant)).getIdLivraison();
+							vuDispo.get(cleTmp).setDispo(false);
+						}
+					}
+				}
+			}
+		}
 	}
 	
+	
+	
+//	public String getMeilleureSolution(int i){
+//		if ((meilleureSol == null) || (i<0) || (i>=meilleureSol.size()))
+//			return null;
+//		return meilleureSol.get(i);
+//	}
+	
 	public int getCoutMeilleureSolution(){
-		return coutMeilleureSolution;
+		return coutMeilleureSol;
 	}
 	
 	/**
