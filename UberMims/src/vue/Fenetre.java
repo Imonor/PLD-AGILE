@@ -80,7 +80,7 @@ public class Fenetre extends JFrame {
 	private JLabel textePickUp = new JLabel();
 	private JLabel texteDelivery = new JLabel();
 	private JLabel texteBienvenue = new JLabel ();
-	private JButton boutonAnnulerModification = new JButton("⟲");
+	private JButton boutonAnnulerModification = new JButton("undo");
 	private JButton boutonRefaireModification = new JButton("redo");
 
 
