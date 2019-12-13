@@ -1,33 +1,20 @@
 package vue;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-import javax.sound.sampled.Line;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
-
-import controleur.Controleur;
 import model.Chemin;
 import model.ContraintesTournee;
 import model.Intersection;
@@ -36,13 +23,12 @@ import model.PointEnlevement;
 import model.PointLivraison;
 import model.Tournee;
 import model.Troncon;
-import util.XMLParser;
-
+/**
+ * Concerne le bon déroulement de l'affichage du plan
+ *
+ */
 public class AffichagePlan extends JScrollPane {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

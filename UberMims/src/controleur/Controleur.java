@@ -11,7 +11,11 @@ import java.util.Map;
 import algo.Dijkstra;
 import algo.TSP2;
 import model.*;
-
+/**
+ * Orchestre les intéractions entre le modèle et les vues
+ * 
+ *
+ */
 public class Controleur {
 
 	private Map<String, Map<String, Chemin>> plusCourtsChemins;
@@ -21,24 +25,26 @@ public class Controleur {
 	private CmdListe cmdListe;
 	private Dijkstra uniteCalculChemins;
 
-//	public Controleur(String filePathPlan, String filePathTournee, int screenHeight, int screenWidth) {
-//		tournee = new Tournee();
-//		uniteCalculChemins = new Dijkstra();
-//		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
-//		chargerTournee(filePathTournee);
-//		cmdListe = new CmdListe();
-//	}
-
 	public Controleur() {
 		tournee = new Tournee();
 		uniteCalculChemins = new Dijkstra();
 		cmdListe = new CmdListe();
 	}
-
+	/**
+	 * Charge le fichier contenant les indications sur le plan de la ville
+	 * @param filePathPlan			Le chemin d'accès au fichier de chargement du plan
+	 * @param screenHeight			La hauteur de la fenêtre
+	 * @param screenWidth			La largeur de la fenêtre
+	 * @throws ExceptionChargement	En cas de mauvais fichier ou fichier corrompu
+	 */
 	public void chargerPlan(String filePathPlan, int screenHeight, int screenWidth) throws ExceptionChargement{
 		plan = XMLParser.chargerPlan(filePathPlan, screenHeight, screenWidth);
 	}
-
+	/**
+	 * Charge le fichier contenant les indications sur la tournée
+	 * @param filePathTournee		Le chemin d'accès au fichier de chargement d'une tournée
+	 * @throws ExceptionChargement	En cas de mauvais fichier ou fichier corrompu
+	 */
 	public void chargerTournee(String filePathTournee) throws ExceptionChargement {
 		contraintes = XMLParser.chargerContraintesTournee(filePathTournee, plan); // vï¿½rifier que le plan nest pas incohï¿½rent
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
@@ -52,15 +58,14 @@ public class Controleur {
 		}
 		plusCourtsChemins = uniteCalculChemins.plusCourtsCheminsPlan(plan.getIntersections(), intersectionsAVisiter);																			// que
 	}
-
+	
+	/**
+	 * Calcule la tournée pour un plan et une demande de tournée
+	 */
 	public void calculerTournee() {
 		TSP2 tsp = new TSP2();
 		tournee = tsp.chercheSolution(2000, contraintes, plusCourtsChemins);
-		int dureeEnlevementLivraison = 0;
-		
-		for(PointEnlevement p : contraintes.getPointsEnlevement()) {
-			dureeEnlevementLivraison += p.getTempsEnlevement();
-		}
+
 		tournee.calculDuree();
 		
 		for (Chemin c : tournee.getPlusCourteTournee()) {
@@ -166,28 +171,40 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 	
+	/**
+	 * Fonction appelee par la fenetre pour modifier la durée d'enlèvement
+	 * @param e		Le point d'enlèvement
+	 * @param duree	La nouvelle durée d'enlèvement	
+	 */	
 	public void modifierTemps(PointEnlevement e, int duree) {
 		CmdModifTemps cmd = new CmdModifTemps(e, duree);
 		cmdListe.addCommande(cmd);
 	}
 	
+	/**
+	 * Fonction appelee par la fenetre pour modifier la durée de livraison
+	 * @param l		Le point de livraison
+	 * @param duree	La nouvelle durée de livraison	
+	 */	
 	public void modifierTemps(PointLivraison l, int duree) {
 		CmdModifTemps cmd = new CmdModifTemps(l, duree);
 		cmdListe.addCommande(cmd);
 	}
+	
+	/**
+	 * Permet d'annuler une commande
+	 */
 	public void undo() {
 		cmdListe.undo();
 	}
-
+	
+	/**
+	 * Permet de refaire une commande annulée
+	 */
 	public void redo() {
 		cmdListe.redo();
 	}
 
-//	public static void main(String[] args) {
-//		Controleur contr = new Controleur("fichiersXML2019/petitPlan.xml", "fichiersXML2019/demandePetit1.xml", 600,
-//				800);
-//		contr.calculerTournee();
-//	}
 
 	public Tournee getTournee() {
 		return tournee;
