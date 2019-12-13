@@ -299,7 +299,6 @@ public class AffichageTournee extends JPanel {
 						 	}
 					 	}
 					 	intersectionClique = current.getIntersections().get(numIntersection);
-					 	//intersectionClique = current.getDerniere();
 					 	fenetre.getAffichagePlan().setIntersectionSelectionne(intersectionClique);
 					 	
 					 	int tailleC = current.getIntersections().size();
