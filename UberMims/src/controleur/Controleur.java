@@ -5,18 +5,14 @@ import util.XMLParser;
 
 
 import java.util.HashMap;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
 import algo.Dijkstra;
-import algo.TSP1;
 import algo.TSP2;
 import model.*;
 
 public class Controleur {
-	private final int LARGEUR_PLAN = 800;
-	private final int HAUTEUR_PLAN = 600;
 
 	private Map<String, Map<String, Chemin>> plusCourtsChemins;
 	private Tournee tournee;
@@ -78,6 +74,12 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * Fonction appelee par la fenetre pour ajouter une livraison a la tournee
+	 * 
+	 * @param e Point d'enlevement a ajouter
+	 * @param l Point de livraison a  ajouter
+	 */
 	public void ajouterLivraison (PointEnlevement e, PointLivraison l) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
@@ -95,27 +97,38 @@ public class Controleur {
 		cmdListe.addCommande(cmd);
 	}
 
+	/**
+	 * Fonction appelee par la fenetre pour supprimer une livraison de la tournee
+	 * @param e Point d'enlevement de la Livraison a supprimer
+	 */
 	public void supprimerLivraison (PointEnlevement e) {
 		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, e, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
 	 }
-	 
+	 /**
+	  * Fonction appelee par la fenetre pour supprimer une livraison de la tournee
+	  * @param l Point de livraison de la livraison a supprimer
+	  */
 	public void supprimerLivraison (PointLivraison l) {
 		 CmdSupprimeLivraison cmd = new CmdSupprimeLivraison(contraintes, tournee, l, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
 	}
 
 	/**
-	 * 
-	 * @param pointModif
-	 * @param newPrec Si le pr�c�dent est le d�p�t, mettre 'null'
-	 * @param newSuiv Si le suivant est le d�p�t, mettre 'null'
+	 * Fonction appelee par la fenetre pour modifier l'ordre des livraisons de la tournee
+	 * @param pointModif Le point dont on veut modifier la place dans la liste
+	 * @param newPrec Le nouveau point precedent (si le precedent est le depot, mettre a null)
+	 * @param newSuiv Le nouveau point suivant (si le suivant est le depot, mettre a null)
 	 */
 	public void modifierOrdrePassage (Intersection pointModif, Intersection newPrec, Intersection newSuiv) {
 		 CmdModifOrdre cmd = new CmdModifOrdre(tournee, pointModif, newPrec, newSuiv, plusCourtsChemins);
 		 cmdListe.addCommande(cmd);
 	}
-	
+	/**
+	 * Fonction appelee par la fenetre pour modifier l'emplacement d'un point d'enlevement
+	 * @param e L'ancien point d'enlevement
+	 * @param newI L'intersection representant le nouvel emplacement
+	 */
 	public void modifierAdresse(PointEnlevement e, Intersection newI) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		
@@ -131,7 +144,12 @@ public class Controleur {
 		CmdModifAdresse cmd = new CmdModifAdresse(contraintes, tournee, e, newI, plusCourtsChemins);
 		cmdListe.addCommande(cmd);
 	}
-	
+
+	/**
+	 * Fonction appelee par la fenetre pour modifier l'emplacement d'un point de livraison
+	 * @param l L'ancien point de livraison
+	 * @param newI L'intersection representant le nouvel emplacement
+	 */
 	public void modifierAdresse(PointLivraison l, Intersection newI) {
 		Map<String, Intersection> intersectionsAVisiter = new HashMap<>();
 		

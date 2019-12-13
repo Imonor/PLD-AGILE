@@ -6,6 +6,10 @@ import java.time.LocalTime;
 
 import model.ContraintesTournee;
 
+/**
+ * Classe representant une Tournee, soit une liste de chemins
+ *
+ */
 public class Tournee {
 	
 	private int duree;
