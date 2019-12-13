@@ -560,6 +560,7 @@ public class ModificationTournee extends JPanel implements MouseListener, Action
 				labelSelectionne = null;
 				panelDetail.setVisible(true);
 				panelModifAdresse.setVisible(false);
+				afficherTournee();
 				break;
 				
 			case "Valider la modification de l'adresse":
